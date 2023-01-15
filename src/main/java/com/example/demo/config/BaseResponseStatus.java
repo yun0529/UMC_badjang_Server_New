@@ -26,9 +26,23 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
 
     // [POST] /users
-    POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
-    POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
-    POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
+    POST_USERS_EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
+    POST_USERS_INVALID_EMAIL(false, 2021, "이메일 형식에 맞게 입력해주세요."),
+    POST_USERS_EXISTS_EMAIL(false,2022,"중복된 이메일입니다."),
+
+    POST_USERS_EMPTY_PW(false, 2030, "비밀번호를 입력해주세요."),
+    POST_USERS_INVALID_PW(false, 2031, "비밀번호에는 문자, 특수문자, 숫자가 포함되어야 합니다. (8 ~ 15자)"),
+
+    POST_USERS_EMPTY_NAME(false, 2040, "이름을 입력해주세요."),
+    POST_USERS_INVALID_NAME(false, 2041, "이름은 2 ~ 20자 사이로 입력해주세요."),
+
+    POST_USERS_EMPTY_BIRTH(false, 2050, "생년월일을 입력해주세요."),
+    POST_USERS_INVALID_BIRTH(false, 2051, "생년월일 형식에 맞게 입력해주세요."),
+    POST_USERS_LIMIT_BIRTH(false, 2052, "만 14세 미만은 가입하실 수 없습니다."),
+
+    POST_USERS_EMPTY_PHONE(false, 2060, "전화번호를 입력해주세요."),
+    POST_USERS_INVALID_PHONE(false, 2061, "전화번호 형식에 맞게 입력해주세요."),
+
 
     /**
      * 3000 : Response 오류
