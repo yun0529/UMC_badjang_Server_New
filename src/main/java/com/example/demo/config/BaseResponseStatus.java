@@ -30,6 +30,12 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
+    POST_COMMENT_EMPTY_CONTENT(false, 2501,"댓글을 입력해주세요."),
+    PATCH_COMMENT_FAIL(false,2502,"댓글 수정에 실패했습니다."),
+
+    DELETE_COMMENT_FAIL(false,2503,"댓글 삭제에 실패하였습니다."),
+
+
     /**
      * 3000 : Response 오류
      */
