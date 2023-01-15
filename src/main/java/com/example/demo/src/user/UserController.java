@@ -1,22 +1,22 @@
 package com.example.demo.src.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.user.model.*;
+import com.example.demo.src.user.model.GetUserRes;
+import com.example.demo.src.user.model.PostUserReq;
+import com.example.demo.src.user.model.PostUserRes;
 import com.example.demo.utils.JwtService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
-
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.utils.ValidationRegex.isRegexEmail;
-import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
+import static com.example.demo.utils.ValidationRegex.*;
 
 @RestController
 @RequestMapping("/users")
@@ -30,9 +30,6 @@ public class UserController {
     @Autowired
     private final JwtService jwtService;
 
-
-
-
     public UserController(UserProvider userProvider, UserService userService, JwtService jwtService){
         this.userProvider = userProvider;
         this.userService = userService;
@@ -40,26 +37,28 @@ public class UserController {
     }
 
     /**
-     * 회원 조회 API
+     * 모든 회원 조회 API
      * [GET] /users
-     * 회원 번호 및 이메일 검색 조회 API
-     * [GET] /users? Email=
+     *
+     * 또는
+     *
+     * 해당 이메일의 유저 정보 조회
+     * [GET] /users?email=
+     *
      * @return BaseResponse<List<GetUserRes>>
      */
-    //Query String
     @ResponseBody
-    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("") // (GET) 127.0.0.1:9000/app/users
-    public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false) int userIdx) {
+    @Transactional
+    @GetMapping("")
+    public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false)String email) {
         try{
-            if(userIdx == 0){
-                List<GetUserRes> getUsersRes = userProvider.getUsers();
-                return new BaseResponse<>(getUsersRes);
+            if (email == null) {
+                List<GetUserRes> getUserRes = userProvider.getUsers();
+                return new BaseResponse<>(getUserRes);
             }
-            // Get Users
-            List<GetUserRes> getUsersRes = userProvider.getUsersByEmail(userIdx);
-            return new BaseResponse<>(getUsersRes);
-        } catch(BaseException exception){
+            List<GetUserRes> getUserRes = userProvider.getUsersByEmail(email);
+            return new BaseResponse<>(getUserRes);
+        } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
@@ -67,45 +66,48 @@ public class UserController {
     /**
      * 회원가입 API
      * [POST] /users
+     *
      * @return BaseResponse<PostUserRes>
      */
-    // Body
     @ResponseBody
-    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @Transactional
     @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
-        // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
-        if(postUserReq.getUserAccount() == null){
+        if(postUserReq.getUser_email() == null){
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
-        //이메일 정규표현
-        if(!isRegexEmail(postUserReq.getUserAccount())){
+        if(!isRegexEmail(postUserReq.getUser_email())){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        if(postUserReq.getUser_password() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_PW);
+        }
+        if(!isRegexPw(postUserReq.getUser_password())){
+            return new BaseResponse<>(POST_USERS_INVALID_PW);
+        }
+        if(postUserReq.getUser_name() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_NAME);
+        }
+        if(postUserReq.getUser_name().length() < 2 || postUserReq.getUser_name().length() > 20){
+            return new BaseResponse<>(POST_USERS_INVALID_NAME);
+        }
+        if(postUserReq.getUser_birth() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_BIRTH);
+        }
+        if(!isRegexBirth(postUserReq.getUser_birth())){
+            return new BaseResponse<>(POST_USERS_INVALID_BIRTH);
+        }
+        if(postUserReq.getUser_phone() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_PHONE);
+        }
+        if(!isRegexPhone(postUserReq.getUser_phone())){
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
         }
         try{
             PostUserRes postUserRes = userService.createUser(postUserReq);
             return new BaseResponse<>(postUserRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
-        }
-    }
-
-    /**
-     * 로그인 API
-     * [POST] /users/logIn
-     * @return BaseResponse<PostLoginRes>
-     */
-    @ResponseBody
-    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @PostMapping("/logIn")
-    public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
-        try{
-            // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
-            // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
-            PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
-            return new BaseResponse<>(postLoginRes);
-        } catch (BaseException exception){
-            return new BaseResponse<>(exception.getStatus());
         }
     }
 
