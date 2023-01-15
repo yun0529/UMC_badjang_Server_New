@@ -60,11 +60,11 @@ public class UserDao {
 
     public int createUser(PostUserReq postUserReq) {
         String createUserQuery = "INSERT INTO User (user_email, user_name, user_type, " +
-                "user_status, user_password, user_birth, user_phone, user_push_yn) " +
-                "VALUES (?,?,?,'NORMAL',?,?,?,?)";
+                "user_password, user_birth, user_phone, user_push_yn) " +
+                "VALUES (?,?,?,?,?,?,?)";
 
         Object[] createUserParams = new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
-                postUserReq.getUser_status(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
+                postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
                 postUserReq.getUser_phone(), postUserReq.getUser_push_yn()};
 
         this.jdbcTemplate.update(createUserQuery, createUserParams);

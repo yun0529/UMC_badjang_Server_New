@@ -13,6 +13,6 @@ public class PostUserReq {
     private String user_name;
     private String user_birth;
     private String user_phone;
-    private String user_status;
+    private String user_type;
     private String user_push_yn;
 }
