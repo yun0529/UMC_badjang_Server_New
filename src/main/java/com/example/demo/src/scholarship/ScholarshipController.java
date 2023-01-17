@@ -10,89 +10,89 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX;
 
 @RestController
 @RequestMapping("/scholarship")
+
 public class ScholarshipController {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    final Logger logger = LoggerFactory.getLogger(this.getClass()); // Log를 남기기: 일단은 모르고 넘어가셔도 무방합니다.
 
     @Autowired
     private final ScholarshipProvider scholarshipProvider;
+
     @Autowired
     private final ScholarshipService scholarshipService;
 
-    public ScholarshipController(ScholarshipProvider scholarshipProvider, ScholarshipService scholarshipService){
+    public ScholarshipController(ScholarshipProvider scholarshipProvider, ScholarshipService scholarshipService) {
         this.scholarshipProvider = scholarshipProvider;
         this.scholarshipService = scholarshipService;
     }
 
+
     /**
-     * 장학금조회 API
-     * [GET] /users
-     * 회원 번호 및 이메일 검색 조회 API
-     * [GET] /users? Email=
-     * @return BaseResponse<List<GetUserRes>>
+     * 모든 회원들의  조회 API
+     * [GET] /scholarship
+     *
+     * 또는
+     *
+     * 해당 scholarship_idx을 같는 scholarship 정보 조회 API
+     * [GET] /scholarship? scholarship_idx=
      */
     //Query String
-    @ResponseBody
+    @ResponseBody   // return되는 자바 객체를 JSON으로 바꿔서 HTTP body에 담는 어노테이션.
+    //  JSON은 HTTP 통신 시, 데이터를 주고받을 때 많이 쓰이는 데이터 포맷.
     @GetMapping("") // (GET) 127.0.0.1:9000/app/users
-    public BaseResponse<List<GetScholarshipRes>> getScholarships(@RequestParam(required = false) Long scholarship_idx) {
-        try{
-            if(scholarship_idx == null){
-                List<GetScholarshipRes> getScholarshipRes = scholarshipProvider.getScholarships();
-                return new BaseResponse<>(getScholarshipRes);
-            }
-            // Get Users
-            List<GetScholarshipRes> getScholarshipRes = scholarshipProvider.getScholarshipByIdx(scholarship_idx);
-            return new BaseResponse<>(getScholarshipRes);
-        } catch(BaseException exception){
+    // GET 방식의 요청을 매핑하기 위한 어노테이션
+    public BaseResponse<List<GetScholarshipRes>> getScholarships(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order){
+        //  @RequestParam은, 1개의 HTTP Request 파라미터를 받을 수 있는 어노테이션(?뒤의 값). default로 RequestParam은 반드시 값이 존재해야 하도록 설정되어 있지만, (전송 안되면 400 Error 유발)
+        //  지금 예시와 같이 required 설정으로 필수 값에서 제외 시킬 수 있음
+        //  defaultValue를 통해, 기본값(파라미터가 없는 경우, 해당 파라미터의 기본값 설정)을 지정할 수 있음
+
+        //  카테고리 null : 전체
+        //	           1 : 교내 재학생 장학금
+        //	           2 : 교내 신입생 입학성적 우수장학금
+        //  필터 	null : 인기순(조회순)
+        //	           1 : 생성시간
+        //	           2 : 인기순(조회순)
+        //	           3 : 댓글순
+        //  정렬	    null : desc
+        //	           1 : asc
+
+        try {
+            List<GetScholarshipRes> getScholarshipsRes = scholarshipProvider.getScholarshipsByFilter(category, filter, order);
+            return new BaseResponse<>(getScholarshipsRes);
+        } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
 
-//    /**
-//     * 회원가입 API
-//     * [POST] /users
-//     * @return BaseResponse<PostUserRes>
-//     */
-//    // Body
-//    @ResponseBody
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-//    @PostMapping("")
-//    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
-//        // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
-//        if(postUserReq.getUserAccount() == null){
-//            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
-//        }
-//        //이메일 정규표현
-//        if(!isRegexEmail(postUserReq.getUserAccount())){
-//            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-//        }
-//        try{
-//            PostUserRes postUserRes = userService.createUser(postUserReq);
-//            return new BaseResponse<>(postUserRes);
-//        } catch(BaseException exception){
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
-//
-//    /**
-//     * 로그인 API
-//     * [POST] /users/logIn
-//     * @return BaseResponse<PostLoginRes>
-//     */
-//    @ResponseBody
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-//    @PostMapping("/logIn")
-//    public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
-//        try{
-//            // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
-//            // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
-//            PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
-//            return new BaseResponse<>(postLoginRes);
-//        } catch (BaseException exception){
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
+
+     /**
+     * 장학금 1개 조회 API
+     * [GET] /scholarship/:scholarshipIdx
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/{scholarshipIdx}") // (GET) 127.0.0.1:9000/scholarship/:scholarshipIdx
+    public BaseResponse<GetScholarshipRes> getScholarship(@PathVariable("scholarshipIdx") long scholarshipIdx) {
+        // @PathVariable RESTful(URL)에서 명시된 파라미터({})를 받는 어노테이션, 이 경우 scholarshipId값을 받아옴.
+        //  null값 or 공백값이 들어가는 경우는 적용하지 말 것
+        //  .(dot)이 포함된 경우, .을 포함한 그 뒤가 잘려서 들어감
+        // Get Users
+        try {
+            if (scholarshipProvider.checkScholarshipIdx(scholarshipIdx) == 0) {
+                throw new BaseException(SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX);
+            }
+            scholarshipService.increaseScholarshipView(scholarshipIdx);
+            GetScholarshipRes getScholarshipRes = scholarshipProvider.getScholarship(scholarshipIdx);
+            return new BaseResponse<>(getScholarshipRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
 
 }
+
