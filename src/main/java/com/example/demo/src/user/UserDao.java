@@ -19,7 +19,7 @@ public class UserDao {
     public void setDataSource(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
-/*
+
     public int checkEmail(String email) {
         String checkEmailQuery = "select exists(select user_email from User where user_email = ?)"; // User Table에 해당 email 값을 갖는 유저 정보가 존재하는가?
         String checkEmailParams = email; // 해당(확인할) 이메일 값
@@ -34,7 +34,7 @@ public class UserDao {
 
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
     }
-*/
+
     // 로그인: 해당 email에 해당되는 user의 암호화된 비밀번호 값을 가져온다.
     public User getPwd(PostLoginReq postLoginReq) {
         String getPwdQuery = "select user_idx, user_password, user_email, user_status from User where user_email = ?"; // 해당 email을 만족하는 User의 정보들을 조회한다.
@@ -50,6 +50,7 @@ public class UserDao {
                 getPwdParams
         ); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
+
 
     // 해당 userIdx를 갖는 유저조회
     public GetUserRes getUser(String user_phone) {
