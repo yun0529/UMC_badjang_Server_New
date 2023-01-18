@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.REQUEST_ERROR;
+import static com.example.demo.config.BaseResponseStatus.GET_SEARCH_EMPTY_QUERY;
+import static com.example.demo.config.BaseResponseStatus.GET_SEARCH_INVALID_QUERY;
 
 @RestController
 public class SearchController {
@@ -49,7 +50,10 @@ public class SearchController {
     public BaseResponse<List<GetSearchBoardRes>> searchBoard(@RequestParam(value="query") String query) {
         try {
             if (query == null || query.equals("")) {
-                return new BaseResponse<>(REQUEST_ERROR);
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            if (query.length() > 50) {
+                return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
             List<GetSearchBoardRes> getSearchBoardRes = searchProvider.searchBoard(query);
             return new BaseResponse<>(getSearchBoardRes);
@@ -63,7 +67,10 @@ public class SearchController {
     public BaseResponse<List<GetSearchScholarshipRes>> searchScholarship(@RequestParam(value="query") String query) {
         try {
             if (query == null || query.equals("")) {
-                return new BaseResponse<>(REQUEST_ERROR);
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            if (query.length() > 50) {
+                return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
             List<GetSearchScholarshipRes> getSearchScholarshipRes = searchProvider.searchScholarship(query);
             return new BaseResponse<>(getSearchScholarshipRes);
@@ -77,7 +84,10 @@ public class SearchController {
     public BaseResponse<List<GetSearchSupportRes>> searchSupport(@RequestParam(value="query") String query) {
         try {
             if (query == null || query.equals("")) {
-                return new BaseResponse<>(REQUEST_ERROR);
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
+            }
+            if (query.length() > 50) {
+                return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
             List<GetSearchSupportRes> getSearchSupportRes = searchProvider.searchSupport(query);
             return new BaseResponse<>(getSearchSupportRes);
