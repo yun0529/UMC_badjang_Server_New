@@ -53,14 +53,14 @@ public class UserDao {
 
 
     // 해당 userIdx를 갖는 유저조회
-    public GetUserRes getUser(String user_phone) {
+    /*public GetUserRes getUser(String user_phone) {
         String getUserQuery = "select user_email from User where user_phone = ?"; // 해당 user_id를 만족하는 유저를 조회하는 쿼리문
         String getUserParams = user_phone;
         return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs, rowNum) -> new GetUserRes(
                         rs.getString("user_email")),// RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getUserParams); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
-    }
+    }*/
 
 
 }

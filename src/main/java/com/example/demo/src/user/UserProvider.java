@@ -61,13 +61,13 @@ public class UserProvider {
     }
 
     // 해당 userIdx를 갖는 User의 정보 조회
-    public GetUserRes getUser(String user_phone) throws BaseException {
+   /*public GetUserRes getUser(String user_phone) throws BaseException {
         try {
             GetUserRes getUserRes = userDao.getUser(user_phone);
             return getUserRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-    }
+    }*/
 }
 

@@ -71,13 +71,14 @@ public class UserController {
      *     아이디찾기 전에 토큰을 받아서 데이터베이스 저장한다음 아이디 찾은후 데이터베이스내의 토큰 제거
      */
     // Path-variable
-    @ResponseBody
+    /*@ResponseBody
     @GetMapping("/{user_phone}") // (GET) 127.0.0.1:9000/app/users/:userIdx
     public BaseResponse<GetUserRes> getUser(@PathVariable("user_phone") String user_phone) {
         // @PathVariable RESTful(URL)에서 명시된 파라미터({})를 받는 어노테이션, 이 경우 userId값을 받아옴.
         //  null값 or 공백값이 들어가는 경우는 적용하지 말 것
         //  .(dot)이 포함된 경우, .을 포함한 그 뒤가 잘려서 들어감
         // Get Users
+
         try {
             GetUserRes getUserRes = userProvider.getUser(user_phone);
             return new BaseResponse<>(getUserRes);
@@ -85,8 +86,18 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
 
-    }
+    }*/
 
+    /**
+     * 비밀번호변경 API
+     *
+     *     아이디찾기 전에 토큰을 받아서 데이터베이스 저장한다음 아이디 찾은후 데이터베이스내의 토큰 제거
+     */
+    /*@PatchMapping("/forget/password")
+    public void changePasswordByForget(
+            @Valid @RequestBody ChangePasswordRequest requestDto) {
+        userService.updatePasswordByForget(requestDto);
+    }*/
 
 
 
