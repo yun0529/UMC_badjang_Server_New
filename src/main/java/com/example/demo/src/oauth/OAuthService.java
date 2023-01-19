@@ -71,7 +71,7 @@ public class OAuthService {
     }
 
 
-    public PostUserRes saveUser(String token) throws BaseException {
+    public PostUserRes saveUser(String token, String refresh_token) throws BaseException {
         KakaoProfile profile = findProfile(token);
 
         if(userProvider.checkEmail(profile.getKakao_account().getEmail()) == 1) {
@@ -79,7 +79,7 @@ public class OAuthService {
         }
 
         try {
-            int user_idx = OAuthDao.createUser(profile);
+            int user_idx = OAuthDao.createUser(profile, refresh_token);
             String jwt = jwtService.createJwt(user_idx);
             return new PostUserRes(user_idx, jwt);
         } catch (Exception exception) {

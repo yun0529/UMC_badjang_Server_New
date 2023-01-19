@@ -26,7 +26,7 @@ public class OAuthController {
     @GetMapping("/kakao")
     public BaseResponse<PostUserRes> kakaoLogin(@RequestParam("code") String code) throws BaseException {
         KakaoOauthToken kakaoOauthToken = OAuthService.getAccessToken(code);
-        PostUserRes postUserRes = OAuthService.saveUser(kakaoOauthToken.getAccess_token());
+        PostUserRes postUserRes = OAuthService.saveUser(kakaoOauthToken.getAccess_token(), kakaoOauthToken.getRefresh_token());
 
         return new BaseResponse<>(postUserRes);
     }
