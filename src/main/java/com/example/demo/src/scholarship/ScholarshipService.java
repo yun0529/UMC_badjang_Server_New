@@ -1,6 +1,10 @@
 package com.example.demo.src.scholarship;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.scholarship.model.PostScholarshipReq;
+import com.example.demo.src.scholarship.model.PostScholarshipRes;
+import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
+import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +50,16 @@ public class ScholarshipService {
                 throw new BaseException(INCREASE_FAIL_SCHOLARSHIP_VIEW);
             }
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 장학금 추가(Post)
+    public PostScholarshipRes createScholarship(PostScholarshipReq postScholarshipReq) throws BaseException {
+        try {
+            long scholarship_idx = scholarshipDao.createScholarship(postScholarshipReq);
+            return new PostScholarshipRes(scholarship_idx);
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

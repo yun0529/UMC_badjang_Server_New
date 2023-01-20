@@ -3,17 +3,25 @@ package com.example.demo.src.scholarship;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
+import com.example.demo.src.scholarship.model.PostScholarshipReq;
+import com.example.demo.src.scholarship.model.PostScholarshipRes;
+import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
+import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentRes;
+import com.example.demo.src.user.model.PostUserRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
-@RequestMapping("/scholarship")
+@RequestMapping("/scholarships")
 
 public class ScholarshipController {
     final Logger logger = LoggerFactory.getLogger(this.getClass()); // Log를 남기기: 일단은 모르고 넘어가셔도 무방합니다.
@@ -31,15 +39,9 @@ public class ScholarshipController {
 
 
     /**
-     * 모든 회원들의  조회 API
-     * [GET] /scholarship
-     *
-     * 또는
-     *
-     * 해당 scholarship_idx을 같는 scholarship 정보 조회 API
-     * [GET] /scholarship? scholarship_idx=
+     * 필터에 맞는 장학금들 조회 API
+     * [GET] /scholarships?category=&filter=&order=
      */
-    //Query String
     @ResponseBody   // return되는 자바 객체를 JSON으로 바꿔서 HTTP body에 담는 어노테이션.
     //  JSON은 HTTP 통신 시, 데이터를 주고받을 때 많이 쓰이는 데이터 포맷.
     @GetMapping("") // (GET) 127.0.0.1:9000/app/users
@@ -70,7 +72,7 @@ public class ScholarshipController {
 
      /**
      * 장학금 1개 조회 API
-     * [GET] /scholarship/:scholarshipIdx
+     * [GET] /scholarships/:scholarshipIdx
      */
     // Path-variable
     @ResponseBody
@@ -91,6 +93,25 @@ public class ScholarshipController {
             return new BaseResponse<>((exception.getStatus()));
         }
 
+    }
+
+    /**
+     * 장학금 추가 API
+     * [POST] /scholarships/new-scholarship
+     */
+    @ResponseBody
+    @PostMapping("/new-scholarship")
+    public BaseResponse<PostScholarshipRes> createScholarship(@RequestBody PostScholarshipReq postScholarshipReq) {
+        //장학금 이름을 입력하지 않으면 에러메시지
+        if (postScholarshipReq.getScholarship_name() == null) {
+            return new BaseResponse<>(POST_SCHOLARSHIP_EMPTY_NAME);
+        }
+        try {
+            PostScholarshipRes postScholarshipRes = scholarshipService.createScholarship(postScholarshipReq);
+            return new BaseResponse<>(postScholarshipRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
 

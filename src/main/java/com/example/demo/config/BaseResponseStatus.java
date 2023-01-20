@@ -45,6 +45,8 @@ public enum BaseResponseStatus {
 
 
     POST_COMMENT_EMPTY_CONTENT(false, 2501,"댓글을 입력해주세요."),
+
+    POST_SCHOLARSHIP_EMPTY_NAME(false, 2552,"장학금 이름을 입력해주세요."),
     PATCH_COMMENT_FAIL(false,2502,"댓글 수정에 실패했습니다."),
 
     DELETE_COMMENT_FAIL(false,2503,"댓글 삭제에 실패하였습니다."),

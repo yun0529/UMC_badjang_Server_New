@@ -36,15 +36,6 @@ public class ScholarshipProvider {
     // ******************************************************************************
 
 
-    // Scholarship들의 정보를 조회
-    public List<GetScholarshipRes> getScholarships() throws BaseException {
-        try {
-            List<GetScholarshipRes> getScholarshipRes = scholarshipDao.getScholarships();
-            return getScholarshipRes;
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
 
     // 해당 filter에 맞는 User들의 정보 조회
     public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) throws BaseException {
