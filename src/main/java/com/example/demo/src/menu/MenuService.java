@@ -1,6 +1,5 @@
 package com.example.demo.src.menu;
 
-
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +15,11 @@ public class MenuService {
     private final MenuProvider menuProvider;
     private final JwtService jwtService;
 
-
     @Autowired
     public MenuService(MenuDao menuDao, MenuProvider menuProvider, JwtService jwtService) {
         this.menuDao = menuDao;
         this.menuProvider = menuProvider;
         this.jwtService = jwtService;
-
     }
+
 }

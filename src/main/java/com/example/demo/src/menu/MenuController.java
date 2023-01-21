@@ -2,9 +2,8 @@ package com.example.demo.src.menu;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.menu.model.GetPopularRes;
-import com.example.demo.src.menu.model.GetSchoolRes;
-import com.example.demo.src.menu.model.GetTotalRes;
+import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.menu.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ public class MenuController {
     private final MenuProvider menuProvider;
     @Autowired
     private final MenuService menuService;
+    private  final JwtService jwtService;
 
 
 
@@ -33,6 +33,7 @@ public class MenuController {
     public MenuController(MenuProvider menuProvider, MenuService menuService, JwtService jwtService){
         this.menuProvider = menuProvider;
         this.menuService = menuService;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -46,7 +47,6 @@ public class MenuController {
     @GetMapping("/menu/total") // (GET) 127.0.0.1:9000/menu/total
     public BaseResponse<List<GetTotalRes>> getTotal() {
         try{
-
                 List<GetTotalRes> getTotalRes = menuProvider.getTotal();
                 return new BaseResponse<>(getTotalRes);
 
@@ -81,16 +81,23 @@ public class MenuController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @GetMapping("/menu/school") // (GET) 127.0.0.1:9000/menu/school
-    public BaseResponse<List<GetSchoolRes>> getSchool() {
-        try{
+    public BaseResponse<List<GetSchoolRes>> getSchool(@RequestParam(defaultValue = "0") int userIdx) throws BaseException {
+        int idx = jwtService.getUserIdx();
+        if(idx != userIdx){
+            return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+        }
+        else if(userIdx == 0){
+            return new BaseResponse<>(BaseResponseStatus.USERS_EMPTY_USER_IDX);
+        }
+        else{
+            try {
+                List<GetSchoolRes> getSchoolRes = menuProvider.getSchool(userIdx);
+                return new BaseResponse<>(getSchoolRes);
 
-            List<GetSchoolRes> getSchoolRes = menuProvider.getSchool();
-            return new BaseResponse<>(getSchoolRes);
-
-        } catch(BaseException exception){
-            System.out.println(exception);
-            return new BaseResponse<>((exception.getStatus()));
+            } catch (BaseException exception) {
+                System.out.println(exception);
+                return new BaseResponse<>((exception.getStatus()));
+            }
         }
     }
-
 }

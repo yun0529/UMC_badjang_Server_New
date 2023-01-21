@@ -1,19 +1,21 @@
 package com.example.demo.src.menu;
 
-import com.example.demo.src.menu.model.GetPopularRes;
-import com.example.demo.src.menu.model.GetSchoolRes;
-import com.example.demo.src.menu.model.GetTotalRes;
+import com.example.demo.config.BaseException;
+import com.example.demo.src.menu.model.*;
+import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
 public class MenuDao {
 
     private JdbcTemplate jdbcTemplate;
+    private final JwtService jwtService = new JwtService();
 
     @Autowired
     public void setDataSource(DataSource dataSource){
@@ -55,20 +57,23 @@ public class MenuDao {
         );
     }
 
-    public List<GetSchoolRes> getSchoolRes(){
-        String getTotalQuery = "SELECT school_idx, Scholarship.scholarship_idx, User.user_idx, school_createAt, school_updateAt, school_status " +
-                "from badjangDB.School " +
-                "left join Scholarship on School.scholarship_idx = Scholarship.scholarship_idx " +
-                "left join User on School.user_idx = User.user_idx where school_status = 'Y' " ;
+    public List<GetSchoolRes> getSchoolRes(int userIdx) {
 
-        return this.jdbcTemplate.query(getTotalQuery,
-                (rs,rowNum) -> new GetSchoolRes(
-                        rs.getInt("school_idx"),
-                        rs.getInt("scholarship_idx"),
-                        rs.getInt("user_idx"),
-                        rs.getString("school_createAt"),
-                        rs.getString("school_updateAt"),
-                        rs.getString("school_status"))
-        );
+        String getSchoolResQuery = "SELECT scholarship_idx, User.user_idx, scholarship_createAt, scholarship_updateAt, scholarship_status " +
+                "from badjangDB.Scholarship " +
+                "join User where User.user_univ = scholarship_univ and scholarship_status = 'Y' " +
+                "and user_idx = ? " ;
+
+                int getUserUnivParams = userIdx;
+
+                return this.jdbcTemplate.query(getSchoolResQuery,
+                        (rs, rowNum) -> new GetSchoolRes(
+                                rs.getInt("scholarship_idx"),
+                                rs.getInt("user_idx"),
+                                rs.getString("scholarship_createAt"),
+                                rs.getString("scholarship_updateAt"),
+                                rs.getString("scholarship_status")),
+                        getUserUnivParams);
     }
+
 }

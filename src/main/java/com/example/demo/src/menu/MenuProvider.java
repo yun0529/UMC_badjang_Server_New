@@ -1,16 +1,12 @@
 package com.example.demo.src.menu;
 
-
 import com.example.demo.config.BaseException;
-import com.example.demo.src.menu.model.GetPopularRes;
-import com.example.demo.src.menu.model.GetSchoolRes;
-import com.example.demo.src.menu.model.GetTotalRes;
+import com.example.demo.src.menu.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -52,22 +48,13 @@ public class MenuProvider {
         }
     }
 
-    public List<GetSchoolRes> getSchool() throws BaseException{
+    public List<GetSchoolRes> getSchool(int userIdx) throws BaseException{
         try{
-            List<GetSchoolRes> getSchoolRes = menuDao.getSchoolRes();
+            List<GetSchoolRes> getSchoolRes = menuDao.getSchoolRes(userIdx);
             return getSchoolRes;
         }
         catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-
-    /*public int checkEmail(String userAccount) throws BaseException{
-        try{
-            return menuDao.checkEmail(userAccount);
-        } catch (Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }*/
-
 }
