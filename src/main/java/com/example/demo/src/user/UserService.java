@@ -1,16 +1,14 @@
 package com.example.demo.src.user;
 
 
-
 import com.example.demo.config.BaseException;
-import com.example.demo.src.user.model.*;
+import com.example.demo.src.user.model.PatchUserReq;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import static com.example.demo.config.BaseResponseStatus.*;
 
 // Service Create, Update, Delete 의 로직 처리
@@ -31,27 +29,20 @@ public class UserService {
 
     }
 
-    //POST
-    public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
-        //중복
-        if(userProvider.checkEmail(postUserReq.getUserAccount()) ==1){
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+    // 회원정보 수정(Patch)
+    public void modifyUserPassword(PatchUserReq patchUserReq) throws BaseException {
+        if(userProvider.checkEmail(patchUserReq.getUser_email()) == 0) {
+            throw new BaseException(NON_EXISTENT_EMAIL);
         }
         String pwd;
-        try{
-            //암호화
-            pwd = new SHA256().encrypt(postUserReq.getUserPw());
-            postUserReq.setUserPw(pwd);
-
-        } catch (Exception ignored) {
-            throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
-        }
-        try{
-            int userIdx = userDao.createUser(postUserReq);
-            //jwt 발급.
-            String jwt = jwtService.createJwt(userIdx);
-            return new PostUserRes(userIdx,jwt);
-        } catch (Exception exception) {
+        try {
+            pwd = new SHA256().encrypt(patchUserReq.getUser_password());
+            patchUserReq.setUser_password(pwd);
+            int result = userDao.modifyUserPassword(patchUserReq); // 해당 과정이 무사히 수행되면 True(1), 그렇지 않으면 False(0)입니다.
+            if (result == 0) { // result값이 0이면 과정이 실패한 것이므로 에러 메서지를 보냅니다.
+                throw new BaseException(MODIFY_FAIL_USERNAME);
+            }
+        } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
         }
     }
