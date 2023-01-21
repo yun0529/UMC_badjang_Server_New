@@ -53,10 +53,13 @@ dependencies {
 
     implementation('org.springframework.boot:spring-boot-starter')
     implementation('org.springframework.boot:spring-boot-starter-web')
+    
+    //FCM 의존성추가
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
 
-
-
-
+    //sms 의존성추가
+   // implementation 'net.nurigo:sdk:4.2.7'
 
 }
 
