@@ -50,13 +50,17 @@ public enum BaseResponseStatus {
     GET_SEARCH_INVALID_QUERY(false, 2201, "검색어는 50자 내로 입력해주세요."),
 
 
-    POST_COMMENT_EMPTY_CONTENT(false, 2501,"댓글을 입력해주세요."),
+    POST_COMMENT_EMPTY_CONTENT(false, 2301,"댓글을 입력해주세요."),
+    PATCH_COMMENT_FAIL(false,2302,"댓글 수정에 실패했습니다."),
+
+    DELETE_COMMENT_FAIL(false,2303,"댓글 삭제에 실패하였습니다."),
 
     POST_SCHOLARSHIP_EMPTY_NAME(false, 2352,"장학금 이름을 입력해주세요."),
 
-    PATCH_COMMENT_FAIL(false,2502,"댓글 수정에 실패했습니다."),
 
-    DELETE_COMMENT_FAIL(false,2503,"댓글 삭제에 실패하였습니다."),
+
+
+
 
     SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 값이 존재하지 않습니다."),
 

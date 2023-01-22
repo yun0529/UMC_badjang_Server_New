@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PostScholarshipCommentReq {
-    private Long scholarship_idx;
-    private Long user_idx;
+    private Integer scholarship_idx;
+    private Integer user_idx;
     private String scholarship_comment_content;
 
 }

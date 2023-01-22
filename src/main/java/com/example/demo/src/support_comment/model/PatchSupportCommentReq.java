@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PatchSupportCommentReq {
-    private Long support_comment_idx;
+    private Integer support_comment_idx;
     private String support_comment_content;
 }

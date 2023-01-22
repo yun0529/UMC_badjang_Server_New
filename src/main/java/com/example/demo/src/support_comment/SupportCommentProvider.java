@@ -25,7 +25,7 @@ public class SupportCommentProvider {
     /**
      * 댓글 조회 API
      */
-    public List<GetSupportCommentRes> getSupportComment(Long support_idx) throws BaseException {
+    public List<GetSupportCommentRes> getSupportComment(Integer support_idx) throws BaseException {
         try {
             List<GetSupportCommentRes> getSupportCommentRes = supportCommentDao.getSupportComment(support_idx);
             return getSupportCommentRes;

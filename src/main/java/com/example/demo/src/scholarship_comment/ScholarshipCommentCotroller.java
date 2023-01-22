@@ -40,7 +40,7 @@ public class ScholarshipCommentCotroller {
      */
     @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/app/users
-    public BaseResponse<List<GetScholarshipCommentRes>> getScholarshipComment(@RequestParam(required = true) Long scholarship_idx) {
+    public BaseResponse<List<GetScholarshipCommentRes>> getScholarshipComment(@RequestParam(required = true) Integer scholarship_idx) {
         try{
             // Get Users
             List<GetScholarshipCommentRes> getScholarshipCommentRes = scholarshipCommentProvider.getScholarshipComment(scholarship_idx);
@@ -61,8 +61,8 @@ public class ScholarshipCommentCotroller {
             return new BaseResponse<>(POST_COMMENT_EMPTY_CONTENT);
         }
         try {
-            Long userIdxByJwt = jwtService.getUserIdx();
-            Long user_idx = postScholarshipCommentReq.getUser_idx();
+            Integer userIdxByJwt = jwtService.getUserIdx();
+            Integer user_idx = postScholarshipCommentReq.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
@@ -80,10 +80,10 @@ public class ScholarshipCommentCotroller {
      */
     @ResponseBody
     @PatchMapping("/modify/{scholarship_comment_idx}") // 게시글 작성자(userIdx)를 확인해서 맞으면 바꾸도록 할껀데 jwt토큰도 받아서 같이
-    public BaseResponse<String> modifyScholarshipComment(@PathVariable("scholarship_comment_idx") long scholarship_comment_idx, @RequestBody ScholarshipComment scholarshipComment) {
+    public BaseResponse<String> modifyScholarshipComment(@PathVariable("scholarship_comment_idx") Integer scholarship_comment_idx, @RequestBody ScholarshipComment scholarshipComment) {
         try {
-            Long userIdxByJwt = jwtService.getUserIdx();
-            Long user_idx = scholarshipComment.getUser_idx();
+            Integer userIdxByJwt = jwtService.getUserIdx();
+            Integer user_idx = scholarshipComment.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
@@ -109,10 +109,10 @@ public class ScholarshipCommentCotroller {
      */
     @ResponseBody
     @PatchMapping("/delete/{scholarship_comment_idx}")
-    public BaseResponse<String> deleteScholarshipComment(@PathVariable("scholarship_comment_idx") long scholarship_comment_idx, @RequestBody ScholarshipComment scholarshipComment) {
+    public BaseResponse<String> deleteScholarshipComment(@PathVariable("scholarship_comment_idx") Integer scholarship_comment_idx, @RequestBody ScholarshipComment scholarshipComment) {
         try {
-            Long userIdxByJwt = jwtService.getUserIdx();
-            Long user_idx = scholarshipComment.getUser_idx();
+            Integer userIdxByJwt = jwtService.getUserIdx();
+            Integer user_idx = scholarshipComment.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
