@@ -26,6 +26,7 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
 
     USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요. "),
+
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2021, "이메일 형식에 맞게 입력해주세요."),
@@ -52,6 +53,7 @@ public enum BaseResponseStatus {
     POST_COMMENT_EMPTY_CONTENT(false, 2501,"댓글을 입력해주세요."),
 
     POST_SCHOLARSHIP_EMPTY_NAME(false, 2352,"장학금 이름을 입력해주세요."),
+
     PATCH_COMMENT_FAIL(false,2502,"댓글 수정에 실패했습니다."),
 
     DELETE_COMMENT_FAIL(false,2503,"댓글 삭제에 실패하였습니다."),

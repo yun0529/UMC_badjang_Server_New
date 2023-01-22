@@ -30,4 +30,5 @@ public class GetScholarshipRes {
     private String scholarship_province;
     private String scholarship_city;
     private String scholarship_category;
+
 }

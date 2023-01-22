@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+
 
 //Provider : Read의 비즈니스 로직 처리
 @Service    // [Business Layer에서 Service를 명시하기 위해서 사용] 비즈니스 로직이나 respository layer 호출하는 함수에 사용된다.
@@ -22,7 +24,6 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
  * dao를 호출하여 DB CRUD를 처리 후 Controller로 반환
  */
 public class ScholarshipProvider {
-
 
     // *********************** 동작에 있어 필요한 요소들을 불러옵니다. *************************
     private final ScholarshipDao scholarshipDao;
@@ -37,7 +38,8 @@ public class ScholarshipProvider {
 
 
 
-    // 해당 filter에 맞는 User들의 정보 조회
+
+    // 해당 filter에 맞는 장학금들의 정보 조회
     public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) throws BaseException {
         try {
             List<GetScholarshipRes> getScholarshipsRes = scholarshipDao.getScholarshipsByFilter(category, filter, order);
@@ -46,6 +48,7 @@ public class ScholarshipProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
 
 
     // 해당 userIdx를 갖는 User의 정보 조회
@@ -57,6 +60,7 @@ public class ScholarshipProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
 
     // 해당 장학금 인덱스가 Scholarship Table에 존재하는지 확인
     public int checkScholarshipIdx(long scholarshipidx) throws BaseException {

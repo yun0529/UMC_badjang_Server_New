@@ -1,6 +1,7 @@
 package com.example.demo.src.scholarship;
 
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
+
 import com.example.demo.src.scholarship.model.PostScholarshipReq;
 import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.sql.DataSource;
 import java.util.List;
+
 
 @Repository //  [Persistence Layer에서 DAO를 명시하기 위해 사용]
 
@@ -29,7 +31,6 @@ public class ScholarshipDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     // ******************************************************************************
-
 
     // 장학금 조회수 1증가
     public int increaseScholarshipView(long scholarshipIdx) {
@@ -82,6 +83,7 @@ public class ScholarshipDao {
 
 
         return this.jdbcTemplate.query(getScholarshipsByFilterQuery,
+
                 (rs, rowNum) -> new GetScholarshipRes(
                         rs.getLong("scholarship_idx"),
                         rs.getString("scholarship_name"),
@@ -124,6 +126,7 @@ public class ScholarshipDao {
                         rs.getInt("scholarship_comment"),
                         rs.getString("scholarship_scale"),
                         rs.getString("scholarship_term"),
+
                         rs.getString("scholarship_presentation"),
                         rs.getString("scholarship_createAt"),
                         rs.getString("scholarship_updateAt"),
@@ -189,5 +192,4 @@ public class ScholarshipDao {
         String lastInsertIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값은 가져온다.
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, long.class); // 해당 쿼리문의 결과 마지막으로 삽인된 장학금의 Idx번호를 반환한다.
     }
-
 }

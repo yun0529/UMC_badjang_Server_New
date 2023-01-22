@@ -33,10 +33,10 @@ public class ScholarshipController {
     private final ScholarshipService scholarshipService;
 
     public ScholarshipController(ScholarshipProvider scholarshipProvider, ScholarshipService scholarshipService) {
+
         this.scholarshipProvider = scholarshipProvider;
         this.scholarshipService = scholarshipService;
     }
-
 
     /**
      * 필터에 맞는 장학금들 조회 API
@@ -113,7 +113,6 @@ public class ScholarshipController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
 
 }
 
