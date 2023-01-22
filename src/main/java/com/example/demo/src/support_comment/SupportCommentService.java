@@ -29,7 +29,7 @@ public class SupportCommentService {
      */
     public PostSupportCommentRes createSupportComment(PostSupportCommentReq postSupportCommentReq) throws BaseException {
         try {
-            long support_comment_idx = supportCommentDao.createSupportComment(postSupportCommentReq);
+            Integer support_comment_idx = supportCommentDao.createSupportComment(postSupportCommentReq);
             return new PostSupportCommentRes(support_comment_idx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

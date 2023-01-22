@@ -1,14 +1,13 @@
 package com.example.demo.src.user;
 
-
-import com.example.demo.src.user.model.*;
+import com.example.demo.src.user.model.GetUserRes;
+import com.example.demo.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Random;
 
 @Repository
 public class UserDao {
@@ -21,102 +20,55 @@ public class UserDao {
     }
 
     public List<GetUserRes> getUsers(){
-        String getUsersQuery = "SELECT User.userIdx, userNickName, userImageUrl, userBackgroundImageUrl, " +
-                "count(subscribeUserIdx) as subscribeCount, count(Video.userIdx) as videoCount, " +
-                "userComment, userAccount,userSubscribeAccess,userSavePlayListAccess, User.createdAt, " +
-                "sum(viewCount) as totalViews " +
-                "from YouTubeDB.User " +
-                "left join UserSubscribe on User.userIdx = UserSubscribe.subscribeUserIdx " +
-                "left join Video on User.userIdx = Video.userIdx " +
-                "left join VideoViewCount on Video.videoIdx = VideoViewCount.videoIdx " +
-                "group by User.userIdx ";
+        String getUsersQuery = "SELECT user_idx, user_email, user_name, user_birth, " +
+                "user_phone, user_reg " +
+                "FROM User";
         return this.jdbcTemplate.query(getUsersQuery,
-                (rs,rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
-                        rs.getString("userNickname"),
-                        rs.getString("userImageUrl"),
-                        rs.getString("userBackgroundImageUrl"),
-                        rs.getInt("subscribeCount"),
-                        rs.getInt("videoCount"),
-                        rs.getString("userComment"),
-                        rs.getString("userAccount"),
-                        rs.getString("userSubscribeAccess"),
-                        rs.getString("userSavePlayListAccess"),
-                        rs.getString("createdAt"),
-                        rs.getString("totalViews"))
+                (rs, rowNum) -> new GetUserRes(
+                        rs.getInt("user_idx"),
+                        rs.getString("user_email"),
+                        rs.getString("user_name"),
+                        rs.getString("user_birth"),
+                        rs.getString("user_phone"),
+                        rs.getDate("user_reg"))
                 );
     }
 
-    public List<GetUserRes> getUsersByEmail(int userIdx){
-        String getUsersByEmailQuery = "SELECT User.userIdx, userNickName, userImageUrl, userBackgroundImageUrl, " +
-                "count(subscribeUserIdx) as subscribeCount, count(Video.userIdx) as videoCount, " +
-                "userComment, userAccount,userSubscribeAccess,userSavePlayListAccess, User.createdAt, " +
-                "sum(viewCount) as totalViews " +
-                "from YouTubeDB.User " +
-                "left join UserSubscribe on User.userIdx = UserSubscribe.subscribeUserIdx " +
-                "left join Video on User.userIdx = Video.userIdx " +
-                "left join VideoViewCount on Video.videoIdx = VideoViewCount.videoIdx " +
-                "group by User.userIdx " +
-                "having User.userIdx = ?";
-        int getUsersByEmailParams = userIdx;
+    public List<GetUserRes> getUsersByEmail(String email) {
+        String getUsersByEmailQuery = "SELECT user_idx, user_email, user_name, user_birth, " +
+                "user_phone, user_reg FROM User WHERE user_email =?"; // 해당 이메일을 만족하는 유저를 조회하는 쿼리문
+        String getUsersByEmailParams = email;
         return this.jdbcTemplate.query(getUsersByEmailQuery,
                 (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
-                        rs.getString("userNickname"),
-                        rs.getString("userImageUrl"),
-                        rs.getString("userBackgroundImageUrl"),
-                        rs.getInt("subscribeCount"),
-                        rs.getInt("videoCount"),
-                        rs.getString("userComment"),
-                        rs.getString("userAccount"),
-                        rs.getString("userSubscribeAccess"),
-                        rs.getString("userSavePlayListAccess"),
-                        rs.getString("createdAt"),
-                        rs.getString("totalViews")),
+                        rs.getInt("user_idx"),
+                        rs.getString("user_email"),
+                        rs.getString("user_name"),
+                        rs.getString("user_birth"),
+                        rs.getString("user_phone"),
+                        rs.getDate("user_reg")),
                 getUsersByEmailParams);
     }
 
-    public int createUser(PostUserReq postUserReq){
-        String createUserQuery = "insert into User (userAccount, userPw, userImageUrl, userBackgroundImageUrl," +
-                " userNickname, userName, userComment, nationalityIdx, userPhoneNumber, userBirth, userGender, userSubscribeAccess, userSavePlayListAccess) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        Object[] createUserParams = new Object[]{postUserReq.getUserAccount(), postUserReq.getUserPw(), postUserReq.getUserImageUrl(),
-                postUserReq.getUserBackgroundImageUrl(), postUserReq.getUserNickname(), postUserReq.getUserName(), postUserReq.getUserComment(),
-                postUserReq.getNationalityIdx(), postUserReq.getUserPhoneNumber(), postUserReq.getUserBirth(), postUserReq.getUserGender(),
-                postUserReq.getUserSubscribeAccess(), postUserReq.getUserSavePlayListAccess()};
-        this.jdbcTemplate.update(createUserQuery, createUserParams);
-        String lastInserIdQuery = "select last_insert_id()";
-        return this.jdbcTemplate.queryForObject(lastInserIdQuery,int.class);
-    }
-
-    public int checkEmail(String userAccount){
-        String checkEmailQuery = "select exists(select userAccount from User where userAccount = ?)";
-        String checkEmailParams = userAccount;
+    public int checkEmail(String user_email) {
+        String checkEmailQuery = "select exists(select user_email from User where user_email = ?)";
+        String checkEmailParams = user_email;
         return this.jdbcTemplate.queryForObject(checkEmailQuery,
                 int.class,
                 checkEmailParams);
-
     }
 
-    public int modifyUserStatusLogIn(int userIdx){
-        String modifyUserNameQuery = "update User set status = ? where userIdx = ? ";
-        Object[] modifyUserNameParams = new Object[]{"Active", userIdx};
+    public int createUser(PostUserReq postUserReq) {
+        String createUserQuery = "INSERT INTO User (user_email, user_name, user_type, " +
+                "user_password, user_birth, user_phone, user_push_yn) " +
+                "VALUES (?,?,?,?,?,?,?)";
 
-        return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
-    }
+        Object[] createUserParams = new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
+                postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
+                postUserReq.getUser_phone(), postUserReq.getUser_push_yn()};
 
-    public User getPwd(PostLoginReq postLoginReq){
-        String getPwdQuery = "select userIdx, userNickname, userAccount,userPw,status from User where userAccount = ?";
-        String getPwdParams = postLoginReq.getUserAccount();
+        this.jdbcTemplate.update(createUserQuery, createUserParams);
+        String lastInsertIdQuery = "select last_insert_id()";
 
-        return this.jdbcTemplate.queryForObject(getPwdQuery,
-                (rs,rowNum)-> new User(
-                        rs.getInt("userIdx"),
-                        rs.getString("userNickname"),
-                        rs.getString("userAccount"),
-                        rs.getString("userPw"),
-                        rs.getString("status")
-                ), getPwdParams);
-
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 }

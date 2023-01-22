@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ScholarshipComment {
-    private Long scholarship_comment_idx;
-    private Long scholarship_idx;
-    private Long user_idx;
+    private Integer scholarship_comment_idx;
+    private Integer scholarship_idx;
+    private Integer user_idx;
     private String scholarship_comment_content;
 
 }

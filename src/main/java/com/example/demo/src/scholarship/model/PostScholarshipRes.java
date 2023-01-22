@@ -1,4 +1,4 @@
-package com.example.demo.src.user.model;
+package com.example.demo.src.scholarship.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostUserRes {
-    private int user_idx;
-    private String jwt;
+public class PostScholarshipRes {
+    private Long scholarship_idx;
 }

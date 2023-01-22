@@ -38,7 +38,7 @@ public class SupportCommentController {
      */
     @ResponseBody
     @GetMapping("")
-    public BaseResponse<List<GetSupportCommentRes>> getSupportComment(@RequestParam(required = true) Long support_idx) {
+    public BaseResponse<List<GetSupportCommentRes>> getSupportComment(@RequestParam(required = true) Integer support_idx) {
         try{
             List<GetSupportCommentRes> getSupportCommentRes = supportCommentProvider.getSupportComment(support_idx);
             return new BaseResponse<>(getSupportCommentRes);
@@ -60,8 +60,8 @@ public class SupportCommentController {
             return new BaseResponse<>(POST_COMMENT_EMPTY_CONTENT);
         }
         try {
-            Long userIdxByJwt = jwtService.getUserIdx();
-            Long user_idx = postSupportCommentReq.getUser_idx();
+            Integer userIdxByJwt = jwtService.getUserIdx();
+            Integer user_idx = postSupportCommentReq.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
@@ -80,10 +80,10 @@ public class SupportCommentController {
      */
     @ResponseBody
     @PatchMapping("/modify/{support_comment_idx}") // 게시글 작성자(userIdx)를 확인해서 맞으면 바꾸도록 할껀데 jwt토큰도 받아서 같이
-    public BaseResponse<String> modifySupportComment(@PathVariable("support_comment_idx") long support_comment_idx, @RequestBody SupportComment supportComment) {
+    public BaseResponse<String> modifySupportComment(@PathVariable("support_comment_idx") Integer support_comment_idx, @RequestBody SupportComment supportComment) {
         try {
-            Long userIdxByJwt = jwtService.getUserIdx(); // 토큰은 헤더에 있음
-            Long user_idx = supportComment.getUser_idx();
+            Integer userIdxByJwt = jwtService.getUserIdx(); // 토큰은 헤더에 있음
+            Integer user_idx = supportComment.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
@@ -109,11 +109,11 @@ public class SupportCommentController {
      */
     @ResponseBody
     @PatchMapping("/delete/{support_comment_idx}")
-    public BaseResponse<String> deleteSupportComment(@PathVariable("support_comment_idx") long support_comment_idx, @RequestBody SupportComment supportComment) {
+    public BaseResponse<String> deleteSupportComment(@PathVariable("support_comment_idx") Integer support_comment_idx, @RequestBody SupportComment supportComment) {
         try {
 
-            Long userIdxByJwt = jwtService.getUserIdx();
-            Long user_idx = supportComment.getUser_idx();
+            Integer userIdxByJwt = jwtService.getUserIdx();
+            Integer user_idx = supportComment.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);

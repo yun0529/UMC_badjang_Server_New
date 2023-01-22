@@ -24,26 +24,26 @@ public class ScholarshipCommentDao {
     /**
      * 댓글 작성 API
      */
-    public long createScholarshipComment(PostScholarshipCommentReq postScholarshipCommentReq) {
+    public Integer createScholarshipComment(PostScholarshipCommentReq postScholarshipCommentReq) {
         String createScholarshipCommentQuery = "insert into Scholarship_Comment(scholarship_idx, user_idx, scholarship_comment_content) VALUES (?,?,?)"; // 실행될 동적 쿼리문
         Object[] createScholarshipCommentParams = new Object[]{postScholarshipCommentReq.getScholarship_idx(), postScholarshipCommentReq.getUser_idx(), postScholarshipCommentReq.getScholarship_comment_content()}; // 동적 쿼리의 ?부분에 주입될 값
         this.jdbcTemplate.update(createScholarshipCommentQuery, createScholarshipCommentParams);
 
         String lastInsertIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값은 가져온다.
-        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, long.class); // 해당 쿼리문의 결과 마지막으로 삽인된 유저의 BoardIdx번호를 반환한다.
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Integer.class); // 해당 쿼리문의 결과 마지막으로 삽인된 유저의 BoardIdx번호를 반환한다.
     }
 
     /**
      * 댓글 조회 API
      */
-    public List<GetScholarshipCommentRes> getScholarshipComment(Long scholarship_idx) {
+    public List<GetScholarshipCommentRes> getScholarshipComment(Integer scholarship_idx) {
         String getScholarshipCommentQuery = "select * from Scholarship_Comment where scholarship_idx = ? and scholarship_comment_status = 'Y'";
-        Long getScholarshipCommentParams = scholarship_idx;
+        Integer getScholarshipCommentParams = scholarship_idx;
         return this.jdbcTemplate.query(getScholarshipCommentQuery,
                 (rs, rowNum) -> new GetScholarshipCommentRes(
-                        rs.getLong("scholarship_comment_idx"),
-                        rs.getLong("scholarship_idx"),
-                        rs.getLong("user_idx"),
+                        rs.getInt("scholarship_comment_idx"),
+                        rs.getInt("scholarship_idx"),
+                        rs.getInt("user_idx"),
                         rs.getString("scholarship_comment_content"),
                         rs.getString("scholarship_comment_updateAt")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getScholarshipCommentParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
