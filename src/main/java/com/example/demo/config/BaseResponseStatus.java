@@ -12,6 +12,7 @@ public enum BaseResponseStatus {
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
     DELETE_SEARCH_HISTORY_SUCCESS(true, 1200, "최근 검색어 삭제 요청을 성공하였습니다."),
+    POST_BOOKMARK_SUCCESS(true, 1201, "북마크 요청을 성공하였습니다."),
 
 
     /**
