@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class DeleteScholarshipCommentReq {
-    private Long scholarship_comment_idx;
+    private Integer scholarship_comment_idx;
 }

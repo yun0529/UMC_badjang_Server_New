@@ -26,7 +26,7 @@ public class ScholarshipCommentProvider {
     /**
      * 댓글 조회 API
      */
-    public List<GetScholarshipCommentRes> getScholarshipComment(Long scholarship_idx) throws BaseException {
+    public List<GetScholarshipCommentRes> getScholarshipComment(Integer scholarship_idx) throws BaseException {
         try {
             List<GetScholarshipCommentRes> getScholarshipCommentRes = scholarshipCommentDao.getScholarshipComment(scholarship_idx);
             return getScholarshipCommentRes;

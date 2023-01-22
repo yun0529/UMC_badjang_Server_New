@@ -29,7 +29,7 @@ public class ScholarshipCommentService {
      */
     public PostScholarshipCommentRes createScholarshipComment(PostScholarshipCommentReq postScholarshipCommentReq) throws BaseException {
         try {
-            long scholarship_comment_idx = scholarshipCommentDao.createScholarshipComment(postScholarshipCommentReq);
+            Integer scholarship_comment_idx = scholarshipCommentDao.createScholarshipComment(postScholarshipCommentReq);
             return new PostScholarshipCommentRes(scholarship_comment_idx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
