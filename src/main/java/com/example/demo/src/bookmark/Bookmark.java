@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Bookmark {
-    private Long Bookmark_idx;
+    private Long bookmark_idx;
     private Long post_idx;
     private Long user_idx;
     private Long scholarship_idx;
