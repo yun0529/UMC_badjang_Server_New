@@ -124,50 +124,52 @@ public class SearchDao {
         );
     }
 
-    public int saveCountQuery(long user_idx) {
+    public int saveCountQuery(long userIdx) {
         String saveCountQuery = "select count(search_history_query) FROM Search_History where user_idx =  ?";
-        long saveCountParams = user_idx;
+        long saveCountParams = userIdx;
 
         return this.jdbcTemplate.queryForObject(saveCountQuery, int.class, saveCountParams);
     }
-    public void saveQuery (String query) {
+
+    public void saveQuery (long userIdx, String query) {
 
         String saveQuery = "INSERT INTO Search_History (user_idx, search_history_query) " +
-        "SELECT * FROM (SELECT 1, ?) AS tmp " +
+        "SELECT * FROM (SELECT ?, ?) AS tmp " +
         "WHERE NOT EXISTS ( " +
-                "SELECT search_history_query FROM Search_History WHERE search_history_query = ? " +
+                "SELECT search_history_query FROM Search_History WHERE user_idx = ? and search_history_query = ? " +
         ") LIMIT 1 ";
 
-        String saveQueryParams = query;
+        long saveQueryParams1 = userIdx;
+        String saveQueryParams2 = query;
 
-        this.jdbcTemplate.update(saveQuery, saveQueryParams, saveQueryParams);
+        this.jdbcTemplate.update(saveQuery, saveQueryParams1, saveQueryParams2, saveQueryParams1, saveQueryParams2);
     }
 
-    public void deleteQuery (long user_idx) {
+    public void deleteQuery (long userIdx) {
 
         String deleteQuery = "DELETE FROM Search_History " +
             "where user_idx = ? " +
             "ORDER BY search_history_createAt " +
             "LIMIT 1 ";
-        long deleteQueryParams = user_idx;
+        long deleteQueryParams = userIdx;
 
         this.jdbcTemplate.update(deleteQuery, deleteQueryParams);
     }
 
-    public void postSearchHistory(String query) {
-        if (saveCountQuery(1) < 5) {
-            saveQuery(query);
+    public void postSearchHistory(long userIdx, String query) {
+        if (saveCountQuery(userIdx) < 5) {
+            saveQuery(userIdx, query);
         } else {
-            deleteQuery(1);
-            saveQuery(query);
+            deleteQuery(userIdx);
+            saveQuery(userIdx, query);
         }
     }
 
-    public List<GetSearchHistoryRes> searchHistory(long user_idx) {
+    public List<GetSearchHistoryRes> searchHistory(long userIdx) {
         String searchHistoryQuery = "select * " +
                 "from Search_History " +
                 "where user_idx = ? ";
-        long searchHistoryParams = user_idx;
+        long searchHistoryParams = userIdx;
 
         return this.jdbcTemplate.query(searchHistoryQuery,
                 (rs, rowNum) -> new GetSearchHistoryRes(

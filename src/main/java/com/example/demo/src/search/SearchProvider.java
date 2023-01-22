@@ -53,8 +53,8 @@ public class SearchProvider {
         }
     }
 
-    public void saveQuery(String query) {
-        searchDao.postSearchHistory(query);
+    public void saveQuery(long userIdx, String query) {
+        searchDao.postSearchHistory(userIdx, query);
     }
 
 //    public List<GetSearchAllRes> searchAll(String query) throws BaseException {
@@ -71,9 +71,9 @@ public class SearchProvider {
 //        }
 //    }
 
-    public List<GetSearchHistoryRes> searchHistory(long user_idx) throws BaseException {
+    public List<GetSearchHistoryRes> searchHistory(long userIdx) throws BaseException {
         try {
-            List<GetSearchHistoryRes> getSearchHistoryRes = searchDao.searchHistory(user_idx);
+            List<GetSearchHistoryRes> getSearchHistoryRes = searchDao.searchHistory(userIdx);
             return getSearchHistoryRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

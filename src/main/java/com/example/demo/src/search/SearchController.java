@@ -74,8 +74,9 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
+            long userIdx = jwtService.getUserIdx();
             List<GetSearchBoardRes> getSearchBoardRes = searchProvider.searchBoard(query);
-            searchProvider.saveQuery(query);
+            searchProvider.saveQuery(userIdx, query);
 
             return new BaseResponse<>(getSearchBoardRes);
         } catch (BaseException exception) {
@@ -93,8 +94,9 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
+            long userIdx = jwtService.getUserIdx();
             List<GetSearchScholarshipRes> getSearchScholarshipRes = searchProvider.searchScholarship(query);
-            searchProvider.saveQuery(query);
+            searchProvider.saveQuery(userIdx, query);
 
             return new BaseResponse<>(getSearchScholarshipRes);
         } catch (BaseException exception) {
@@ -112,8 +114,10 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
+            long userIdx = jwtService.getUserIdx();
+            System.out.println(userIdx);
             List<GetSearchSupportRes> getSearchSupportRes = searchProvider.searchSupport(query);
-            searchProvider.saveQuery(query);
+            searchProvider.saveQuery(userIdx, query);
 
             return new BaseResponse<>(getSearchSupportRes);
         } catch (BaseException exception) {
