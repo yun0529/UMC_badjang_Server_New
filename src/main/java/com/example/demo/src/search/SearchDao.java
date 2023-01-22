@@ -64,7 +64,18 @@ public class SearchDao {
                         rs.getInt("scholarship_comment"),
                         rs.getString("scholarship_scale"),
                         rs.getString("scholarship_term"),
-                        rs.getString("scholarship_presentation")
+                        rs.getString("scholarship_presentation"),
+                        rs.getString("scholarship_createAt"),
+                        rs.getString("scholarship_updateAt"),
+                        rs.getString("scholarship_status"),
+                        rs.getString("scholarship_univ"),
+                        rs.getString("scholarship_college"),
+                        rs.getString("scholarship_department"),
+                        rs.getString("scholarship_grade"),
+                        rs.getString("scholarship_semester"),
+                        rs.getString("scholarship_province"),
+                        rs.getString("scholarship_city"),
+                        rs.getString("scholarship_category")
                 ),
                 wrappedKeyword, wrappedKeyword, wrappedKeyword
         );

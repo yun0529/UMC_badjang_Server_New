@@ -19,4 +19,15 @@ public class GetSearchScholarshipRes {
     private String scholarship_scale;
     private String scholarship_term;
     private String scholarship_presentation;
+    private String scholarship_createAt;
+    private String scholarship_updateAt;
+    private String scholarship_status;
+    private String scholarship_univ;
+    private String scholarship_college;
+    private String scholarship_department;
+    private String scholarship_grade;
+    private String scholarship_semester;
+    private String scholarship_province;
+    private String scholarship_city;
+    private String scholarship_category;
 }

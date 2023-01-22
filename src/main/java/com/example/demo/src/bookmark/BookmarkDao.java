@@ -33,8 +33,8 @@ public class BookmarkDao {
 
         return this.jdbcTemplate.query(getBookmarkBoardQuery,
                 (rs, rowNum) -> new GetBookmarkBoardRes(
-                        rs.getLong("bookmark_idx"),
-                        rs.getLong("post_idx"),
+                        rs.getInt("bookmark_idx"),
+                        rs.getInt("post_idx"),
                         rs.getString("post_name"),
                         rs.getString("post_content"),
                         rs.getString("post_image"),
@@ -60,8 +60,8 @@ public class BookmarkDao {
 
         return this.jdbcTemplate.query(getBookmarkScholarshipQuery,
                 (rs, rowNum) -> new GetBookmarkScholarshipRes(
-                        rs.getLong("bookmark_idx"),
-                        rs.getLong("scholarship_idx"),
+                        rs.getInt("bookmark_idx"),
+                        rs.getInt("scholarship_idx"),
                         rs.getString("scholarship_name"),
                         rs.getString("scholarship_institution"),
                         rs.getString("scholarship_content"),
@@ -89,8 +89,8 @@ public class BookmarkDao {
 
         return this.jdbcTemplate.query(getAllBookmarksQuery,
                 (rs, rowNum) -> new GetBookmarkSupportRes(
-                        rs.getLong("bookmark_idx"),
-                        rs.getLong("support_idx"),
+                        rs.getInt("bookmark_idx"),
+                        rs.getInt("support_idx"),
                         rs.getString("support_policy"),
                         rs.getString("support_name"),
                         rs.getString("support_institution"),

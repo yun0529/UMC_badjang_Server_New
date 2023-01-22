@@ -25,7 +25,7 @@ public class BookmarkProvider {
     }
 
 
-    public GetBookmarkAllRes getBookmarkAll(long userIdx) throws BaseException {
+    public GetBookmarkAllRes getBookmarkAll(int userIdx) throws BaseException {
         try {
             List<GetBookmarkBoardRes> getBookmarkBoardRes = bookmarkDao.getBookmarkBoard(userIdx);
             List<GetBookmarkScholarshipRes> getBookmarkScholarshipRes = bookmarkDao.getBookmarkScholarship(userIdx);
@@ -39,7 +39,7 @@ public class BookmarkProvider {
         }
     }
 
-    public List<GetBookmarkBoardRes> getBookmarkBoard(long userIdx) throws BaseException {
+    public List<GetBookmarkBoardRes> getBookmarkBoard(int userIdx) throws BaseException {
         try {
             List<GetBookmarkBoardRes> getBookmarkBoardRes = bookmarkDao.getBookmarkBoard(userIdx);
             return getBookmarkBoardRes;
@@ -48,7 +48,7 @@ public class BookmarkProvider {
         }
     }
 
-    public List<GetBookmarkScholarshipRes> getBookmarkScholarship(long userIdx) throws BaseException {
+    public List<GetBookmarkScholarshipRes> getBookmarkScholarship(int userIdx) throws BaseException {
         try {
             List<GetBookmarkScholarshipRes> getBookmarkScholarshipRes = bookmarkDao.getBookmarkScholarship(userIdx);
             return getBookmarkScholarshipRes;
@@ -57,7 +57,7 @@ public class BookmarkProvider {
         }
     }
 
-    public List<GetBookmarkSupportRes> getBookmarkSupport(long userIdx) throws BaseException {
+    public List<GetBookmarkSupportRes> getBookmarkSupport(int userIdx) throws BaseException {
         try {
             List<GetBookmarkSupportRes> getBookmarkSupportRes = bookmarkDao.getBookmarkSupport(userIdx);
             return getBookmarkSupportRes;

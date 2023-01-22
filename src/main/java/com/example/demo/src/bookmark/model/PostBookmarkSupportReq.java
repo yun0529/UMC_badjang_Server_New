@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostBookmarkSupportReq {
-    private Long user_idx;
-    private Long support_idx;
+    private int user_idx;
+    private int support_idx;
 }

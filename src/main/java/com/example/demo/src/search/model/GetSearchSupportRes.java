@@ -20,4 +20,5 @@ public class GetSearchSupportRes {
     private String support_scale;
     private String support_term;
     private String support_presentation;
+
 }

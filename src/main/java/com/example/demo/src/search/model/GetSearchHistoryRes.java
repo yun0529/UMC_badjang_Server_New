@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GetSearchHistoryRes {
 
-    private Long search_history_idx;
-    private Long user_idx;
+    private int search_history_idx;
+    private int user_idx;
     private String search_history_query;
 }

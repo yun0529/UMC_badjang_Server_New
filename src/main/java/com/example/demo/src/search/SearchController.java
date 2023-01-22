@@ -39,7 +39,7 @@ public class SearchController {
     public BaseResponse<List<GetSearchHistoryRes>> searchHistory() {
 
         try {
-            Long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             List<GetSearchHistoryRes> getSearchHistoryRes = searchProvider.searchHistory(userIdx);
             return new BaseResponse<>(getSearchHistoryRes);
 
@@ -51,9 +51,9 @@ public class SearchController {
 
     @ResponseBody
     @DeleteMapping("/search/delete/{searchHistoryIdx}")
-    public BaseResponse<String> deleteSearchHistory(@PathVariable long searchHistoryIdx) {
+    public BaseResponse<String> deleteSearchHistory(@PathVariable int searchHistoryIdx) {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             DeleteSearchHistoryReq deleteSearchHistoryReq = new DeleteSearchHistoryReq(userIdx, searchHistoryIdx);
             searchService.deleteSearchHistory(deleteSearchHistoryReq);
 
@@ -73,7 +73,7 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             GetSearchAllRes getSearchAllRes = searchProvider.searchAll(query);
             searchProvider.saveQuery(userIdx, query);
 
@@ -114,7 +114,7 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             List<GetSearchScholarshipRes> getSearchScholarshipRes = searchProvider.searchScholarship(query);
             searchProvider.saveQuery(userIdx, query);
 
@@ -134,7 +134,7 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             System.out.println(userIdx);
             List<GetSearchSupportRes> getSearchSupportRes = searchProvider.searchSupport(query);
             searchProvider.saveQuery(userIdx, query);

@@ -72,7 +72,7 @@ public class SearchProvider {
         }
     }
 
-    public List<GetSearchHistoryRes> searchHistory(long userIdx) throws BaseException {
+    public List<GetSearchHistoryRes> searchHistory(int userIdx) throws BaseException {
         try {
             List<GetSearchHistoryRes> getSearchHistoryRes = searchDao.searchHistory(userIdx);
             return getSearchHistoryRes;
