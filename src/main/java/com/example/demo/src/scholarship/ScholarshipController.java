@@ -5,15 +5,23 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
 import com.example.demo.src.scholarship.model.PostScholarshipReq;
 import com.example.demo.src.scholarship.model.PostScholarshipRes;
+
+import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
+import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentRes;
+import com.example.demo.src.user.model.PostUserRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.POST_SCHOLARSHIP_EMPTY_NAME;
-import static com.example.demo.config.BaseResponseStatus.SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX;
+
+import static com.example.demo.config.BaseResponseStatus.*;
+
 
 @RestController
 @RequestMapping("/scholarships")

@@ -1,14 +1,15 @@
 package com.example.demo.src.menu;
 
-import com.example.demo.src.menu.model.GetPopularRes;
-import com.example.demo.src.menu.model.GetSchoolRes;
-import com.example.demo.src.menu.model.GetTotalRes;
+
+import com.example.demo.config.BaseException;
+import com.example.demo.src.menu.model.*;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository

@@ -59,6 +59,9 @@ public enum BaseResponseStatus {
 
 
 
+
+
+
     SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 값이 존재하지 않습니다."),
 
     /**
