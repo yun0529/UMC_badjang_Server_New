@@ -63,6 +63,26 @@ public class SearchController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("/search/all")
+    public BaseResponse<GetSearchAllRes> searchAll(@RequestParam(value="query") String query) {
+        try {
+            if (query == null || query.equals("")) {
+                return new BaseResponse<>(REQUEST_ERROR);
+            }
+            if (query.length() > 50) {
+                return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
+            }
+            long userIdx = jwtService.getUserIdx();
+            GetSearchAllRes getSearchAllRes = searchProvider.searchAll(query);
+            searchProvider.saveQuery(userIdx, query);
+
+            return new BaseResponse<>(getSearchAllRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
     @ResponseBody
     @GetMapping("/search/board")
