@@ -20,32 +20,6 @@ public class SearchDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
-//    public List<GetSearchAllRes> searchAll(String query) {
-//        String searchQuery = "SELECT Scholarship_name as 'name', Scholarship_content as 'content', Scholarship_view as 'view' " +
-//                "FROM Scholarship " +
-//                "WHERE Scholarship_name like ? " +
-//                "or Scholarship_content like ? " +
-//                "UNION ALL " +
-//                "select Support_name, Support_content, Support_view " +
-//                "from Support " +
-//                "where Support_name like ? " +
-//                "or Support_content like ? " +
-//                "order by 'view' desc";
-//        String wrappedKeyword = "%" + query + "%";
-//
-//        return this.jdbcTemplate.query(searchQuery,
-//                (rs, rowNum) -> new GetSearchAllRes(
-//                        rs.getString("name"),
-//                        rs.getString("content"),
-//                        rs.getInt("view")
-//                ),
-//                wrappedKeyword, wrappedKeyword, wrappedKeyword, wrappedKeyword
-//        );
-//    }
-
-
-
     public List<GetSearchBoardRes> searchBoard(String query) {
         String searchQuery = "select * " +
                 "from Board " +
