@@ -1,9 +1,7 @@
 package com.example.demo.src.search;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.search.model.GetSearchBoardRes;
-import com.example.demo.src.search.model.GetSearchScholarshipRes;
-import com.example.demo.src.search.model.GetSearchSupportRes;
+import com.example.demo.src.search.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +53,10 @@ public class SearchProvider {
         }
     }
 
+    public void saveQuery(String query) {
+        searchDao.postSearchHistory(query);
+    }
+
 //    public List<GetSearchAllRes> searchAll(String query) throws BaseException {
 //        try {
 //            List<GetSearchBoardRes> getSearchBoardRes = searchDao.searchBoard(query);
@@ -69,5 +71,13 @@ public class SearchProvider {
 //        }
 //    }
 
+    public List<GetSearchHistoryRes> searchHistory(long user_idx) throws BaseException {
+        try {
+            List<GetSearchHistoryRes> getSearchHistoryRes = searchDao.searchHistory(user_idx);
+            return getSearchHistoryRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }

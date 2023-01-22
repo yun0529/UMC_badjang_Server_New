@@ -2,21 +2,18 @@ package com.example.demo.src.search;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.search.model.GetSearchBoardRes;
-import com.example.demo.src.search.model.GetSearchScholarshipRes;
-import com.example.demo.src.search.model.GetSearchSupportRes;
+import com.example.demo.src.search.model.*;
+import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.GET_SEARCH_EMPTY_QUERY;
-import static com.example.demo.config.BaseResponseStatus.GET_SEARCH_INVALID_QUERY;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
 public class SearchController {
@@ -26,23 +23,45 @@ public class SearchController {
     @Autowired
     private final SearchProvider searchProvider;
 
-    public SearchController(SearchProvider searchProvider) {
+    @Autowired
+    private final SearchService searchService;
+
+    private final JwtService jwtService;
+
+    public SearchController(SearchProvider searchProvider, SearchService searchService, JwtService jwtService) {
         this.searchProvider = searchProvider;
+        this.searchService = searchService;
+        this.jwtService = jwtService;
     }
 
-//    @ResponseBody
-//    @GetMapping("/search")
-//    public BaseResponse<List<GetSearchAllRes>> searchAll(@RequestParam(value="query") String query) {
-//        try {
-//            if (query == null || query.equals("")) {
-//                return new BaseResponse<>(REQUEST_ERROR);
-//            }
-//            List<GetSearchAllRes> getSearchAllRes = searchProvider.searchAll(query);
-//            return new BaseResponse<>(getSearchAllRes);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
+    @ResponseBody
+    @GetMapping("/search")
+    public BaseResponse<List<GetSearchHistoryRes>> searchHistory() {
+
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            List<GetSearchHistoryRes> getSearchHistoryRes = searchProvider.searchHistory(userIdx);
+            return new BaseResponse<>(getSearchHistoryRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    @ResponseBody
+    @DeleteMapping("/search/delete/{searchHistoryIdx}")
+    public BaseResponse<String> deleteSearchHistory(@PathVariable long searchHistoryIdx) {
+        try {
+            long userIdx = jwtService.getUserIdx();
+            DeleteSearchHistoryReq deleteSearchHistoryReq = new DeleteSearchHistoryReq(userIdx, searchHistoryIdx);
+            searchService.deleteSearchHistory(deleteSearchHistoryReq);
+
+            return new BaseResponse<>(DELETE_SEARCH_HISTORY_SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 
     @ResponseBody
@@ -56,6 +75,8 @@ public class SearchController {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
             List<GetSearchBoardRes> getSearchBoardRes = searchProvider.searchBoard(query);
+            searchProvider.saveQuery(query);
+
             return new BaseResponse<>(getSearchBoardRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -73,6 +94,8 @@ public class SearchController {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
             List<GetSearchScholarshipRes> getSearchScholarshipRes = searchProvider.searchScholarship(query);
+            searchProvider.saveQuery(query);
+
             return new BaseResponse<>(getSearchScholarshipRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -90,6 +113,8 @@ public class SearchController {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
             List<GetSearchSupportRes> getSearchSupportRes = searchProvider.searchSupport(query);
+            searchProvider.saveQuery(query);
+
             return new BaseResponse<>(getSearchSupportRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
