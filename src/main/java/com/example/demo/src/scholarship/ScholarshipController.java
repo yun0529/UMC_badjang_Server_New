@@ -5,6 +5,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
 import com.example.demo.src.scholarship.model.PostScholarshipReq;
 import com.example.demo.src.scholarship.model.PostScholarshipRes;
+
 import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
 import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentRes;
 import com.example.demo.src.user.model.PostUserRes;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.print.Pageable;
 import java.util.List;
 
+
 import static com.example.demo.config.BaseResponseStatus.*;
+
 
 @RestController
 @RequestMapping("/scholarships")
