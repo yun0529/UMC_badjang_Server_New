@@ -11,8 +11,8 @@ public enum BaseResponseStatus {
      * 1000 : 요청 성공
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
-    DELETE_SEARCH_HISTORY_SUCCESS(true, 1200, "최근 검색어 삭제 요청을 성공하였습니다."),
-    POST_BOOKMARK_SUCCESS(true, 1201, "북마크 요청을 성공하였습니다."),
+    DELETE_SEARCH_HISTORY_SUCCESS(true, 1250, "최근 검색어 삭제 요청을 성공하였습니다."),
+    POST_BOOKMARK_SUCCESS(true, 1251, "북마크 요청을 성공하였습니다."),
 
 
     /**
@@ -45,11 +45,11 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_PHONE(false, 2060, "전화번호를 입력해주세요."),
     POST_USERS_INVALID_PHONE(false, 2061, "전화번호 형식에 맞게 입력해주세요."),
 
-    GET_SEARCH_EMPTY_QUERY(false, 2200, "검색어를 입력해주세요."),
+    GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
 
-    GET_SEARCH_INVALID_QUERY(false, 2201, "검색어는 50자 내로 입력해주세요."),
+    GET_SEARCH_INVALID_QUERY(false, 2251, "검색어는 50자 내로 입력해주세요."),
 
-    DELETE_SEARCH_HISTORY_FAIL(true, 1200, "최근 검색어 삭제를 실패하였습니다."),
+    DELETE_SEARCH_HISTORY_FAIL(true, 2252, "최근 검색어 삭제를 실패하였습니다."),
 
 
     POST_COMMENT_EMPTY_CONTENT(false, 2501,"댓글을 입력해주세요."),
