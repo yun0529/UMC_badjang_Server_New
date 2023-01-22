@@ -46,6 +46,18 @@ public class BookmarkController {
         this.bookmarkService = bookmarkService;
     }
 
+    @ResponseBody
+    @GetMapping("/bookmark")
+    public BaseResponse<GetBookmarkAllRes> getBookmarkAll() {
+        try {
+            long userIdx = jwtService.getUserIdx();
+            GetBookmarkAllRes getBookmarkAllRes = bookmarkProvider.getBookmarkAll(userIdx);
+
+            return new BaseResponse<>(getBookmarkAllRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     @ResponseBody
     @GetMapping("/bookmark/board")

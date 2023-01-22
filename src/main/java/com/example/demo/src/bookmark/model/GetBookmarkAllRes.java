@@ -15,5 +15,5 @@ import java.util.List;
 public class GetBookmarkAllRes {
     private List<GetBookmarkBoardRes> getBookmarkBoardRes;
     private List<GetBookmarkScholarshipRes> getBookmarkScholarshipRes;
-//    private GetBookmarkSupportRes getBookmarkSupportRes;
+    private List<GetBookmarkSupportRes> getBookmarkSupportRes;
 }

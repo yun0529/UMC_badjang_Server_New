@@ -25,14 +25,19 @@ public class BookmarkProvider {
     }
 
 
-//    public List<GetBookmarkAllRes> getBookmarkAll(long userIdx) throws BaseException {
-//        try {
-//            List<GetBookmarkAllRes> getBookmarkRes = bookmarkDao.getBookmarkAll(userIdx);
-//            return getBookmarkRes;
-//        } catch (Exception exception) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
-//    }
+    public GetBookmarkAllRes getBookmarkAll(long userIdx) throws BaseException {
+        try {
+            List<GetBookmarkBoardRes> getBookmarkBoardRes = bookmarkDao.getBookmarkBoard(userIdx);
+            List<GetBookmarkScholarshipRes> getBookmarkScholarshipRes = bookmarkDao.getBookmarkScholarship(userIdx);
+            List<GetBookmarkSupportRes> getBookmarkSupportRes = bookmarkDao.getBookmarkSupport(userIdx);
+
+            GetBookmarkAllRes getBookmarkAllRes = new GetBookmarkAllRes(getBookmarkBoardRes, getBookmarkScholarshipRes, getBookmarkSupportRes);
+
+            return getBookmarkAllRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
     public List<GetBookmarkBoardRes> getBookmarkBoard(long userIdx) throws BaseException {
         try {
