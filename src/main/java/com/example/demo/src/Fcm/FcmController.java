@@ -1,5 +1,9 @@
+
+/*
 package com.example.demo.src.Fcm;
 
+import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,22 +12,37 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+import static com.example.demo.config.BaseResponseStatus.POST_USERS_INVALID_EMAIL;
+import static com.example.demo.config.BaseResponseStatus.POST_USERS_INVALID_PHONE;
+import static com.example.demo.utils.ValidationRegex.isRegexEmail;
+import static com.example.demo.utils.ValidationRegex.isRegexPhone;
+
 @RestController
 @RequiredArgsConstructor
 public class FcmController {
 
     private final FcmService fcmservice;
 
-    @PostMapping("/api/fcm")
-    public ResponseEntity pushMessage(@RequestBody RequestDTO requestDTO) throws IOException {
+    @PostMapping("/fcm")
+    public ResponseEntity pushMessage(@RequestBody RequestDTO requestDTO) throws IOException, BaseException {
         System.out.println(requestDTO.getTargetToken());
+        //휴대폰, 이메일 형식적 validation
+        if(!isRegexPhone(requestDTO.getUser_phone())){
+            throw new BaseException(POST_USERS_INVALID_PHONE);
+        }
+        if(!isRegexEmail(requestDTO.getUser_email())){
+            throw new BaseException(POST_USERS_INVALID_EMAIL);
+        }
 
         fcmservice.sendMessageTo(
+                requestDTO.getUser_phone(),
                 requestDTO.getTargetToken()
         );
         return ResponseEntity.ok().build();
     }
 }
+*/
+
 /*import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -65,4 +84,6 @@ public class FcmController {
         return response;
     }
 }*/
+
+
 

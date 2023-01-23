@@ -1,3 +1,4 @@
+/*
 package com.example.demo.src.Fcm;
 
 import lombok.AllArgsConstructor;
@@ -28,4 +29,5 @@ public class FcmMessage {
             private String image;
         }
 }
+*/
 

@@ -1,5 +1,7 @@
+/*
 package com.example.demo.src.Fcm;
 
+import com.example.demo.config.BaseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -9,19 +11,39 @@ import org.springframework.boot.json.JsonParseException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
+import static com.example.demo.config.BaseResponseStatus.*;
+@Service
 @Component
 @RequiredArgsConstructor
 public class FcmService {
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/badjang-ea2ea/messages:send";
+    private final FcmDao fcmDao;
     private final ObjectMapper objectMapper;
+
+    //클래스의 인스턴스를 만들지 않고 '정적'클래스를 사용하려고하는 초보자에게 매우 흔한 오류
+
+    private final String API_URL = "https://fcm.googleapis.com/v1/projects/badjang-ea2ea/messages:send";
+
     //매개변수로 전달받은 targetToken에 해당하는 device로 fcm푸시알림을 전소요청
     //target토는의 경우 fcm을 이요해 front를 구현할때 얻을 수 있다.
-    public void sendMessageTo(String targetToken) throws IOException {
+    public int checkUserPhone(String user_phone) throws BaseException {
+        try{
+            return fcmDao.checkUserPhone(user_phone);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    //존재하는 회원인지 의미적 VALIDATION
+    public void sendMessageTo(String user_phone, String targetToken) throws IOException, BaseException {
+        if(checkUserPhone(user_phone) == 0) {
+            throw new BaseException(NON_EXISTENT_PHONENUMBER);
+        }
+
         Random rand  = new Random();
         String numStr = "";
         for(int i=0; i<4; i++) {
@@ -75,3 +97,4 @@ public class FcmService {
         return googleCredentials.getAccessToken().getTokenValue(); //토큰값을 최종적으로 얻어옵니다
     }
 }
+*/

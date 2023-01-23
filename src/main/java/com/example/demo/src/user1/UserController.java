@@ -1,8 +1,10 @@
-package com.example.demo.src.user;
+package com.example.demo.src.user1;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.user.model.*;
+import com.example.demo.src.user1.model.GetUserRes;
+import com.example.demo.src.user1.model.PostLoginReq;
+import com.example.demo.src.user1.model.PostLoginRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.config.BaseResponseStatus.POST_USERS_EMPTY_PW;
-import static com.example.demo.utils.ValidationRegex.*;
+import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 
 @RestController

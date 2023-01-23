@@ -1,4 +1,4 @@
-/*
+package com.example.demo.src.user1.model;/*
 package com.example.demo.src.user.model;
 
 import lombok.*;
