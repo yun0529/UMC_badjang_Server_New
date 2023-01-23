@@ -49,7 +49,7 @@ public class JwtService {
     @return int
     @throws BaseException
      */
-    public Integer getUserIdx() throws BaseException{
+    public int getUserIdx() throws BaseException{
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){

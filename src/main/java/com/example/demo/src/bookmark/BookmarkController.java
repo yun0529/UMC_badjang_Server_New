@@ -46,6 +46,10 @@ public class BookmarkController {
         this.bookmarkService = bookmarkService;
     }
 
+    /**
+     * 즐겨찾기 조회
+     * [GET] /bookmark
+     */
     @ResponseBody
     @GetMapping("/bookmark")
     public BaseResponse<GetBookmarkAllRes> getBookmarkAll() {
@@ -59,6 +63,10 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 조회(게시판만)
+     * [GET] /bookmark/board
+     */
     @ResponseBody
     @GetMapping("/bookmark/board")
     public BaseResponse<List<GetBookmarkBoardRes>> getBookmarkBoard() {
@@ -72,6 +80,10 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 조회(장학금만)
+     * [GET] /bookmark/scholarship
+     */
     @ResponseBody
     @GetMapping("/bookmark/scholarship")
     public BaseResponse<List<GetBookmarkScholarshipRes>> getBookmarkScholarship() {
@@ -85,6 +97,10 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 조회(지원금만)
+     * [GET] /bookmark/support
+     */
     @ResponseBody
     @GetMapping("/bookmark/support")
     public BaseResponse<List<GetBookmarkSupportRes>> getBookmarkSupport() {
@@ -98,6 +114,10 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 장학금 즐겨찾기 추가
+     * [POST] /scholarships/:scholarshipIdx/bookmark
+     */
     @PostMapping("/scholarships/{scholarshipIdx}/bookmark")
     public BaseResponse<String> postBookmarkScholarship(@PathVariable("scholarshipIdx") int scholarshipIdx) throws BaseException {
         try {
@@ -111,6 +131,10 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 지원금 즐겨찾기 추가
+     * [POST] /supports/:supportIdx/bookmark
+     */
     @PostMapping("/supports/{supportIdx}/bookmark")
     public BaseResponse<String> postBookmarkSupport(@PathVariable("supportIdx") int supportIdx) throws BaseException {
         try {

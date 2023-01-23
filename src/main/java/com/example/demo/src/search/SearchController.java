@@ -34,6 +34,10 @@ public class SearchController {
         this.jwtService = jwtService;
     }
 
+    /**
+     * 최근 검색어 API
+     * [GET] /search
+     */
     @ResponseBody
     @GetMapping("/search")
     public BaseResponse<List<GetSearchHistoryRes>> searchHistory() {
@@ -49,6 +53,10 @@ public class SearchController {
 
     }
 
+    /**
+     * 최근 검색어 삭제 API
+     * [DELETE] /search/delete/:searchHistoryIdx
+     */
     @ResponseBody
     @DeleteMapping("/search/delete/{searchHistoryIdx}")
     public BaseResponse<String> deleteSearchHistory(@PathVariable int searchHistoryIdx) {
@@ -63,6 +71,10 @@ public class SearchController {
         }
     }
 
+    /**
+     * 전체 검색
+     * [GET] /search/all
+     */
     @ResponseBody
     @GetMapping("/search/all")
     public BaseResponse<GetSearchAllRes> searchAll(@RequestParam(value="query") String query) {
@@ -84,6 +96,10 @@ public class SearchController {
     }
 
 
+    /**
+     * 게시판 검색
+     * [GET] /search/board
+     */
     @ResponseBody
     @GetMapping("/search/board")
     public BaseResponse<List<GetSearchBoardRes>> searchBoard(@RequestParam(value="query") String query) {
@@ -104,6 +120,10 @@ public class SearchController {
         }
     }
 
+    /**
+     * 장학금 검색
+     * [GET] /search/scholarship
+     */
     @ResponseBody
     @GetMapping("/search/scholarship")
     public BaseResponse<List<GetSearchScholarshipRes>> searchScholarship(@RequestParam(value="query") String query) {
@@ -124,6 +144,10 @@ public class SearchController {
         }
     }
 
+    /**
+     * 지원금 검색
+     * [GET] /search/support
+     */
     @ResponseBody
     @GetMapping("/search/support")
     public BaseResponse<List<GetSearchSupportRes>> searchSupport(@RequestParam(value="query") String query) {

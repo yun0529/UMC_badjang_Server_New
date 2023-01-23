@@ -15,11 +15,12 @@ public class SearchDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired //readme 참고
+    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //게시판 검색
     public List<GetSearchBoardRes> searchBoard(String query) {
         String searchQuery = "select * " +
                 "from Board " +
@@ -30,7 +31,7 @@ public class SearchDao {
 
         return this.jdbcTemplate.query(searchQuery,
                 (rs, rowNum) -> new GetSearchBoardRes(
-                        rs.getLong("post_idx"),
+                        rs.getInt("post_idx"),
                         rs.getString("post_name"),
                         rs.getString("post_content"),
                         rs.getString("post_image"),
@@ -43,6 +44,7 @@ public class SearchDao {
         );
     }
 
+    //장학금 검색
     public List<GetSearchScholarshipRes> searchScholarship(String query) {
         String searchQuery = "select * " +
                 "from Scholarship " +
@@ -81,6 +83,7 @@ public class SearchDao {
         );
     }
 
+    //지원금 검색
     public List<GetSearchSupportRes> searchSupport(String query) {
         String searchQuery = "select * " +
                 "from Support " +
@@ -116,6 +119,7 @@ public class SearchDao {
         return this.jdbcTemplate.queryForObject(saveCountQuery, int.class, saveCountParams);
     }
 
+    //같은 유저가 이전과 동일한 검색어로 검색했을 경우 중복된 검색어를 제외하고 저장
     public void saveQuery (long userIdx, String query) {
 
         String saveQuery = "INSERT INTO Search_History (user_idx, search_history_query) " +
@@ -141,6 +145,7 @@ public class SearchDao {
         this.jdbcTemplate.update(deleteQuery, deleteQueryParams);
     }
 
+    //저장된 최근 검색어가 5개보다 작을 경우, 저장만 하고 5개보다 많을 경우 가장 오래된 검색어를 삭제 후 저장
     public void postSearchHistory(long userIdx, String query) {
         if (saveCountQuery(userIdx) < 5) {
             saveQuery(userIdx, query);
@@ -150,6 +155,7 @@ public class SearchDao {
         }
     }
 
+    //최근 검색어 조회
     public List<GetSearchHistoryRes> searchHistory(long userIdx) {
         String searchHistoryQuery = "select * " +
                 "from Search_History " +
@@ -158,14 +164,15 @@ public class SearchDao {
 
         return this.jdbcTemplate.query(searchHistoryQuery,
                 (rs, rowNum) -> new GetSearchHistoryRes(
-                        rs.getLong("search_history_idx"),
-                        rs.getLong("user_idx"),
+                        rs.getInt("search_history_idx"),
+                        rs.getInt("user_idx"),
                         rs.getString("search_history_query")
                 ),
                 searchHistoryParams
         );
     }
 
+    //최근 검색어 삭제
     public int deleteHistoryQuery(DeleteSearchHistoryReq deleteSearchHistoryReq) {
         String deleteQuery = "DELETE FROM Search_History " +
                 "where user_idx = ? " +
