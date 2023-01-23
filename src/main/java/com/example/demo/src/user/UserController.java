@@ -126,7 +126,7 @@ public class UserController {
             int user_idx_JWT = jwtService.getUserIdx();
             int user_idx = postInfoReq.getUser_idx();
 
-            if(user_idx != user_idx_JWT) {
+            if (user_idx != user_idx_JWT) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
@@ -134,6 +134,8 @@ public class UserController {
             return new BaseResponse<>("정보가 저장되었습니다.");
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 
 
