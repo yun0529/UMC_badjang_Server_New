@@ -16,4 +16,11 @@ public class ValidationRegex {
         Matcher matcher = pattern.matcher(target);
         return matcher.find();
     }
+
+    public static boolean isRegexPhone(String target) {
+        String regex = "^01([0|1])([0-9]{8})";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(target);
+        return matcher.find();
+    }
 }
