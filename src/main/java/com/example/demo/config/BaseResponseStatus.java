@@ -60,8 +60,6 @@ public enum BaseResponseStatus {
 
 
 
-
-
     SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 값이 존재하지 않습니다."),
 
     /**
@@ -75,7 +73,8 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
 
     FAILED_TO_LOGIN_STATUS(false,3015,"이미 로그인된 아이디입니다."),
-
+    NON_EXISTENT_EMAIL(false, 3101, "존재하지 않는 이메일입니다."),
+    NON_EXISTENT_PHONENUMBER(false, 3102, "존재하지 않는 번호입니다."),
 
     /**
      * 4000 : Database, Server 오류
@@ -85,7 +84,7 @@ public enum BaseResponseStatus {
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
-
+    MODIFY_FAIL_USERPASSWORD(false,4100,"유저 비밀번호 변경 실패"),
     INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요

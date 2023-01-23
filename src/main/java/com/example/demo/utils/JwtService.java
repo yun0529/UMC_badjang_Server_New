@@ -1,6 +1,5 @@
 package com.example.demo.utils;
 
-
 import com.example.demo.config.BaseException;
 import com.example.demo.config.secret.Secret;
 import io.jsonwebtoken.Claims;
@@ -14,8 +13,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-import static com.example.demo.config.BaseResponseStatus.EMPTY_JWT;
-import static com.example.demo.config.BaseResponseStatus.INVALID_JWT;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class JwtService {
@@ -25,11 +23,11 @@ public class JwtService {
     @param userIdx
     @return String
      */
-    public String createJwt(int userIdx){
+    public String createJwt(int user_idx){
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam("type","jwt")
-                .claim("userIdx",userIdx)
+                .claim("user_idx",user_idx)
                 .setIssuedAt(now)
                 .setExpiration(new Date(System.currentTimeMillis()+1*(1000*60*60*24*365)))
                 .signWith(SignatureAlgorithm.HS256, Secret.JWT_SECRET_KEY)
@@ -50,7 +48,7 @@ public class JwtService {
     @return int
     @throws BaseException
      */
-    public Integer getUserIdx() throws BaseException{
+    public int getUser_idx() throws BaseException{
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){
@@ -68,7 +66,7 @@ public class JwtService {
         }
 
         // 3. userIdx 추출
-        return claims.getBody().get("userIdx",Integer.class);
+        return claims.getBody().get("user_idx",Integer.class);
     }
 
 }
