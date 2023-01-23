@@ -1,6 +1,7 @@
 package com.example.demo.src.user;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.user.model.PostInfoReq;
 import com.example.demo.src.user.model.PatchUserReq;
 import com.example.demo.src.user.model.PostUserReq;
 import com.example.demo.src.user.model.PostUserRes;
@@ -63,6 +64,14 @@ public class UserService {
             return new PostUserRes(user_idx, jwt);
 
         } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void saveUserUnivInfo(PostInfoReq postInfoReq) throws BaseException {
+        try {
+            userDao.saveUserUnivInfo(postInfoReq);
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

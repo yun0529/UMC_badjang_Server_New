@@ -111,6 +111,29 @@ public class UserController {
         }
     }
 
+    /**
+     * 학교, 지역 정보 저장 API
+     * [POST] /users/info
+     *
+     * @return BaseResponse<PostUserRes>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PostMapping("/info")
+    public BaseResponse<String> saveUserUnivInfo(@RequestBody PostInfoReq postInfoReq) {
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postInfoReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            userService.saveUserUnivInfo(postInfoReq);
+            return new BaseResponse<>("정보가 저장되었습니다.");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
 
 
 
