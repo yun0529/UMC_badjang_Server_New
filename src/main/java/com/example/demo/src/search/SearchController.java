@@ -34,12 +34,16 @@ public class SearchController {
         this.jwtService = jwtService;
     }
 
+    /**
+     * 최근 검색어 API
+     * [GET] /search
+     */
     @ResponseBody
     @GetMapping("/search")
     public BaseResponse<List<GetSearchHistoryRes>> searchHistory() {
 
         try {
-            Long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             List<GetSearchHistoryRes> getSearchHistoryRes = searchProvider.searchHistory(userIdx);
             return new BaseResponse<>(getSearchHistoryRes);
 
@@ -49,11 +53,15 @@ public class SearchController {
 
     }
 
+    /**
+     * 최근 검색어 삭제 API
+     * [DELETE] /search/delete/:searchHistoryIdx
+     */
     @ResponseBody
     @DeleteMapping("/search/delete/{searchHistoryIdx}")
-    public BaseResponse<String> deleteSearchHistory(@PathVariable long searchHistoryIdx) {
+    public BaseResponse<String> deleteSearchHistory(@PathVariable int searchHistoryIdx) {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             DeleteSearchHistoryReq deleteSearchHistoryReq = new DeleteSearchHistoryReq(userIdx, searchHistoryIdx);
             searchService.deleteSearchHistory(deleteSearchHistoryReq);
 
@@ -63,6 +71,10 @@ public class SearchController {
         }
     }
 
+    /**
+     * 전체 검색
+     * [GET] /search/all
+     */
     @ResponseBody
     @GetMapping("/search/all")
     public BaseResponse<GetSearchAllRes> searchAll(@RequestParam(value="query") String query) {
@@ -73,7 +85,7 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             GetSearchAllRes getSearchAllRes = searchProvider.searchAll(query);
             searchProvider.saveQuery(userIdx, query);
 
@@ -84,6 +96,10 @@ public class SearchController {
     }
 
 
+    /**
+     * 게시판 검색
+     * [GET] /search/board
+     */
     @ResponseBody
     @GetMapping("/search/board")
     public BaseResponse<List<GetSearchBoardRes>> searchBoard(@RequestParam(value="query") String query) {
@@ -104,6 +120,10 @@ public class SearchController {
         }
     }
 
+    /**
+     * 장학금 검색
+     * [GET] /search/scholarship
+     */
     @ResponseBody
     @GetMapping("/search/scholarship")
     public BaseResponse<List<GetSearchScholarshipRes>> searchScholarship(@RequestParam(value="query") String query) {
@@ -114,7 +134,7 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             List<GetSearchScholarshipRes> getSearchScholarshipRes = searchProvider.searchScholarship(query);
             searchProvider.saveQuery(userIdx, query);
 
@@ -124,6 +144,10 @@ public class SearchController {
         }
     }
 
+    /**
+     * 지원금 검색
+     * [GET] /search/support
+     */
     @ResponseBody
     @GetMapping("/search/support")
     public BaseResponse<List<GetSearchSupportRes>> searchSupport(@RequestParam(value="query") String query) {
@@ -134,7 +158,7 @@ public class SearchController {
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             System.out.println(userIdx);
             List<GetSearchSupportRes> getSearchSupportRes = searchProvider.searchSupport(query);
             searchProvider.saveQuery(userIdx, query);

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetSearchBoardRes {
-    private Long post_idx;
+    private int post_idx;
     private String post_name;
     private String post_content;
     private String post_image;

@@ -46,11 +46,15 @@ public class BookmarkController {
         this.bookmarkService = bookmarkService;
     }
 
+    /**
+     * 즐겨찾기 조회
+     * [GET] /bookmark
+     */
     @ResponseBody
     @GetMapping("/bookmark")
     public BaseResponse<GetBookmarkAllRes> getBookmarkAll() {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             GetBookmarkAllRes getBookmarkAllRes = bookmarkProvider.getBookmarkAll(userIdx);
 
             return new BaseResponse<>(getBookmarkAllRes);
@@ -59,11 +63,15 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 조회(게시판만)
+     * [GET] /bookmark/board
+     */
     @ResponseBody
     @GetMapping("/bookmark/board")
     public BaseResponse<List<GetBookmarkBoardRes>> getBookmarkBoard() {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
 
             List<GetBookmarkBoardRes> getBookmarkBoardRes = bookmarkProvider.getBookmarkBoard(userIdx);
             return new BaseResponse<>(getBookmarkBoardRes);
@@ -72,11 +80,15 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 조회(장학금만)
+     * [GET] /bookmark/scholarship
+     */
     @ResponseBody
     @GetMapping("/bookmark/scholarship")
     public BaseResponse<List<GetBookmarkScholarshipRes>> getBookmarkScholarship() {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
 
             List<GetBookmarkScholarshipRes> getBookmarkScholarshipRes = bookmarkProvider.getBookmarkScholarship(userIdx);
             return new BaseResponse<>(getBookmarkScholarshipRes);
@@ -85,11 +97,15 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 조회(지원금만)
+     * [GET] /bookmark/support
+     */
     @ResponseBody
     @GetMapping("/bookmark/support")
     public BaseResponse<List<GetBookmarkSupportRes>> getBookmarkSupport() {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
 
             List<GetBookmarkSupportRes> getBookmarkSupportRes = bookmarkProvider.getBookmarkSupport(userIdx);
             return new BaseResponse<>(getBookmarkSupportRes);
@@ -98,10 +114,14 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 장학금 즐겨찾기 추가
+     * [POST] /scholarships/:scholarshipIdx/bookmark
+     */
     @PostMapping("/scholarships/{scholarshipIdx}/bookmark")
-    public BaseResponse<String> postBookmarkScholarship(@PathVariable("scholarshipIdx") long scholarshipIdx) throws BaseException {
+    public BaseResponse<String> postBookmarkScholarship(@PathVariable("scholarshipIdx") int scholarshipIdx) throws BaseException {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             PostBookmarkScholarshipReq postBookmarkScholarshipReq = new PostBookmarkScholarshipReq(userIdx, scholarshipIdx);
             bookmarkService.postBookmarkScholarship(postBookmarkScholarshipReq);
 
@@ -111,10 +131,14 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 지원금 즐겨찾기 추가
+     * [POST] /supports/:supportIdx/bookmark
+     */
     @PostMapping("/supports/{supportIdx}/bookmark")
-    public BaseResponse<String> postBookmarkSupport(@PathVariable("supportIdx") long supportIdx) throws BaseException {
+    public BaseResponse<String> postBookmarkSupport(@PathVariable("supportIdx") int supportIdx) throws BaseException {
         try {
-            long userIdx = jwtService.getUserIdx();
+            int userIdx = jwtService.getUserIdx();
             PostBookmarkSupportReq postBookmarkSupportReq = new PostBookmarkSupportReq(userIdx, supportIdx);
 
             bookmarkService.postBookmarkSupport(postBookmarkSupportReq);

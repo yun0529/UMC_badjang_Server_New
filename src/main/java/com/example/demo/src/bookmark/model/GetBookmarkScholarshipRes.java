@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor // 해당 클래스의 모든 멤버 변수를 받는 생성자를 생성
 
 public class GetBookmarkScholarshipRes {
-    private Long bookmark_idx;
-    private Long scholarship_idx;
+    private int bookmark_idx;
+    private int scholarship_idx;
     private String scholarship_name;
     private String scholarship_institution;
     private String scholarship_content;

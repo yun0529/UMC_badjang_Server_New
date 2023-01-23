@@ -20,6 +20,7 @@ public class BookmarkDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //즐겨찾기(게시판) 조회
     public List<GetBookmarkBoardRes> getBookmarkBoard(long userIdx) {
         long userIdxParams = userIdx;
         System.out.println(userIdxParams);
@@ -33,8 +34,8 @@ public class BookmarkDao {
 
         return this.jdbcTemplate.query(getBookmarkBoardQuery,
                 (rs, rowNum) -> new GetBookmarkBoardRes(
-                        rs.getLong("bookmark_idx"),
-                        rs.getLong("post_idx"),
+                        rs.getInt("bookmark_idx"),
+                        rs.getInt("post_idx"),
                         rs.getString("post_name"),
                         rs.getString("post_content"),
                         rs.getString("post_image"),
@@ -47,7 +48,7 @@ public class BookmarkDao {
         );
     }
 
-
+    //즐겨찾기(장학금) 조회
     public List<GetBookmarkScholarshipRes> getBookmarkScholarship(long userIdx) {
         long userIdxParams = userIdx;
 
@@ -60,8 +61,8 @@ public class BookmarkDao {
 
         return this.jdbcTemplate.query(getBookmarkScholarshipQuery,
                 (rs, rowNum) -> new GetBookmarkScholarshipRes(
-                        rs.getLong("bookmark_idx"),
-                        rs.getLong("scholarship_idx"),
+                        rs.getInt("bookmark_idx"),
+                        rs.getInt("scholarship_idx"),
                         rs.getString("scholarship_name"),
                         rs.getString("scholarship_institution"),
                         rs.getString("scholarship_content"),
@@ -77,6 +78,7 @@ public class BookmarkDao {
         );
     }
 
+    //지원금(북마크) 조회
     public List<GetBookmarkSupportRes> getBookmarkSupport(long userIdx) {
         long userIdxParams = userIdx;
 
@@ -89,8 +91,8 @@ public class BookmarkDao {
 
         return this.jdbcTemplate.query(getAllBookmarksQuery,
                 (rs, rowNum) -> new GetBookmarkSupportRes(
-                        rs.getLong("bookmark_idx"),
-                        rs.getLong("support_idx"),
+                        rs.getInt("bookmark_idx"),
+                        rs.getInt("support_idx"),
                         rs.getString("support_policy"),
                         rs.getString("support_name"),
                         rs.getString("support_institution"),
@@ -107,6 +109,7 @@ public class BookmarkDao {
         );
     }
 
+    //북마크에 저장되어있는 장학금인지 확인
     public int BookmarkScholarshipNull(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
 
         String bookmarkNullQuery = "select Exists( " +
@@ -123,6 +126,7 @@ public class BookmarkDao {
 
     }
 
+    //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
     public int postBookmarkScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
         int bookmarkScholarshipNull = BookmarkScholarshipNull(postBookmarkScholarshipReq);
 
@@ -140,6 +144,7 @@ public class BookmarkDao {
         return this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
     }
 
+    //북마크에 저장되어있는 지원금인지 확인
     public int BookmarkSupportNull(PostBookmarkSupportReq postBookmarkSupportReq) {
 
         String bookmarkNullQuery = "select Exists( " +
@@ -157,6 +162,7 @@ public class BookmarkDao {
 
     }
 
+    //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
     public int postBookmarkSupport(PostBookmarkSupportReq postBookmarkSupportReq) {
         int BookmarkScholarshipNull = BookmarkSupportNull(postBookmarkSupportReq);
 
@@ -178,6 +184,7 @@ public class BookmarkDao {
         return this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
     }
 
+    //북마크에 저장되어있는 게시판인지 확인
     public int BookmarkBoardNull(long userIdx, long boardIdx) {
 
         String BookmarkNullQuery = "select Exists( " +

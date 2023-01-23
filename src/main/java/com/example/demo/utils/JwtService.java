@@ -14,7 +14,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-import static com.example.demo.config.BaseResponseStatus.*;
+import static com.example.demo.config.BaseResponseStatus.EMPTY_JWT;
+import static com.example.demo.config.BaseResponseStatus.INVALID_JWT;
 
 @Service
 public class JwtService {
@@ -49,7 +50,7 @@ public class JwtService {
     @return int
     @throws BaseException
      */
-    public int getUserIdx() throws BaseException{
+    public Integer getUserIdx() throws BaseException{
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){
@@ -67,7 +68,7 @@ public class JwtService {
         }
 
         // 3. userIdx 추출
-        return claims.getBody().get("userIdx", Integer.class);
+        return claims.getBody().get("userIdx",Integer.class);
     }
 
 }

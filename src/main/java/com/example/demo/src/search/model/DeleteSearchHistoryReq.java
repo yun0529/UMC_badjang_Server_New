@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class DeleteSearchHistoryReq {
-    private long user_idx;
-    private long support_history_idx;
+    private int user_idx;
+    private int support_history_idx;
 }

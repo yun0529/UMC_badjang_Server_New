@@ -3,8 +3,11 @@ package com.example.demo.src.scholarship;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.scholarship.model.PostScholarshipReq;
 import com.example.demo.src.scholarship.model.PostScholarshipRes;
+
+
 import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
 import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentRes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

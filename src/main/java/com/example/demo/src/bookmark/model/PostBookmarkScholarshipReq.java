@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostBookmarkScholarshipReq {
-    private Long user_idx;
-    private Long scholarship_idx;
+    private int user_idx;
+    private int scholarship_idx;
 }

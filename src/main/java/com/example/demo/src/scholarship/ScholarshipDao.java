@@ -1,9 +1,9 @@
 package com.example.demo.src.scholarship;
 
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
-
 import com.example.demo.src.scholarship.model.PostScholarshipReq;
 import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

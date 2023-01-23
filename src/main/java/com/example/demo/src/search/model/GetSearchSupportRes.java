@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetSearchSupportRes {
-    private Long support_idx;
+    private int support_idx;
     private String support_policy;
     private String support_name;
     private String support_institution;
@@ -20,4 +20,5 @@ public class GetSearchSupportRes {
     private String support_scale;
     private String support_term;
     private String support_presentation;
+
 }
