@@ -23,6 +23,13 @@ public class OAuthController {
         this.OAuthService = OAuthService;
     }
 
+    /**
+     * 카카오 소셜 로그인 api (CALLBACK)
+     * [GET] /oauth/kakao
+     *
+     * @param code
+     * @return BaseResponse<PostUserRes>
+     */
     @GetMapping("/kakao")
     public BaseResponse<PostUserRes> kakaoLogin(@RequestParam("code") String code) throws BaseException {
         KakaoOauthToken kakaoOauthToken = OAuthService.getAccessToken(code);
