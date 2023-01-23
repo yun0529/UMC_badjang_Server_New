@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.config.BaseResponseStatus.POST_USERS_EMPTY_PASSWORD;
+import static com.example.demo.config.BaseResponseStatus.POST_USERS_EMPTY_PW;
 import static com.example.demo.utils.ValidationRegex.*;
 import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 
@@ -48,7 +48,7 @@ public class UserController {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
         if (postLoginReq.getUser_password() == null) {
-            return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
+            return new BaseResponse<>(POST_USERS_EMPTY_PW);
         }
         if (!isRegexEmail(postLoginReq.getUser_email())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
@@ -88,27 +88,33 @@ public class UserController {
 
     /**
      * 비밀번호변경 API
-     * [PATCH] /users/:user_id
+     * [PATCH] /users/:user_email
      */
-    @ResponseBody
+    /*@ResponseBody
     @PatchMapping("/{user_email}")
     public BaseResponse<String> modifyUserPassword(@PathVariable("user_email") String user_email, @RequestBody User user) {
-        if(!isRegexEmail(user_email)){
+        *//*if(!isRegexEmail(user_email)){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }*//*
+        if (user.getUser_password() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_PW);
         }
         if(!isRegexPw(user.getUser_password())){
             return new BaseResponse<>(POST_USERS_INVALID_PW);
         }
+        if (!isRegexEmail(user_email)) {
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
 
         try {
-            /**
+            *//**
             //jwt에서 idx 추출.
             int userIdxByJwt = jwtService.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            //같다면 유저네임 변경**/
+            //같다면 유저네임 변경**//*
             PatchUserReq patchUserReq = new PatchUserReq(user_email, user.getUser_password());
             userService.modifyUserPassword(patchUserReq);
 
@@ -117,7 +123,7 @@ public class UserController {
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
-    }
+    }*/
 
 
 
