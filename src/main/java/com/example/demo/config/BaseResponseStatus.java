@@ -11,6 +11,8 @@ public enum BaseResponseStatus {
      * 1000 : 요청 성공
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
+    DELETE_SEARCH_HISTORY_SUCCESS(true, 1250, "최근 검색어 삭제 요청을 성공하였습니다."),
+    POST_BOOKMARK_SUCCESS(true, 1251, "북마크 요청을 성공하였습니다."),
 
 
     /**
@@ -24,6 +26,8 @@ public enum BaseResponseStatus {
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
+
+    USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요. "),
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
@@ -43,6 +47,26 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_PHONE(false, 2060, "전화번호를 입력해주세요."),
     POST_USERS_INVALID_PHONE(false, 2061, "전화번호 형식에 맞게 입력해주세요."),
 
+    GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
+
+    GET_SEARCH_INVALID_QUERY(false, 2251, "검색어는 50자 내로 입력해주세요."),
+
+    DELETE_SEARCH_HISTORY_FAIL(true, 2252, "최근 검색어 삭제를 실패하였습니다."),
+
+
+    POST_COMMENT_EMPTY_CONTENT(false, 2301,"댓글을 입력해주세요."),
+    PATCH_COMMENT_FAIL(false,2302,"댓글 수정에 실패했습니다."),
+
+    DELETE_COMMENT_FAIL(false,2303,"댓글 삭제에 실패하였습니다."),
+
+    POST_SCHOLARSHIP_EMPTY_NAME(false, 2352,"장학금 이름을 입력해주세요."),
+
+
+
+
+
+
+    SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 값이 존재하지 않습니다."),
 
     /**
      * 3000 : Response 오류
@@ -68,6 +92,8 @@ public enum BaseResponseStatus {
 
     KAKAO_CONNECTION_ERROR(false, 4020, "카카오톡 연결에 실패하였습니다.");
 
+
+    INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
 
