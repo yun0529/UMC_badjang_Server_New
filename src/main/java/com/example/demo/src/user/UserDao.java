@@ -1,6 +1,7 @@
 package com.example.demo.src.user;
 
 import com.example.demo.src.user.model.GetUserRes;
+import com.example.demo.src.user.model.PostInfoReq;
 import com.example.demo.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -71,5 +72,56 @@ public class UserDao {
         String lastInsertIdQuery = "select last_insert_id()";
 
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+    }
+
+    public void saveUserUnivInfo(PostInfoReq postInfoReq) {
+
+        String saveUserUnivInfoQuery = "UPDATE User SET user_univ = ";
+
+        if(postInfoReq.getUser_univ() != null)
+            saveUserUnivInfoQuery += "'" + postInfoReq.getUser_univ() + "'";
+        else
+            saveUserUnivInfoQuery += "null";
+
+        saveUserUnivInfoQuery += ", user_college = ";
+        if(postInfoReq.getUser_college() != null)
+            saveUserUnivInfoQuery += "'" + postInfoReq.getUser_college() + "'";
+        else
+            saveUserUnivInfoQuery += "null";
+
+        saveUserUnivInfoQuery += ", user_department = ";
+        if(postInfoReq.getUser_department() != null)
+            saveUserUnivInfoQuery += "'" + postInfoReq.getUser_department() + "'";
+        else
+            saveUserUnivInfoQuery += "null";
+
+        saveUserUnivInfoQuery += ", user_grade = ";
+        if(postInfoReq.getUser_grade() != null)
+            saveUserUnivInfoQuery += "'" + postInfoReq.getUser_grade() + "'";
+        else
+            saveUserUnivInfoQuery += "null";
+
+        saveUserUnivInfoQuery += ", user_semester = ";
+        if(postInfoReq.getUser_semester() != null)
+            saveUserUnivInfoQuery += "'" + postInfoReq.getUser_semester() + "'";
+        else
+            saveUserUnivInfoQuery += "null";
+
+        saveUserUnivInfoQuery += ", user_province = ";
+        if(postInfoReq.getUser_province() != null)
+            saveUserUnivInfoQuery += "'" + postInfoReq.getUser_province() + "'";
+        else
+            saveUserUnivInfoQuery += "null";
+
+        saveUserUnivInfoQuery += ", user_city = ";
+        if(postInfoReq.getUser_city() != null)
+            saveUserUnivInfoQuery += "'" + postInfoReq.getUser_city() + "'";
+        else
+            saveUserUnivInfoQuery += "null";
+
+        saveUserUnivInfoQuery += " WHERE user_idx = '" + postInfoReq.getUser_idx() + "'";
+
+        System.out.println(saveUserUnivInfoQuery);
+        this.jdbcTemplate.update(saveUserUnivInfoQuery);
     }
 }
