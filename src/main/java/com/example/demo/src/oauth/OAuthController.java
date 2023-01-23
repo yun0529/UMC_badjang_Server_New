@@ -31,10 +31,14 @@ public class OAuthController {
      * @return BaseResponse<PostUserRes>
      */
     @GetMapping("/kakao")
-    public BaseResponse<PostUserRes> kakaoLogin(@RequestParam("code") String code) throws BaseException {
-        KakaoOauthToken kakaoOauthToken = OAuthService.getAccessToken(code);
-        PostUserRes postUserRes = OAuthService.saveUser(kakaoOauthToken.getAccess_token(), kakaoOauthToken.getRefresh_token());
+    public BaseResponse<PostUserRes> kakaoLogin(@RequestParam("code") String code) {
+        try{
+            KakaoOauthToken kakaoOauthToken = OAuthService.getAccessToken(code);
+            PostUserRes postUserRes = OAuthService.saveUser(kakaoOauthToken.getAccess_token(), kakaoOauthToken.getRefresh_token());
 
-        return new BaseResponse<>(postUserRes);
+            return new BaseResponse<>(postUserRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 }
