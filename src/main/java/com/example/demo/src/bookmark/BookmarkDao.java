@@ -78,7 +78,7 @@ public class BookmarkDao {
         );
     }
 
-    //지원금(북마크) 조회
+    //즐겨찾기(지원금) 조회
     public List<GetBookmarkSupportRes> getBookmarkSupport(long userIdx) {
         long userIdxParams = userIdx;
 
