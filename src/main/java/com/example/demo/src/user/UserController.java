@@ -3,9 +3,7 @@ package com.example.demo.src.user;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.user.model.GetUserRes;
-import com.example.demo.src.user.model.PostUserReq;
-import com.example.demo.src.user.model.PostUserRes;
+import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +106,32 @@ public class UserController {
             return new BaseResponse<>(postUserRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 학교, 지역 정보 저장 API
+     * [POST] /users/info
+     *
+     * @return BaseResponse<PostUserRes>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PostMapping("/info")
+    public BaseResponse<String> saveUserUnivInfo(@RequestBody PostInfoReq postInfoReq) {
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postInfoReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            userService.saveUserUnivInfo(postInfoReq);
+            return new BaseResponse<>("정보가 저장되었습니다.");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
