@@ -84,7 +84,6 @@ public enum BaseResponseStatus {
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
-    KAKAO_CONNECTION_ERROR(false, 4020, "카카오톡 연결에 실패하였습니다."),
     MODIFY_FAIL_USERPASSWORD(false,4100,"유저 비밀번호 변경 실패"),
     INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
