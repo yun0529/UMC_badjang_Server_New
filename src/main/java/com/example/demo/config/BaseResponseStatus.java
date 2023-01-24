@@ -11,6 +11,8 @@ public enum BaseResponseStatus {
      * 1000 : 요청 성공
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
+    DELETE_SEARCH_HISTORY_SUCCESS(true, 1250, "최근 검색어 삭제 요청을 성공하였습니다."),
+    POST_BOOKMARK_SUCCESS(true, 1251, "북마크 요청을 성공하였습니다."),
 
 
     /**
@@ -45,9 +47,11 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_PHONE(false, 2060, "전화번호를 입력해주세요."),
     POST_USERS_INVALID_PHONE(false, 2061, "전화번호 형식에 맞게 입력해주세요."),
 
-    GET_SEARCH_EMPTY_QUERY(false, 2200, "검색어를 입력해주세요."),
+    GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
 
-    GET_SEARCH_INVALID_QUERY(false, 2201, "검색어는 50자 내로 입력해주세요."),
+    GET_SEARCH_INVALID_QUERY(false, 2251, "검색어는 50자 내로 입력해주세요."),
+
+    DELETE_SEARCH_HISTORY_FAIL(true, 2252, "최근 검색어 삭제를 실패하였습니다."),
 
 
     POST_COMMENT_EMPTY_CONTENT(false, 2301,"댓글을 입력해주세요."),
@@ -76,6 +80,10 @@ public enum BaseResponseStatus {
 
     FAILED_TO_LOGIN_STATUS(false,3015,"이미 로그인된 아이디입니다."),
 
+    NON_EXISTENT_EMAIL(false, 3101, "존재하지 않는 이메일입니다."),
+    NON_EXISTENT_PHONENUMBER(false, 3102, "존재하지 않는 번호입니다."),
+
+
 
     /**
      * 4000 : Database, Server 오류
@@ -85,6 +93,10 @@ public enum BaseResponseStatus {
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
+
+    KAKAO_CONNECTION_ERROR(false, 4020, "카카오톡 연결에 실패하였습니다."),
+
+    MODIFY_FAIL_USERPASSWORD(false,4100,"유저 비밀번호 변경 실패"),
 
     INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요

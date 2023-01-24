@@ -1,4 +1,4 @@
-package com.example.demo.src.user.model;
+package com.example.demo.src.search.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostLoginRes {
+public class DeleteSearchHistoryReq {
     private int user_idx;
-    private String jwt;
+    private int support_history_idx;
 }
