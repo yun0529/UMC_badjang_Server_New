@@ -110,84 +110,120 @@ public class BookmarkDao {
     }
 
     //북마크에 저장되어있는 장학금인지 확인
-    public int BookmarkScholarshipNull(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
+    public int bookmarkScholarshipNullCheck(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
 
-        String bookmarkNullQuery = "select Exists( " +
-                "select bookmark_idx from Bookmark " +
+        String bookmarkScholarshipNullCheckQuery = "select Exists( " +
+                "select bookmark_idx " +
+                "from Bookmark " +
                 "where user_idx = ? " +
                 "and scholarship_idx = ? " +
                 ") as isChk ";
 
-        Object[] bookmarkNullParams = new Object[]{postBookmarkScholarshipReq.getUser_idx(), postBookmarkScholarshipReq.getScholarship_idx()};
+        Object[] bookmarkScholarshipNullCheckParams = new Object[]{postBookmarkScholarshipReq.getUser_idx(), postBookmarkScholarshipReq.getScholarship_idx()};
 
-        return this.jdbcTemplate.queryForObject(bookmarkNullQuery,
+        return this.jdbcTemplate.queryForObject(bookmarkScholarshipNullCheckQuery,
                 int.class,
-                bookmarkNullParams);
+                bookmarkScholarshipNullCheckParams);
+
+    }
+
+    public int NullCheckSchoolForScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
+
+        String NullCheckSchoolForScholarshipQuery = "select Exists( " +
+                "select bookmark_idx from School " +
+                "left join Bookmark " +
+                "on Bookmark.School_idx = School.School_idx " +
+                "where Bookmark.user_idx = ? " +
+                "and School.scholarship_idx = ? " +
+                ") as isChk ";
+
+        Object[] NullCheckSchoolForScholarshipParams = new Object[]{postBookmarkScholarshipReq.getUser_idx(), postBookmarkScholarshipReq.getScholarship_idx()};
+
+        return this.jdbcTemplate.queryForObject(NullCheckSchoolForScholarshipQuery,
+                int.class,
+                NullCheckSchoolForScholarshipParams);
 
     }
 
     //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
-    public int postBookmarkScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
-        int bookmarkScholarshipNull = BookmarkScholarshipNull(postBookmarkScholarshipReq);
+    public String postBookmarkScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
+        int bookmarkScholarshipNullCheck = bookmarkScholarshipNullCheck(postBookmarkScholarshipReq);
+        int NullCheckSchoolForScholarship = NullCheckSchoolForScholarship(postBookmarkScholarshipReq);
 
         String postBookmarkScholarshipQuery;
         Object[] postBookmarkScholarshipParams = new Object[]{postBookmarkScholarshipReq.getUser_idx(), postBookmarkScholarshipReq.getScholarship_idx()};
 
-        if (bookmarkScholarshipNull == 1) {
+        if (bookmarkScholarshipNullCheck == 1) {
             postBookmarkScholarshipQuery = "delete from Bookmark " +
                     "where user_idx = ? " +
                     "and scholarship_idx = ? ";
+            this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
+            return "삭제";
+
+        } else if (NullCheckSchoolForScholarship == 1) {
+            postBookmarkScholarshipQuery = "delete a " +
+                    "from Bookmark a " +
+                    "left join School b " +
+                    "on a.School_idx = b.School_idx " +
+                    "where a.user_idx = ? " +
+                    "and b.scholarship_idx = ? ";
+            this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
+            return "삭제";
+
         } else {
             postBookmarkScholarshipQuery = "insert into Bookmark (user_idx, scholarship_idx) " +
                     "VALUES (?, ?) ";
+            this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
+            return "추가";
         }
-        return this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
     }
 
     //북마크에 저장되어있는 지원금인지 확인
-    public int BookmarkSupportNull(PostBookmarkSupportReq postBookmarkSupportReq) {
+    public int bookmarkSupportNullCheck(PostBookmarkSupportReq postBookmarkSupportReq) {
 
-        String bookmarkNullQuery = "select Exists( " +
+        String bookmarkSupportNullCheckQuery = "select Exists( " +
                 "select bookmark_idx from Bookmark " +
                 "where user_idx = ? " +
                 "and support_idx = ? " +
                 ") as isChk ";
 
-        Object[] supportNullParams = new Object[]{postBookmarkSupportReq.getUser_idx(), postBookmarkSupportReq.getSupport_idx()};
+        Object[] bookmarkSupportNullCheckParams = new Object[]{postBookmarkSupportReq.getUser_idx(), postBookmarkSupportReq.getSupport_idx()};
 
 
-        return this.jdbcTemplate.queryForObject(bookmarkNullQuery,
+        return this.jdbcTemplate.queryForObject(bookmarkSupportNullCheckQuery,
                 int.class,
-                supportNullParams);
+                bookmarkSupportNullCheckParams);
 
     }
 
     //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
-    public int postBookmarkSupport(PostBookmarkSupportReq postBookmarkSupportReq) {
-        int BookmarkScholarshipNull = BookmarkSupportNull(postBookmarkSupportReq);
+    public String postBookmarkSupport(PostBookmarkSupportReq postBookmarkSupportReq) {
+        int bookmarkSupportNullCheck = bookmarkSupportNullCheck(postBookmarkSupportReq);
 
         String postBookmarkSupportQuery;
         Object[] postBookmarkSupportParams = new Object[]{postBookmarkSupportReq.getUser_idx(), postBookmarkSupportReq.getSupport_idx()};
 
-        if (BookmarkScholarshipNull == 1) {
+        if (bookmarkSupportNullCheck == 1) {
 
             postBookmarkSupportQuery = "delete from Bookmark " +
                     "where user_idx = ? " +
                     "and support_idx = ? ";
+            this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
+            return "삭제";
 
         } else {
-
             postBookmarkSupportQuery = "insert into Bookmark (user_idx, support_idx) " +
                     "VALUES (?, ?) ";
-
+            this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
+            return "추가";
         }
-        return this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
+
     }
 
     //북마크에 저장되어있는 게시판인지 확인
-    public int BookmarkBoardNull(long userIdx, long boardIdx) {
+    public int bookmarkBoardNull(long userIdx, long boardIdx) {
 
-        String BookmarkNullQuery = "select Exists( " +
+        String bookmarkNullQuery = "select Exists( " +
                 "select bookmark_idx from Bookmark " +
                 "where user_idx = ? " +
                 "and board_idx = ? " +
@@ -196,9 +232,88 @@ public class BookmarkDao {
         long userIdxParams = userIdx;
         long boardIdxParams = boardIdx;
 
-        return this.jdbcTemplate.queryForObject(BookmarkNullQuery,
+        return this.jdbcTemplate.queryForObject(bookmarkNullQuery,
                 int.class,
                 userIdxParams, boardIdxParams);
+
+    }
+
+    //북마크에 저장되어있는 우리학교 장학금(장학금)인지 확인
+    public int bookmarkSchoolNullCheck(PostBookmarkSchoolReq postBookmarkSchoolReq) {
+
+        String bookmarkSchoolNullCheckQuery = "select Exists( " +
+                "select bookmark_idx from Bookmark " +
+                "where user_idx = ? " +
+                "and school_idx = ? " +
+                ") as isChk ";
+
+        Object[] bookmarkSchoolNullCheckParams = new Object[]{postBookmarkSchoolReq.getUser_idx(), postBookmarkSchoolReq.getSchool_idx()};
+
+
+        return this.jdbcTemplate.queryForObject(bookmarkSchoolNullCheckQuery,
+                int.class,
+                bookmarkSchoolNullCheckParams);
+
+    }
+
+    public int NullCheckScholarshipForSchool(PostBookmarkSchoolReq postBookmarkSchoolReq) {
+
+        String NullCheckSchoolForScholarshipQuery = "select Exists( " +
+                "select bookmark_idx from School " +
+                "left join Bookmark " +
+                "on Bookmark.School_idx = School.School_idx " +
+                "where Bookmark.user_idx = ? " +
+                "and School.school_idx = ? " +
+                ") as isChk ";
+
+        Object[] NullCheckSchoolForScholarshipParams = new Object[]{postBookmarkSchoolReq.getUser_idx(), postBookmarkSchoolReq.getSchool_idx()};
+
+        return this.jdbcTemplate.queryForObject(NullCheckSchoolForScholarshipQuery,
+                int.class,
+                NullCheckSchoolForScholarshipParams);
+
+    }
+
+
+
+    //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
+    public String postBookmarkSchool(PostBookmarkSchoolReq postBookmarkSchoolReq) {
+        int bookmarkSchoolNullCheck = bookmarkSchoolNullCheck(postBookmarkSchoolReq);
+
+        int NullCheckScholarshipForSchool = NullCheckScholarshipForSchool(postBookmarkSchoolReq);
+
+        String postBookmarkSchoolQuery;
+        Object[] postBookmarkSchoolParams = new Object[]{postBookmarkSchoolReq.getUser_idx(), postBookmarkSchoolReq.getSchool_idx()};
+
+        if (bookmarkSchoolNullCheck == 1) {
+
+            postBookmarkSchoolQuery = "delete from Bookmark " +
+                    "where user_idx = ? " +
+                    "and school_idx = ? ";
+
+            this.jdbcTemplate.update(postBookmarkSchoolQuery, postBookmarkSchoolParams);
+            return "삭제";
+
+        } else if (NullCheckScholarshipForSchool == 1) {
+
+            postBookmarkSchoolQuery = "delete a " +
+                    "from Bookmark a " +
+                    "left join School b " +
+                    "on a.School_idx = b.School_idx " +
+                    "where a.user_idx = ? " +
+                    "and b.school_idx = ? ";
+
+            this.jdbcTemplate.update(postBookmarkSchoolQuery, postBookmarkSchoolParams);
+            return "삭제";
+
+        }
+        else {
+            postBookmarkSchoolQuery = "insert into Bookmark (user_idx, school_idx) " +
+                    "VALUES (?, ?) ";
+
+            this.jdbcTemplate.update(postBookmarkSchoolQuery, postBookmarkSchoolParams);
+            return "추가";
+        }
 
     }
 

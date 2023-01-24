@@ -24,8 +24,7 @@ import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.POST_BOOKMARK_SUCCESS;
-import static com.example.demo.config.BaseResponseStatus.REQUEST_ERROR;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
 public class BookmarkController {
@@ -123,9 +122,14 @@ public class BookmarkController {
         try {
             int userIdx = jwtService.getUserIdx();
             PostBookmarkScholarshipReq postBookmarkScholarshipReq = new PostBookmarkScholarshipReq(userIdx, scholarshipIdx);
-            bookmarkService.postBookmarkScholarship(postBookmarkScholarshipReq);
+            String postBookmarkScholarshipRes = bookmarkService.postBookmarkScholarship(postBookmarkScholarshipReq);
 
-            return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            if (postBookmarkScholarshipRes == "삭제") {
+                return new BaseResponse<>(DELETE_BOOKMARK_SUCCESS);
+            } else {
+                return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            }
+
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -141,11 +145,44 @@ public class BookmarkController {
             int userIdx = jwtService.getUserIdx();
             PostBookmarkSupportReq postBookmarkSupportReq = new PostBookmarkSupportReq(userIdx, supportIdx);
 
-            bookmarkService.postBookmarkSupport(postBookmarkSupportReq);
+            String postBookmarkSupportRes = bookmarkService.postBookmarkSupport(postBookmarkSupportReq);
 
-            return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            if (postBookmarkSupportRes == "삭제") {
+                return new BaseResponse<>(DELETE_BOOKMARK_SUCCESS);
+            } else if (postBookmarkSupportRes == "추가") {
+                return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            } else {
+                return new BaseResponse<>(POST_BOOKMARK_FAIL);
+            }
+
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /**
+     * 우리학교 장학금 즐겨찾기 추가
+     * [POST] /menu/school/:schoolIdx/bookmark
+     */
+    @PostMapping("/menu/school/{schoolIdx}/bookmark")
+    public BaseResponse<String> postBookmarkSchool(@PathVariable("schoolIdx") int schoolIdx) throws BaseException {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            PostBookmarkSchoolReq postBookmarkSchoolReq = new PostBookmarkSchoolReq(userIdx, schoolIdx);
+
+            String postBookmarkSchoolRes = bookmarkService.postBookmarkSchool(postBookmarkSchoolReq);
+
+            if (postBookmarkSchoolRes == "삭제") {
+                return new BaseResponse<>(DELETE_BOOKMARK_SUCCESS);
+            } else if (postBookmarkSchoolRes == "추가") {
+                return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            } else {
+                return new BaseResponse<>(POST_BOOKMARK_FAIL);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }

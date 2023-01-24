@@ -3,6 +3,7 @@ package com.example.demo.src.bookmark;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.bookmark.model.PostBookmarkScholarshipReq;
+import com.example.demo.src.bookmark.model.PostBookmarkSchoolReq;
 import com.example.demo.src.bookmark.model.PostBookmarkSupportReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,25 +28,32 @@ public class BookmarkService {
 
     }
 
-    public int postBookmarkScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) throws BaseException {
+    public String postBookmarkScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) throws BaseException {
         try {
-            int postBookmarkScholarshipRes = bookmarkDao.postBookmarkScholarship(postBookmarkScholarshipReq);
+            String postBookmarkScholarshipRes = bookmarkDao.postBookmarkScholarship(postBookmarkScholarshipReq);
             return postBookmarkScholarshipRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public int postBookmarkSupport(PostBookmarkSupportReq postBookmarkSupportReq) throws BaseException {
+    public String postBookmarkSupport(PostBookmarkSupportReq postBookmarkSupportReq) throws BaseException {
         try {
-            int postBookmarkSupportRes = bookmarkDao.postBookmarkSupport(postBookmarkSupportReq);
+            String postBookmarkSupportRes = bookmarkDao.postBookmarkSupport(postBookmarkSupportReq);
             return postBookmarkSupportRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-
+    public String postBookmarkSchool(PostBookmarkSchoolReq postBookmarkSchoolReq) throws BaseException {
+        try {
+            String postBookmarkSchoolRes = bookmarkDao.postBookmarkSchool(postBookmarkSchoolReq);
+            return postBookmarkSchoolRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }
 
