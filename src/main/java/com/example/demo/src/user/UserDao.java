@@ -1,6 +1,7 @@
 package com.example.demo.src.user;
 
 import com.example.demo.src.user.model.GetUserRes;
+import com.example.demo.src.user.model.PostExtraReq;
 import com.example.demo.src.user.model.PostInfoReq;
 import com.example.demo.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,5 +124,15 @@ public class UserDao {
 
         System.out.println(saveUserUnivInfoQuery);
         this.jdbcTemplate.update(saveUserUnivInfoQuery);
+    }
+
+    public void saveUserExtraInfo(PostExtraReq postExtraReq) {
+        String saveUserExtraInfoQuery = "UPDATE User " +
+                "SET user_name = ?, user_birth = ?, user_phone = ? " +
+                "WHERE user_idx = ?";
+        Object[] saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
+                postExtraReq.getUser_phone(), postExtraReq.getUser_idx()};
+
+        this.jdbcTemplate.update(saveUserExtraInfoQuery, saveUserExtraInfoParams);
     }
 }
