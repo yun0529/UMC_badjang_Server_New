@@ -144,7 +144,6 @@ public class BookmarkController {
         try {
             int userIdx = jwtService.getUserIdx();
             PostBookmarkSupportReq postBookmarkSupportReq = new PostBookmarkSupportReq(userIdx, supportIdx);
-
             String postBookmarkSupportRes = bookmarkService.postBookmarkSupport(postBookmarkSupportReq);
 
             if (postBookmarkSupportRes == "삭제") {
@@ -169,7 +168,6 @@ public class BookmarkController {
         try {
             int userIdx = jwtService.getUserIdx();
             PostBookmarkSchoolReq postBookmarkSchoolReq = new PostBookmarkSchoolReq(userIdx, schoolIdx);
-
             String postBookmarkSchoolRes = bookmarkService.postBookmarkSchool(postBookmarkSchoolReq);
 
             if (postBookmarkSchoolRes == "삭제") {
