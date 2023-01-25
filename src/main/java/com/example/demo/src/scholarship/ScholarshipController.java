@@ -114,28 +114,6 @@ public class ScholarshipController {
     @ResponseBody
     @GetMapping("/myfilter")
     public BaseResponse<List<GetScholarshipRes>> getScholarshipMyfilter(@RequestBody GetScholarshipMyfilter getScholarshipMyfilter) {
-//        if(getMyfilter.getUniversity() == null) {
-//            return new BaseResponse<>(GET_MYFILTER_EMPTY_UNIVERSITY);
-//        }
-//        if(getMyfilter.getCollege() == null) {
-//            return new BaseResponse<>(GET_MYFILTER_EMPTY_COLLEGE);
-//        }
-//        if(getMyfilter.getDepartment() == null) {
-//            return new BaseResponse<>(GET_MYFILTER_EMPTY_DEPARTMENT);
-//        }
-//        if(getMyfilter.getGrade()== null) {
-//            return new BaseResponse<>(GET_MYFILTER_EMPTY_GRADE);
-//        }
-//        if(getMyfilter.getSemester()== null) {
-//            return new BaseResponse<>(GET_MYFILTER_EMPTY_SEMESTER);
-//        }
-//        if(getMyfilter.getProvince()== null) {
-//            return new BaseResponse<>(GET_MYFILTER_EMPTY_PROVINCE);
-//        }
-//        if(getMyfilter.getCity()== null) {
-//            return new BaseResponse<>(GET_MYFILTER_EMPTY_CITY);
-//        }
-
         try {
             List<GetScholarshipRes> getScholarshipRes = scholarshipProvider.getScholarshipMyfilter(getScholarshipMyfilter);
             return new BaseResponse<>(getScholarshipRes);

@@ -2,7 +2,10 @@ package com.example.demo.src.support;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.scholarship.model.GetScholarshipMyfilter;
+import com.example.demo.src.scholarship.model.GetScholarshipRes;
 import com.example.demo.src.scholarship.model.PostScholarshipRes;
+import com.example.demo.src.support.model.GetSupportMyfilter;
 import com.example.demo.src.support.model.GetSupportRes;
 import com.example.demo.src.support.model.PostSupportReq;
 import com.example.demo.src.support.model.PostSupportRes;
@@ -105,6 +108,20 @@ public class SupportController {
         try {
             PostSupportRes postSupportRes = supportService.createSupport(postSupportReq);
             return new BaseResponse<>(postSupportRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * myfilter로 조회 API
+     * */
+    @ResponseBody
+    @GetMapping("/myfilter")
+    public BaseResponse<List<GetSupportRes>> getSupportMyfilter(@RequestBody GetSupportMyfilter getSupportMyfilter) {
+        try {
+            List<GetSupportRes> getSupportRes = supportProvider.getSupportMyfilter(getSupportMyfilter);
+            return new BaseResponse<>(getSupportRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

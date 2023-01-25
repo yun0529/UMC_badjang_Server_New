@@ -261,8 +261,6 @@ public class ScholarshipDao {
             cityQuery = " and scholarship_city = ?";
         }
 
-        System.out.println(university+college+department+grade+semester+province+city);
-
         MyfilterQuery = MyfilterQuery + universityQuery + collegeQuery + departmentQuery
                 + gradeQuery + semesterQuery + provinceQuery + cityQuery;
 
