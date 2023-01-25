@@ -50,7 +50,7 @@ public class ScholarshipProvider {
 
 
 
-    // 해당 userIdx를 갖는 User의 정보 조회
+    // 해당 scholarshipIdx를 갖는 장학금의 정보 조회
     public GetScholarshipRes getScholarship(long scholarshipIdx) throws BaseException {
         try {
             GetScholarshipRes getScholarshipRes = scholarshipDao.getScholarship(scholarshipIdx);

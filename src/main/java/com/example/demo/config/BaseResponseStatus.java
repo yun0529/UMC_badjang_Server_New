@@ -68,12 +68,16 @@ public enum BaseResponseStatus {
 
     POST_SCHOLARSHIP_EMPTY_NAME(false, 2352,"장학금 이름을 입력해주세요."),
 
+    POST_SUPPORT_EMPTY_NAME(false, 2353,"지원금 이름을 입력해주세요."),
+
+    POST_SUPPORT_EMPTY_POLICY(false, 2354,"정책id를 입력해주세요."),
 
 
 
 
+    SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 장학금idx 값이 존재하지 않습니다."),
 
-    SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 값이 존재하지 않습니다."),
+    SUPPORT_EMPTY_SUPPORT_IDX(false, 2355, "해당 지원금idx 값이 존재하지 않습니다."),
 
     /**
      * 3000 : Response 오류
@@ -105,7 +109,9 @@ public enum BaseResponseStatus {
 
     MODIFY_FAIL_USERPASSWORD(false,4100,"유저 비밀번호 변경 실패"),
 
-    INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패");
+    INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패"),
+
+    INCREASE_FAIL_SUPPORT_VIEW(false,4356,"지원금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
 
