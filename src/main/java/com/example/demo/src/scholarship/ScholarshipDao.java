@@ -106,13 +106,13 @@ public class ScholarshipDao {
                         rs.getString("scholarship_semester"),
                         rs.getString("scholarship_province"),
                         rs.getString("scholarship_city"),
-                        rs.getString("scholarship_category")) // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                        rs.getString("scholarship_category"))
                 );
     }
 
-    // 해당 scholarshipIdx를 갖는 유저조회
+    // 해당 scholarshipIdx를 갖는 장학금조회
     public GetScholarshipRes getScholarship(long scholarshipIdx) {
-        String getScholarshipQuery = "select * from Scholarship where scholarship_status = 'Y' and scholarship_Idx = ?"; // 해당 userIdx를 만족하는 유저를 조회하는 쿼리문
+        String getScholarshipQuery = "select * from Scholarship where scholarship_status = 'Y' and scholarship_Idx = ?";
         long getScholarshipParams = scholarshipIdx;
         return this.jdbcTemplate.queryForObject(getScholarshipQuery,
                 (rs, rowNum) -> new GetScholarshipRes(
@@ -126,7 +126,6 @@ public class ScholarshipDao {
                         rs.getInt("scholarship_comment"),
                         rs.getString("scholarship_scale"),
                         rs.getString("scholarship_term"),
-
                         rs.getString("scholarship_presentation"),
                         rs.getString("scholarship_createAt"),
                         rs.getString("scholarship_updateAt"),
@@ -138,8 +137,8 @@ public class ScholarshipDao {
                         rs.getString("scholarship_semester"),
                         rs.getString("scholarship_province"),
                         rs.getString("scholarship_city"),
-                        rs.getString("scholarship_category")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
-                getScholarshipParams); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+                        rs.getString("scholarship_category")),
+                getScholarshipParams);
     }
 
     // 장학금 idx가 존재하는지 확인
@@ -148,7 +147,7 @@ public class ScholarshipDao {
         long checkScholarshipIdxParams = scholarshipidx; // 해당(확인할) 이메일 값
         return this.jdbcTemplate.queryForObject(checkScholarshipIdxQuery,
                 int.class,
-                checkScholarshipIdxParams); // checkEmailQuery, checkEmailParams를 통해 가져온 값(intgud)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+                checkScholarshipIdxParams);
     }
 
     // 장학금 추가
