@@ -13,9 +13,9 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-
 public class GetNotificationScholarshipRes {
     private int scholarship_idx;
     private String scholarship_name;
+    private String scholarship_institution;
     private String scholarship_univ;
 }

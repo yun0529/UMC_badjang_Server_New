@@ -21,7 +21,7 @@ public class NotificationDao {
     }
 
     public List<GetNotificationScholarshipRes> getNotificationScholarshipRes(int userIdx) {
-        String getNotificationScholarshipResQuery = "select Scholarship.scholarship_idx, Scholarship.scholarship_name, Scholarship.scholarship_univ " +
+        String getNotificationScholarshipResQuery = "select Scholarship.scholarship_idx, Scholarship.scholarship_name, Scholarship.scholarship_institution, Scholarship.scholarship_univ " +
                 "from User, Scholarship " +
                 "where User.user_univ = Scholarship.scholarship_univ " +
                 "and User.user_idx = ? " +
@@ -34,6 +34,7 @@ public class NotificationDao {
                 (rs, rowNum) -> new GetNotificationScholarshipRes(
                         rs.getInt("scholarship_idx"),
                         rs.getString("scholarship_name"),
+                        rs.getString("scholarship_institution"),
                         rs.getString("scholarship_univ")
                 ),
                 getNotificationScholarshipResParams

@@ -16,6 +16,6 @@ import java.util.List;
 
 public class GetNotificationAllRes {
     private List<GetNotificationCommentRes> getNotificationCommentRes;
-    private List<GetNotificationScholarshipRes> getBookmarkScholarshipRes;
+    private List<GetNotificationScholarshipRes> getNotificationScholarshipRes;
     private List<GetNotificationSupportRes> getNotificationSupportRes;
 }

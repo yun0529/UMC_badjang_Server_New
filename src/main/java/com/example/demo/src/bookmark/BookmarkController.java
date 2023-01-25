@@ -114,7 +114,7 @@ public class BookmarkController {
     }
 
     /**
-     * 장학금 즐겨찾기 추가
+     * 장학금 페이지 즐겨찾기 추가 및 취소
      * [POST] /scholarships/:scholarshipIdx/bookmark
      */
     @PostMapping("/scholarships/{scholarshipIdx}/bookmark")
@@ -126,8 +126,10 @@ public class BookmarkController {
 
             if (postBookmarkScholarshipRes == "삭제") {
                 return new BaseResponse<>(DELETE_BOOKMARK_SUCCESS);
-            } else {
+            } else if (postBookmarkScholarshipRes == "추가") {
                 return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            } else {
+                return new BaseResponse<>(POST_BOOKMARK_FAIL);
             }
 
         } catch (BaseException exception) {
@@ -136,7 +138,7 @@ public class BookmarkController {
     }
 
     /**
-     * 지원금 즐겨찾기 추가
+     * 지원금 페이지 즐겨찾기 추가 및 취소
      * [POST] /supports/:supportIdx/bookmark
      */
     @PostMapping("/supports/{supportIdx}/bookmark")
@@ -160,7 +162,7 @@ public class BookmarkController {
     }
 
     /**
-     * 우리학교 장학금 즐겨찾기 추가
+     * 우리학교 장학금 페이지 즐겨찾기 추가 및 취소
      * [POST] /menu/school/:schoolIdx/bookmark
      */
     @PostMapping("/menu/school/{schoolIdx}/bookmark")
