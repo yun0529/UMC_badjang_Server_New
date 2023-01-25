@@ -58,6 +58,13 @@ public enum BaseResponseStatus {
     PATCH_COMMENT_FAIL(false,2302,"댓글 수정에 실패했습니다."),
 
     DELETE_COMMENT_FAIL(false,2303,"댓글 삭제에 실패하였습니다."),
+    GET_MYFILTER_EMPTY_UNIVERSITY(false, 2304, "대학교를 입력하세요."),
+    GET_MYFILTER_EMPTY_COLLEGE(false, 2305, "단과대학을 입력하세요."),
+    GET_MYFILTER_EMPTY_DEPARTMENT(false, 2306, "학과를 입력하세요."),
+    GET_MYFILTER_EMPTY_GRADE(false, 2307, "학년을 입력하세요."),
+    GET_MYFILTER_EMPTY_SEMESTER(false, 2308, "학기를 입력하세요."),
+    GET_MYFILTER_EMPTY_PROVINCE(false, 2309, "도를 입력하세요."),
+    GET_MYFILTER_EMPTY_CITY(false, 2310, "시/군/구/를을 입력하세요."),
 
     POST_SCHOLARSHIP_EMPTY_NAME(false, 2352,"장학금 이름을 입력해주세요."),
 

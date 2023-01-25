@@ -2,21 +2,16 @@ package com.example.demo.src.scholarship;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.scholarship.model.GetScholarshipMyfilter;
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
 import com.example.demo.src.scholarship.model.PostScholarshipReq;
 import com.example.demo.src.scholarship.model.PostScholarshipRes;
 
-import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
-import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentRes;
-import com.example.demo.src.user.model.PostUserRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 
@@ -112,6 +107,42 @@ public class ScholarshipController {
         try {
             PostScholarshipRes postScholarshipRes = scholarshipService.createScholarship(postScholarshipReq);
             return new BaseResponse<>(postScholarshipRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * myfilter로 조회 API
+     * */
+    @ResponseBody
+    @GetMapping("/myfilter")
+    public BaseResponse<List<GetScholarshipRes>> getScholarshipMyfilter(@RequestBody GetScholarshipMyfilter getScholarshipMyfilter) {
+//        if(getMyfilter.getUniversity() == null) {
+//            return new BaseResponse<>(GET_MYFILTER_EMPTY_UNIVERSITY);
+//        }
+//        if(getMyfilter.getCollege() == null) {
+//            return new BaseResponse<>(GET_MYFILTER_EMPTY_COLLEGE);
+//        }
+//        if(getMyfilter.getDepartment() == null) {
+//            return new BaseResponse<>(GET_MYFILTER_EMPTY_DEPARTMENT);
+//        }
+//        if(getMyfilter.getGrade()== null) {
+//            return new BaseResponse<>(GET_MYFILTER_EMPTY_GRADE);
+//        }
+//        if(getMyfilter.getSemester()== null) {
+//            return new BaseResponse<>(GET_MYFILTER_EMPTY_SEMESTER);
+//        }
+//        if(getMyfilter.getProvince()== null) {
+//            return new BaseResponse<>(GET_MYFILTER_EMPTY_PROVINCE);
+//        }
+//        if(getMyfilter.getCity()== null) {
+//            return new BaseResponse<>(GET_MYFILTER_EMPTY_CITY);
+//        }
+
+        try {
+            List<GetScholarshipRes> getScholarshipRes = scholarshipProvider.getScholarshipMyfilter(getScholarshipMyfilter);
+            return new BaseResponse<>(getScholarshipRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
