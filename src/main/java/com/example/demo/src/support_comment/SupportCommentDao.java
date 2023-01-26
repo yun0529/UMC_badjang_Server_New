@@ -44,6 +44,10 @@ public class SupportCommentDao {
         Object[] createSupportCommentParams = new Object[]{postSupportCommentReq.getSupport_idx(), postSupportCommentReq.getUser_idx(), postSupportCommentReq.getSupport_comment_content()}; // 동적 쿼리의 ?부분에 주입될 값
         this.jdbcTemplate.update(createSupportCommentQuery, createSupportCommentParams);
 
+        String supportCommentCountUpQuery = "update Support set support_comment = support_comment + 1 where support_idx = ?";
+        int supportCommentCountUpParams = postSupportCommentReq.getSupport_idx();
+        this.jdbcTemplate.update(supportCommentCountUpQuery,supportCommentCountUpParams);
+
         String lastInsertIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값은 가져온다.
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Integer.class); // 해당 쿼리문의 결과 마지막으로 삽인된 유저의 BoardIdx번호를 반환한다.
     }
