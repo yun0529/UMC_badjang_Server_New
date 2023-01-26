@@ -185,4 +185,28 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 전국소식 페이지 즐겨찾기 추가 및 취소
+     * [POST] /menu/total/:totalIdx/bookmark
+     */
+    @PostMapping("/menu/total/{totalIdx}/bookmark")
+    public BaseResponse<String> postBookmarkTotal(@PathVariable("totalIdx") int totalIdx) throws BaseException {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            PostBookmarkTotalReq postBookmarkTotalReq = new PostBookmarkTotalReq(userIdx, totalIdx);
+            String postBookmarkTotalRes = bookmarkService.postBookmarkTotal(postBookmarkTotalReq);
+
+            if (postBookmarkTotalRes == "삭제") {
+                return new BaseResponse<>(DELETE_BOOKMARK_SUCCESS);
+            } else if (postBookmarkTotalRes == "추가") {
+                return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            } else {
+                return new BaseResponse<>(POST_BOOKMARK_FAIL);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }

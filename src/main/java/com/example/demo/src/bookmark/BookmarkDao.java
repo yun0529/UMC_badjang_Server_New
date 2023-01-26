@@ -496,11 +496,13 @@ public class BookmarkDao {
     public int nullCheckScholarshipForTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
 
         String nullCheckScholarshipForTotalQuery = "select Exists( " +
-                "select bookmark_idx from School " +
-                "left join Bookmark " +
-                "on Bookmark.School_idx = School.School_idx " +
+                "select bookmark_idx from Bookmark " +
+                "join Scholarship  " +
+                "on Bookmark.scholarship_idx = Scholarship.scholarship_idx " +
+                "left join Total " +
+                "on Total.scholarship_idx = Scholarship.scholarship_idx " +
                 "where Bookmark.user_idx = ? " +
-                "and School.school_idx = ? " +
+                "and Total.total_idx = ? " +
                 ") as isChk ";
 
         Object[] nullCheckScholarshipForTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
@@ -514,11 +516,13 @@ public class BookmarkDao {
     public int nullCheckSupportForTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
 
         String nullCheckSupportForTotalQuery = "select Exists( " +
-                "select bookmark_idx from School " +
-                "left join Bookmark " +
-                "on Bookmark.School_idx = School.School_idx " +
+                "select bookmark_idx from Bookmark " +
+                "join Support  " +
+                "on Bookmark.support_idx = Support.support_idx " +
+                "left join Total " +
+                "on Total.fund_idx = Support.support_idx " +
                 "where Bookmark.user_idx = ? " +
-                "and School.school_idx = ? " +
+                "and Total.total_idx = ? " +
                 ") as isChk ";
 
         Object[] nullCheckSupportForTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
@@ -532,13 +536,13 @@ public class BookmarkDao {
     public int nullCheckSchoolForTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
 
         String nullCheckSchoolForTotalQuery = "select Exists( " +
-                "select bookmark_idx from School " +
-                "join Total " +
-                "on School.scholarship_idx = Total.scholarship_idx " +
-                "left join Bookmark " +
+                "select bookmark_idx from Bookmark " +
+                "join School " +
                 "on School.school_idx = Bookmark.school_idx " +
+                "left join Total " +
+                "on Total.scholarship_idx = School.scholarship_idx " +
                 "where School.user_idx = ? " +
-                "and School.school_idx = ? " +
+                "and Total.total_idx = ? " +
                 ") as isChk ";
 
         Object[] nullCheckSchoolForTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
@@ -552,8 +556,10 @@ public class BookmarkDao {
     //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
     public String postBookmarkTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
         int bookmarkTotalNullCheck = bookmarkTotalNullCheck(postBookmarkTotalReq);
-
         int nullCheckScholarshipForTotal = nullCheckScholarshipForTotal(postBookmarkTotalReq);
+        int nullCheckSupportForTotal = nullCheckSupportForTotal(postBookmarkTotalReq);
+        int nullCheckSchoolForTotal = nullCheckSchoolForTotal(postBookmarkTotalReq);
+
 
         String postBookmarkTotalQuery;
         Object[] postBookmarkTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
@@ -569,18 +575,50 @@ public class BookmarkDao {
 
         } else if (nullCheckScholarshipForTotal == 1) {
 
-            postBookmarkTotalQuery = "delete a " +
-                    "from Bookmark a " +
-                    "left join Total b " +
-                    "on a.total_idx = b.total_idx " +
-                    "where a.user_idx = ? " +
-                    "and b.total_idx = ? ";
+            postBookmarkTotalQuery = "delete from Bookmark where scholarship_idx = ( " +
+                    "select * from ( " +
+                    "select Scholarship.scholarship_idx from Bookmark " +
+                    "join Scholarship " +
+                    "on Bookmark.scholarship_idx = Scholarship.scholarship_idx " +
+                    "left join Total " +
+                    "on Total.scholarship_idx = Scholarship.scholarship_idx " +
+                    "where Bookmark.user_idx = ? " +
+                    "and Total.total_idx = ? ) A ) ";
 
             this.jdbcTemplate.update(postBookmarkTotalQuery, postBookmarkTotalParams);
             return "삭제";
 
-        }
-        else {
+        } else if (nullCheckSupportForTotal == 1) {
+
+            postBookmarkTotalQuery = "delete from Bookmark where support_idx = ( " +
+                    "select * from ( " +
+                    "select Support.support_idx from Bookmark " +
+                    "join Support " +
+                    "on Bookmark.support_idx = Support.support_idx " +
+                    "left join Total " +
+                    "on Total.fund_idx = Support.support_idx " +
+                    "where Bookmark.user_idx = ? " +
+                    "and Total.total_idx = ? ) A ) ";
+
+            this.jdbcTemplate.update(postBookmarkTotalQuery, postBookmarkTotalParams);
+            return "삭제";
+
+        } else if (nullCheckSchoolForTotal == 1) {
+
+            postBookmarkTotalQuery = "delete from Bookmark where school_idx = ( " +
+                    "select * from ( " +
+                    "select School.school_idx from Bookmark " +
+                    "join School " +
+                    "on School.school_idx = Bookmark.school_idx " +
+                    "left join Total " +
+                    "on Total.scholarship_idx = School.scholarship_idx " +
+                    "where School.user_idx = ? " +
+                    "and Total.total_idx = ? ) A ) ";
+
+            this.jdbcTemplate.update(postBookmarkTotalQuery, postBookmarkTotalParams);
+            return "삭제";
+
+        } else {
             postBookmarkTotalQuery = "insert into Bookmark (user_idx, total_idx) " +
                     "VALUES (?, ?) ";
 
