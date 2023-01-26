@@ -24,6 +24,7 @@ public class NotificationDao {
         String getNotificationScholarshipResQuery = "select Scholarship.scholarship_idx, Scholarship.scholarship_name, Scholarship.scholarship_institution, Scholarship.scholarship_univ " +
                 "from User, Scholarship " +
                 "where User.user_univ = Scholarship.scholarship_univ " +
+                "or User.user_univ = Scholarship.scholarship_institution " +
                 "and User.user_idx = ? " +
                 "and Scholarship.scholarship_createAt > User.user_reg " +
                 "order by Scholarship.scholarship_createAt desc " +

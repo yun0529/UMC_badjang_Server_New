@@ -265,7 +265,7 @@ public class BookmarkDao {
                 "left join Bookmark " +
                 "on Bookmark.total_idx = Total.total_idx " +
                 "where Bookmark.user_idx = ? " +
-                "and Total.support_idx = ? " +
+                "and Total.fund_idx = ? " +
                 ") as isChk ";
 
         Object[] nullCheckTotalForScholarshipParams = new Object[]{postBookmarkSupportReq.getUser_idx(), postBookmarkSupportReq.getSupport_idx()};
@@ -376,11 +376,11 @@ public class BookmarkDao {
     public int nullCheckScholarshipForSchool(PostBookmarkSchoolReq postBookmarkSchoolReq) {
 
         String nullCheckSchoolForScholarshipQuery = "select Exists( " +
-                "select bookmark_idx from School " +
+                "select bookmark_idx from Bookmark " +
                 "join Scholarship " +
+                "on Bookmark.scholarship_idx = Scholarship.scholarship_idx " +
+                "left join School " +
                 "on School.scholarship_idx = Scholarship.scholarship_idx " +
-                "right join Bookmark " +
-                "on School.school_idx = Bookmark.school_idx " +
                 "where School.user_idx = ? " +
                 "and School.school_idx = ? " +
                 ") as isChk ";
@@ -396,11 +396,11 @@ public class BookmarkDao {
     public int nullCheckTotalForSchool(PostBookmarkSchoolReq postBookmarkSchoolReq) {
 
         String nullCheckSchoolForScholarshipQuery = "select Exists( " +
-                "select bookmark_idx from School " +
+                "select bookmark_idx from Bookmark " +
                 "join Total " +
+                "on Total.total_idx = Bookmark.total_idx " +
+                "left join School " +
                 "on School.scholarship_idx = Total.scholarship_idx " +
-                "left join Bookmark " +
-                "on School.school_idx = Bookmark.school_idx " +
                 "where School.user_idx = ? " +
                 "and School.school_idx = ? " +
                 ") as isChk ";
@@ -435,29 +435,36 @@ public class BookmarkDao {
 
         } else if (nullCheckScholarshipForSchool == 1) {
 
-            postBookmarkSchoolQuery = "delete a " +
-                    "from Bookmark a " +
-                    "left join School b " +
-                    "on a.School_idx = b.School_idx " +
-                    "where a.user_idx = ? " +
-                    "and b.school_idx = ? ";
+            postBookmarkSchoolQuery = "delete from Bookmark where scholarship_idx = ( " +
+                    "select * from ( " +
+                    "select Scholarship.scholarship_idx from Bookmark " +
+                    "join Scholarship " +
+                    "on Bookmark.scholarship_idx = Scholarship.scholarship_idx " +
+                    "left join School " +
+                    "on School.scholarship_idx = Scholarship.scholarship_idx " +
+                    "where School.user_idx = ? " +
+                    "and School.school_idx = ? ) A ) ";
 
             this.jdbcTemplate.update(postBookmarkSchoolQuery, postBookmarkSchoolParams);
             return "삭제";
 
         } else if (nullCheckTotalForSchool == 1) {
 
-            postBookmarkSchoolQuery = "delete a " +
-                    "from Bookmark a " +
-                    "left join School b " +
-                    "on a.School_idx = b.School_idx " +
-                    "where a.user_idx = ? " +
-                    "and b.school_idx = ? ";
+            postBookmarkSchoolQuery = "delete from Bookmark where total_idx = ( " +
+                    "select * from ( " +
+                    "select Total.total_idx from Bookmark " +
+                    "join Total " +
+                    "on Total.total_idx = Bookmark.total_idx " +
+                    "left join School " +
+                    "on School.scholarship_idx = Total.scholarship_idx " +
+                    "where School.user_idx = ? " +
+                    "and School.school_idx = ? ) A ) ";
 
             this.jdbcTemplate.update(postBookmarkSchoolQuery, postBookmarkSchoolParams);
             return "삭제";
 
-        } else {
+        }
+        else {
 
             postBookmarkSchoolQuery = "insert into Bookmark (user_idx, school_idx) " +
                     "VALUES (?, ?) ";
@@ -486,9 +493,9 @@ public class BookmarkDao {
 
     }
 
-    public int nullCheckScholarshipAndSupportForTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
+    public int nullCheckScholarshipForTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
 
-        String nullCheckScholarshipAndSupportForTotalQuery = "select Exists( " +
+        String nullCheckScholarshipForTotalQuery = "select Exists( " +
                 "select bookmark_idx from School " +
                 "left join Bookmark " +
                 "on Bookmark.School_idx = School.School_idx " +
@@ -496,11 +503,49 @@ public class BookmarkDao {
                 "and School.school_idx = ? " +
                 ") as isChk ";
 
-        Object[] nullCheckScholarshipAndSupportForTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
+        Object[] nullCheckScholarshipForTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
 
-        return this.jdbcTemplate.queryForObject(nullCheckScholarshipAndSupportForTotalQuery,
+        return this.jdbcTemplate.queryForObject(nullCheckScholarshipForTotalQuery,
                 int.class,
-                nullCheckScholarshipAndSupportForTotalParams);
+                nullCheckScholarshipForTotalParams);
+
+    }
+
+    public int nullCheckSupportForTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
+
+        String nullCheckSupportForTotalQuery = "select Exists( " +
+                "select bookmark_idx from School " +
+                "left join Bookmark " +
+                "on Bookmark.School_idx = School.School_idx " +
+                "where Bookmark.user_idx = ? " +
+                "and School.school_idx = ? " +
+                ") as isChk ";
+
+        Object[] nullCheckSupportForTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
+
+        return this.jdbcTemplate.queryForObject(nullCheckSupportForTotalQuery,
+                int.class,
+                nullCheckSupportForTotalParams);
+
+    }
+
+    public int nullCheckSchoolForTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
+
+        String nullCheckSchoolForTotalQuery = "select Exists( " +
+                "select bookmark_idx from School " +
+                "join Total " +
+                "on School.scholarship_idx = Total.scholarship_idx " +
+                "left join Bookmark " +
+                "on School.school_idx = Bookmark.school_idx " +
+                "where School.user_idx = ? " +
+                "and School.school_idx = ? " +
+                ") as isChk ";
+
+        Object[] nullCheckSchoolForTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
+
+        return this.jdbcTemplate.queryForObject(nullCheckSchoolForTotalQuery,
+                int.class,
+                nullCheckSchoolForTotalParams);
 
     }
 
@@ -508,7 +553,7 @@ public class BookmarkDao {
     public String postBookmarkTotal(PostBookmarkTotalReq postBookmarkTotalReq) {
         int bookmarkTotalNullCheck = bookmarkTotalNullCheck(postBookmarkTotalReq);
 
-        int nullCheckScholarshipSupportForTotal = nullCheckScholarshipAndSupportForTotal(postBookmarkTotalReq);
+        int nullCheckScholarshipForTotal = nullCheckScholarshipForTotal(postBookmarkTotalReq);
 
         String postBookmarkTotalQuery;
         Object[] postBookmarkTotalParams = new Object[]{postBookmarkTotalReq.getUser_idx(), postBookmarkTotalReq.getTotal_idx()};
@@ -522,7 +567,7 @@ public class BookmarkDao {
             this.jdbcTemplate.update(postBookmarkTotalQuery, postBookmarkTotalParams);
             return "삭제";
 
-        } else if (nullCheckScholarshipSupportForTotal == 1) {
+        } else if (nullCheckScholarshipForTotal == 1) {
 
             postBookmarkTotalQuery = "delete a " +
                     "from Bookmark a " +
