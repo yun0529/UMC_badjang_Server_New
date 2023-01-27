@@ -81,17 +81,17 @@ public class MenuController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @GetMapping("/menu/school") // (GET) 127.0.0.1:9000/menu/school
-    public BaseResponse<List<GetSchoolRes>> getSchool(@RequestParam(defaultValue = "0") int userIdx) throws BaseException {
+    public BaseResponse<List<GetSchoolRes>> getSchool(@RequestParam(defaultValue = "0") int user_idx) throws BaseException {
         int idx = jwtService.getUserIdx();
-        if(idx != userIdx){
+        if(idx != user_idx){
             return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
         }
-        else if(userIdx == 0){
+        else if(user_idx == 0){
             return new BaseResponse<>(BaseResponseStatus.USERS_EMPTY_USER_IDX);
         }
         else{
             try {
-                List<GetSchoolRes> getSchoolRes = menuProvider.getSchool(userIdx);
+                List<GetSchoolRes> getSchoolRes = menuProvider.getSchool(user_idx);
                 return new BaseResponse<>(getSchoolRes);
 
             } catch (BaseException exception) {
@@ -100,4 +100,31 @@ public class MenuController {
             }
         }
     }
+
+    /*@ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @PostMapping("/menu/school/add/{user_idx}")
+    public BaseResponse<List<PostSchoolRes>> postSchool(@PathVariable("user_idx") int user_idx) {
+
+            try {
+                int idx = jwtService.getUserIdx();
+
+                if(idx != user_idx){
+                    return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+                }
+                else if(user_idx == 0){
+                    return new BaseResponse<>(BaseResponseStatus.USERS_EMPTY_USER_IDX);
+                }
+                else if(getSchool(user_idx) == null){
+                    return new BaseResponse<>(BaseResponseStatus.NON_MATCH_UNIV);
+                }
+
+                List<PostSchoolRes> postSchoolRes = menuProvider.postSchool(user_idx);
+                return new BaseResponse<>(postSchoolRes);
+
+            } catch (BaseException exception) {
+                System.out.println(exception);
+                return new BaseResponse<>((exception.getStatus()));
+            }
+    }*/
 }

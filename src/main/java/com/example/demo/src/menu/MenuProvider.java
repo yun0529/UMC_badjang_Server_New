@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Iterator;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -48,13 +50,24 @@ public class MenuProvider {
         }
     }
 
-    public List<GetSchoolRes> getSchool(int userIdx) throws BaseException{
+    public List<GetSchoolRes> getSchool(int user_idx) throws BaseException{
         try{
-            List<GetSchoolRes> getSchoolRes = menuDao.getSchoolRes(userIdx);
+            List<GetSchoolRes> getSchoolRes = menuDao.getSchoolRes(user_idx);
             return getSchoolRes;
         }
         catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    /*public List<PostSchoolRes> postSchool(int user_idx) throws BaseException{
+        try{
+            List<PostSchoolRes> postSchoolRes = menuDao.postSchoolRes(user_idx);
+            return postSchoolRes;
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }*/
 }

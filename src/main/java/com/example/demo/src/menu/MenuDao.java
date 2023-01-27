@@ -1,6 +1,5 @@
 package com.example.demo.src.menu;
 
-import com.example.demo.config.BaseException;
 import com.example.demo.src.menu.model.*;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,17 +56,18 @@ public class MenuDao {
         );
     }
 
-    public List<GetSchoolRes> getSchoolRes(int userIdx) {
+    public List<GetSchoolRes> getSchoolRes(int user_idx) {
 
         String getSchoolResQuery = "SELECT scholarship_idx, User.user_idx, scholarship_createAt, scholarship_updateAt, scholarship_status " +
                 "from badjangDB.Scholarship " +
                 "join User where User.user_univ = scholarship_univ and scholarship_status = 'Y' " +
                 "and user_idx = ? " ;
 
-                int getUserUnivParams = userIdx;
+                int getUserUnivParams = user_idx;
 
                 return this.jdbcTemplate.query(getSchoolResQuery,
                         (rs, rowNum) -> new GetSchoolRes(
+                                rs.getInt("school_idx"),
                                 rs.getInt("scholarship_idx"),
                                 rs.getInt("user_idx"),
                                 rs.getString("scholarship_createAt"),
@@ -76,4 +76,27 @@ public class MenuDao {
                         getUserUnivParams);
     }
 
+    /*public List<PostSchoolRes> postSchoolRes (int user_idx) {
+        PostSchoolReq postSchoolReq = new PostSchoolReq();
+        Iterator<GetSchoolRes> school = getSchoolRes(user_idx).iterator();
+
+        while (school.hasNext()) {
+            String postSchoolResQuery = "insert into School (scholarship_idx, user_idx, " +
+                    "school_createAt, school_updateAt, school_status) " +
+                    "VALUES (?, ?, ?, ?, ?) " ;
+            postSchoolReq.setScholarship_idx(school.next().getScholarship_idx());
+            postSchoolReq.setUser_idx(school.next().getUser_idx());
+            postSchoolReq.setSchool_createAt(school.next().getScholarship_createAt());
+            postSchoolReq.setSchool_updateAt(school.next().getScholarship_updateAt());
+            postSchoolReq.setSchool_status(school.next().getScholarship_status());
+
+            Object[] createPostParams = new Object[]{
+                    postSchoolReq.getScholarship_idx(), postSchoolReq.getUser_idx(), postSchoolReq.getSchool_createAt(),
+                    postSchoolReq.getSchool_updateAt(), postSchoolReq.getSchool_status()
+            };
+            this.jdbcTemplate.update(postSchoolResQuery, createPostParams);
+        }
+        return null;
+    }*/
 }
+
