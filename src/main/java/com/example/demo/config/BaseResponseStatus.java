@@ -65,6 +65,7 @@ public enum BaseResponseStatus {
     GET_MYFILTER_EMPTY_SEMESTER(false, 2308, "학기를 입력하세요."),
     GET_MYFILTER_EMPTY_PROVINCE(false, 2309, "도를 입력하세요."),
     GET_MYFILTER_EMPTY_CITY(false, 2310, "시/군/구/를을 입력하세요."),
+    PATCH_WRONG_COMMENT_INDEX(false,2311,"잘못된 접근입니다."),
 
     POST_SCHOLARSHIP_EMPTY_NAME(false, 2352,"장학금 이름을 입력해주세요."),
 

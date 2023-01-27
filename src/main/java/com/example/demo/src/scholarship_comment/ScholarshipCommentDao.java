@@ -67,9 +67,13 @@ public class ScholarshipCommentDao {
     /**
      * 댓글 삭제 API
      */
-    public int deleteScholarshipComment(DeleteScholarshipCommentReq deleteScholarshipCommentReq) {
+    public int deleteScholarshipComment(Integer scholarship_idx, Integer scholarship_comment_idx) {
+
+        String scholarshipCommentCountDownQuery = "update Scholarship set scholarship_comment = scholarship_comment - 1 where scholarship_idx = ?";
+        this.jdbcTemplate.update(scholarshipCommentCountDownQuery,scholarship_idx);
+
         String deleteScholarshipCommentQuery = "update Scholarship_Comment set scholarship_comment_status = 'N' where scholarship_comment_idx = ?";
-        Object[] deleteScholarshipCommentParams = new Object[]{deleteScholarshipCommentReq.getScholarship_comment_idx()};
+        Object[] deleteScholarshipCommentParams = new Object[]{scholarship_comment_idx};
 
         return this.jdbcTemplate.update(deleteScholarshipCommentQuery,deleteScholarshipCommentParams);
 

@@ -53,9 +53,9 @@ public class ScholarshipCommentService {
     /**
      * 댓글 삭제 API
      */
-    public void deleteScholarshipComment(DeleteScholarshipCommentReq deleteScholarshipCommentReq) throws BaseException {
+    public void deleteScholarshipComment(Integer scholarship_idx, Integer scholarship_comment_idx) throws BaseException {
         try {
-            int result = scholarshipCommentDao.deleteScholarshipComment(deleteScholarshipCommentReq);
+            int result = scholarshipCommentDao.deleteScholarshipComment(scholarship_idx, scholarship_comment_idx);
             if(result == 0) {
                 throw new BaseException(DELETE_COMMENT_FAIL);
             }

@@ -67,9 +67,12 @@ public class SupportCommentDao {
     /**
      * 댓글 삭제 API
      */
-    public int deleteSupportComment(DeleteSupportCommentReq deleteSupportCommentReq) {
+    public int deleteSupportComment(Integer support_idx, Integer support_comment_idx) {
+        String supportCommentCountDownQuery = "update Support set support_comment = support_comment - 1 where support_idx = ?";
+        this.jdbcTemplate.update(supportCommentCountDownQuery,support_idx);
+
         String deleteSupportCommentQuery = "update Support_Comment set support_comment_status = 'N' where support_comment_idx = ?";
-        Object[] deleteSupportCommentParams = new Object[]{deleteSupportCommentReq.getSupport_comment_idx()};
+        Object[] deleteSupportCommentParams = new Object[]{support_comment_idx};
 
         return this.jdbcTemplate.update(deleteSupportCommentQuery,deleteSupportCommentParams);
 
