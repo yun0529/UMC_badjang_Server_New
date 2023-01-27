@@ -1,6 +1,9 @@
 package com.example.demo.src.support;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.scholarship.model.GetScholarshipMyfilter;
+import com.example.demo.src.scholarship.model.GetScholarshipRes;
+import com.example.demo.src.support.model.GetSupportMyfilter;
 import com.example.demo.src.support.model.GetSupportRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,14 @@ public class SupportProvider {
         try {
             return supportDao.checkSupportIdx(supportidx);
         } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetSupportRes> getSupportMyfilter(GetSupportMyfilter getSupportMyfilter) throws BaseException {
+        try {
+            return supportDao.getSupportMyfilter(getSupportMyfilter);
+        } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }

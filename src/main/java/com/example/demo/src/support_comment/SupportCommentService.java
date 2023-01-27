@@ -54,9 +54,9 @@ public class SupportCommentService {
     /**
      * 댓글 삭제 API
      */
-    public void deleteSupportComment(DeleteSupportCommentReq deleteSupportCommentReq) throws BaseException {
+    public void deleteSupportComment(Integer support_idx, Integer support_comment_idx) throws BaseException {
         try {
-            int result = supportCommentDao.deleteSupportComment(deleteSupportCommentReq);
+            int result = supportCommentDao.deleteSupportComment(support_idx, support_comment_idx);
             if(result == 0) {
                 throw new BaseException(DELETE_COMMENT_FAIL);
             }

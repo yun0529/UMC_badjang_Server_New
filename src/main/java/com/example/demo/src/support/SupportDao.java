@@ -1,5 +1,8 @@
 package com.example.demo.src.support;
 
+import com.example.demo.src.scholarship.model.GetScholarshipMyfilter;
+import com.example.demo.src.scholarship.model.GetScholarshipRes;
+import com.example.demo.src.support.model.GetSupportMyfilter;
 import com.example.demo.src.support.model.GetSupportRes;
 import com.example.demo.src.support.model.PostSupportReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,5 +192,107 @@ public class SupportDao {
 
         String lastInsertIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값은 가져온다.
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, long.class); // 해당 쿼리문의 결과 마지막으로 삽인된 지원금의 Idx번호를 반환한다.
+    }
+
+    public List<GetSupportRes> getSupportMyfilter(GetSupportMyfilter getSupportMyfilter) {
+
+        String MyfilterQuery = "select * from Support where support_status = 'Y'";
+
+        String university = getSupportMyfilter.getSupport_univ();
+        String college = getSupportMyfilter.getSupport_college();
+        String department = getSupportMyfilter.getSupport_department();
+        Integer grade = getSupportMyfilter.getSupport_grade();
+        Integer semester = getSupportMyfilter.getSupport_semester();
+        String province = getSupportMyfilter.getSupport_province();
+        String city = getSupportMyfilter.getSupport_city();
+
+        String universityQuery = "";
+        String collegeQuery= "";
+        String departmentQuery= "";
+        String gradeQuery= "";
+        String semesterQuery= "";
+        String provinceQuery= "";
+        String cityQuery= "";
+
+        if(university == null) {
+            universityQuery = " and 1 = ?";
+            university = "1";
+        } else {
+            universityQuery = " and support_univ = ?";
+        }
+
+        if(college == null) {
+            college = "1";
+            collegeQuery = " and 1 = ?";
+        } else {
+            collegeQuery = " and support_college = ?";
+        }
+
+        if(department == null) {
+            departmentQuery = " and 1 = ?";
+            department= "1";
+        } else {
+            departmentQuery = " and support_department = ?";
+        }
+
+        if(grade == null) {
+            gradeQuery = " and 1 = ?";
+            grade = 1;
+        } else {
+            gradeQuery = " and support_grade = ?";
+        }
+
+        if(semester == null) {
+            semester = 1;
+            semesterQuery = " and 1 = ?";
+        } else {
+            semesterQuery = " and support_semester = ?";
+        }
+
+        if(province == null) {
+            provinceQuery = " and 1 = ?";
+            province = "1";
+        } else {
+            provinceQuery = " and support_province = ?";
+        }
+
+        if(city == null) {
+            cityQuery = " and 1 = ?";
+            city = "1";
+        } else {
+            cityQuery = " and support_city = ?";
+        }
+
+
+        MyfilterQuery = MyfilterQuery + universityQuery + collegeQuery + departmentQuery
+                + gradeQuery + semesterQuery + provinceQuery + cityQuery;
+
+        return this.jdbcTemplate.query(MyfilterQuery,
+                (rs, rowNum) -> new GetSupportRes(
+                        rs.getLong("support_idx"),
+                        rs.getString("support_policy"),
+                        rs.getString("support_name"),
+                        rs.getString("support_institution"),
+                        rs.getString("support_content"),
+                        rs.getString("support_image"),
+                        rs.getString("support_homepage"),
+                        rs.getInt("support_view"),
+                        rs.getInt("support_comment"),
+                        rs.getString("support_scale"),
+                        rs.getString("support_term"),
+                        rs.getString("support_presentation"),
+                        rs.getString("support_createAt"),
+                        rs.getString("support_updateAt"),
+                        rs.getString("support_status"),
+                        rs.getString("support_province"),
+                        rs.getString("support_city"),
+                        rs.getString("support_univ"),
+                        rs.getString("support_college"),
+                        rs.getString("support_department"),
+                        rs.getString("support_grade"),
+                        rs.getString("support_semester"),
+                        rs.getString("support_category")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                university,college,department,grade,semester,province,city); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+
     }
 }
