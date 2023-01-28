@@ -79,6 +79,19 @@ public class BoardController {
         }
     }
 
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/board/detail/recommend/{post_idx}")
+    public BaseResponse<List<GetBoardRes>> getUpdateRecommendCount(@PathVariable("post_idx")int post_idx){
+        try{
+            List<GetBoardRes> getBoardCommentRes = boardProvider.updateRecommendCount(post_idx);
+            return new BaseResponse<>(getBoardCommentRes);
+        } catch(BaseException exception){
+            System.out.println(exception);
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
     /**
      * 자유게시판 게시글 작성
      * [POST] /board/add
@@ -154,6 +167,30 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @PostMapping("/board/recommend/{post_idx}")
+    public BaseResponse<PostRecommendRes> postRecommend(@PathVariable("post_idx")int post_idx,
+                                                    @RequestBody PostRecommendReq postRecommendReq){
+        try {
+            if(post_idx != postRecommendReq.getPost_idx()){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
+            }
+            else if(postRecommendReq.getUser_idx() == 0){
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_USER_IDX);
+            }
+            else if(postRecommendReq.getPost_idx() == 0){
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
+            }
+            PostRecommendRes postRecommendRes = boardProvider.postRecommend(postRecommendReq);
+            return new BaseResponse<>(postRecommendRes);
+        } catch (BaseException exception) {
+            System.out.println(exception);
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
     //[GET] 댓글 조회 (게시글 인덱스 사용)
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)

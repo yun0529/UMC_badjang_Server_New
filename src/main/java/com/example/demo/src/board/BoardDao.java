@@ -108,12 +108,31 @@ public class BoardDao {
 
         int updateCommentCount = post_idx;
         this.jdbcTemplate.update(updateCommentQuery, updateCommentCount);
+        return null;
+    }
+    //게시글 상세조회(추천 증가)
+    public List<GetBoardRes> updateRecommendCount(int post_idx){
+        String updateCommentQuery = "UPDATE Board set post_recommend = (select count(Board_Recommend.post_idx) " +
+                "from Board_Recommend where Board_Recommend.post_idx = Board.post_idx) " +
+                "where Board.post_idx = ? " ;
 
+        int updateRecommendCount = post_idx;
+        this.jdbcTemplate.update(updateCommentQuery, updateRecommendCount);
         return null;
     }
 
-    //게시글 상세조회(추천수 증감)
+    //게시글 상세조회(추천 등록)
+    public PostRecommendRes postRecommend(PostRecommendReq postRecommendReq){
+        String createRecommendQuery = "INSERT INTO Board_Recommend (user_idx, post_idx)" +
+                "VALUES (?, ?) " ;
 
+        Object[] createParams = new Object[]{
+                postRecommendReq.getUser_idx(), postRecommendReq.getPost_idx()
+        };
+
+        this.jdbcTemplate.update(createRecommendQuery, createParams);
+        return null;
+    }
     /**
      * 댓글 관련 시작부분
      */
@@ -142,7 +161,6 @@ public class BoardDao {
                 ),getPostIdx);
     }
 //게시글 댓글 작성
-
     public PostCommentRes postComment(PostCommentReq postCommentReq){
         String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_recommend, comment_anonymity, " +
                 "comment_createAt, comment_updatedAt, comment_status) " +

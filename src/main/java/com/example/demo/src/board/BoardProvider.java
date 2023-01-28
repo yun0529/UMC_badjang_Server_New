@@ -57,6 +57,17 @@ public class BoardProvider {
         }
     }
 
+    public List<GetBoardRes> updateRecommendCount(int post_idx) throws BaseException {
+        try{
+            List<GetBoardRes> updateRecommendCount = boardDao.updateRecommendCount(post_idx);
+            return updateRecommendCount;
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 
     public List<PostBoardRes> postBoard(PostBoardReq postBoardReq) throws BaseException{
         try{
@@ -85,6 +96,16 @@ public class BoardProvider {
             List<GetBoardRes> deleteBoardRes = boardDao.deleteBoard(deleteBoardReq);
             return deleteBoardRes;
         }catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostRecommendRes postRecommend(PostRecommendReq postRecommendReq) throws BaseException {
+        try {
+            PostRecommendRes postRecommendRes = boardDao.postRecommend(postRecommendReq);
+            return postRecommendRes;
+        } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }

@@ -41,12 +41,13 @@ public enum BaseResponseStatus {
     EMPTY_BOARD_CONTENT(false, 2401, "게시물 본문을 입력해주세요"),
     INVALID_POST_IDX(false, 2402, "요청한 게시글 인덱스와 일치하지 않습니다."),
     EMPTY_POST_IDX(false, 2403, "게시글 인덱스를 확인하세요."),
-    EMPTY_CATEGORY_IDX(false, 2404, "게시글 카테고리를 확인하세요."),
-    EMPTY_COMMENT_IDX(false, 2405, "댓글 인덱스를 확인하세요."),
-    EMPTY_COMMENT_ANONYMITY(false, 2406, "댓글의 익명성 여부를 확인하세요"),
-    EMPTY_COMMENT_STATUS(false, 2407, "댓글의 존재유무를 확인하세요."),
-    EMPTY_COMMENT_CONTENT(false, 2408, "댓글 내용을 입력하세요"),
-    INVALID_COMMENT_IDX(false, 2409, "수정하려는 댓글 인덱스가 일치하지 않습니다."),
+    EMPTY_USER_IDX(false, 2404, "유저 인덱스를 확인하세요."),
+    EMPTY_CATEGORY_IDX(false, 2405, "게시글 카테고리를 확인하세요."),
+    EMPTY_COMMENT_IDX(false, 2406, "댓글 인덱스를 확인하세요."),
+    EMPTY_COMMENT_ANONYMITY(false, 2407, "댓글의 익명성 여부를 확인하세요"),
+    EMPTY_COMMENT_STATUS(false, 2408, "댓글의 존재유무를 확인하세요."),
+    EMPTY_COMMENT_CONTENT(false, 2409, "댓글 내용을 입력하세요"),
+    INVALID_COMMENT_IDX(false, 2410, "수정하려는 댓글 인덱스가 일치하지 않습니다."),
 
 
 
