@@ -5,6 +5,7 @@ import com.example.demo.src.user.model.PostExtraReq;
 import com.example.demo.src.user.model.PostInfoReq;
 import com.example.demo.src.user.model.PostUserReq;
 import com.example.demo.src.user.model.PostUserRes;
+import com.example.demo.src.user.model.PatchUserReq;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
