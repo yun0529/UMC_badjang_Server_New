@@ -5,6 +5,7 @@ import com.example.demo.src.user.model.PostExtraReq;
 import com.example.demo.src.user.model.PostInfoReq;
 import com.example.demo.src.user.model.PostUserReq;
 import com.example.demo.src.user.model.PostUserRes;
+import com.example.demo.src.user.model.PatchUserReq;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
@@ -96,6 +97,24 @@ public class UserService {
             String jwt = jwtService.createJwt(user_idx);
             return new PostUserRes(user_idx, jwt);
         } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    
+    // 회원정보 수정(Patch)
+    public void modifyUserPassword(PatchUserReq patchUserReq) throws BaseException {
+        if(userProvider.checkEmail(patchUserReq.getUser_email()) == 0) {
+            throw new BaseException(NON_EXISTENT_EMAIL);
+        }
+        String pwd;
+        try {
+            pwd = new SHA256().encrypt(patchUserReq.getUser_password());
+            patchUserReq.setUser_password(pwd);
+            int result = userDao.modifyUserPassword(patchUserReq); // 해당 과정이 무사히 수행되면 True(1), 그렇지 않으면 False(0)입니다.
+            if (result == 0) { // result값이 0이면 과정이 실패한 것이므로 에러 메서지를 보냅니다.
+                throw new BaseException(MODIFY_FAIL_USERPASSWORD);
+            }
+        } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
         }
     }
