@@ -278,5 +278,40 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    //[Post] 댓글 추천(댓글 인덱스 사용)
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @PostMapping("/board/detail/comment/recommend/{comment_idx}")
+    public BaseResponse<PostCommentRecommendRes> getUpdateCommentRecommendCount(@PathVariable("comment_idx")int comment_idx,
+                                                                                @RequestBody PostCommentRecommendReq postCommentRecommendReq){
+        try{
+            if(comment_idx != postCommentRecommendReq.getComment_idx()){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_COMMENT_IDX);
+            }
+            else if(comment_idx == 0){
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
+            }
+            PostCommentRecommendRes getCommentRes = boardProvider.updateCommentRecommend(postCommentRecommendReq);
+            return new BaseResponse<>(getCommentRes);
+        } catch(BaseException exception){
+            System.out.println(exception);
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //[Get/Patch] 댓글 추천 수 증감(댓글 인덱스 사용)
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/board/comment/recommend/{comment_idx}")
+    public BaseResponse<List<GetCommentRes>> getUpdateCommentRecommendCount(@PathVariable("comment_idx")int comment_idx){
+        try{
+            List<GetCommentRes> getCommentRes = boardProvider.updateCommentRecommendCount(comment_idx);
+            return new BaseResponse<>(getCommentRes);
+        } catch(BaseException exception){
+            System.out.println(exception);
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
 

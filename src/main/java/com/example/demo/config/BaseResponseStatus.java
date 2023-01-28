@@ -47,7 +47,7 @@ public enum BaseResponseStatus {
     EMPTY_COMMENT_ANONYMITY(false, 2407, "댓글의 익명성 여부를 확인하세요"),
     EMPTY_COMMENT_STATUS(false, 2408, "댓글의 존재유무를 확인하세요."),
     EMPTY_COMMENT_CONTENT(false, 2409, "댓글 내용을 입력하세요"),
-    INVALID_COMMENT_IDX(false, 2410, "수정하려는 댓글 인덱스가 일치하지 않습니다."),
+    INVALID_COMMENT_IDX(false, 2410, "댓글 인덱스가 일치하지 않습니다."),
 
 
 

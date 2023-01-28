@@ -216,4 +216,34 @@ public class BoardDao {
         this.jdbcTemplate.update(deleteQuery,deleteResult);
         return null;
     }
+
+    public PostCommentRecommendRes postCommentRecommend(PostCommentRecommendReq postCommentRecommendReq) {
+        String createRecommendQuery = "INSERT INTO Comment_Recommend (comment_idx, user_idx)" +
+                "VALUES (?, ?) " ;
+
+        Object[] createParams = new Object[]{
+                postCommentRecommendReq.getComment_idx(), postCommentRecommendReq.getUser_idx()
+        };
+
+        this.jdbcTemplate.update(createRecommendQuery, createParams);
+
+        String lastInsertIdQuery = "select comment_recommend_idx, comment_idx " +
+                "from badjangDB.Comment_Recommend order by comment_recommend_idx desc limit 1 ";
+
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,(rs, rowNum) -> new PostCommentRecommendRes(
+                rs.getInt("comment_recommend_idx"),
+                rs.getInt("comment_idx")
+        ));
+    }
+
+    public List<GetCommentRes> updateCommentRecommendCount(int comment_idx) {
+        String updateCommentQuery = "UPDATE Comment set comment_updatedAt = CURRENT_TIMESTAMP, " +
+                "comment_recommend = (select count(Comment_Recommend.comment_idx) " +
+                "from Comment_Recommend where Comment_Recommend.comment_idx = Comment.comment_idx) " +
+                "where Comment.comment_idx = ? " ;
+
+        int updateRecommendCount = comment_idx;
+        this.jdbcTemplate.update(updateCommentQuery, updateRecommendCount);
+        return null;
+    }
 }

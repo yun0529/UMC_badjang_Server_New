@@ -157,4 +157,26 @@ public class BoardProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public PostCommentRecommendRes updateCommentRecommend (PostCommentRecommendReq postCommentRecommendReq) throws BaseException {
+        try {
+            PostCommentRecommendRes postCommentRecommendRes = boardDao.postCommentRecommend(postCommentRecommendReq);
+            return new PostCommentRecommendRes(
+                    postCommentRecommendRes.getComment_recommend_idx(),postCommentRecommendRes.getComment_idx());
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetCommentRes> updateCommentRecommendCount(int comment_idx) throws BaseException {
+        try{
+            List<GetCommentRes> updateCommentRecommendCount = boardDao.updateCommentRecommendCount(comment_idx);
+            return updateCommentRecommendCount;
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
