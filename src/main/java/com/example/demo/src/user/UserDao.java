@@ -128,10 +128,10 @@ public class UserDao {
 
     public void saveUserExtraInfo(PostExtraReq postExtraReq) {
         String saveUserExtraInfoQuery = "UPDATE User " +
-                "SET user_name = ?, user_birth = ?, user_phone = ? " +
+                "SET user_name = ?, user_birth = ?, user_phone = ?, user_push_yn = ? " +
                 "WHERE user_idx = ?";
         Object[] saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
-                postExtraReq.getUser_phone(), postExtraReq.getUser_idx()};
+                postExtraReq.getUser_phone(), postExtraReq.getUser_push_yn(), postExtraReq.getUser_idx()};
 
         this.jdbcTemplate.update(saveUserExtraInfoQuery, saveUserExtraInfoParams);
     }

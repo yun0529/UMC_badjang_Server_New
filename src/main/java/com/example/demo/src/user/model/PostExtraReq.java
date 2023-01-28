@@ -12,4 +12,5 @@ public class PostExtraReq {
     private String user_name;
     private String user_birth;
     private String user_phone;
+    private String user_push_yn;
 }
