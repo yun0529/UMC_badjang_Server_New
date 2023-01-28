@@ -77,6 +77,19 @@ public class UserService {
     }
 
     public PostUserRes saveUserExtraInfo(PostExtraReq postExtraReq) throws BaseException {
+
+        LocalDate now = LocalDate.now();
+        LocalDate parsedBirth = LocalDate.parse(postExtraReq.getUser_birth(),
+                DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        int Age = now.minusYears(parsedBirth.getYear()).getYear();
+
+        if(parsedBirth.plusYears(Age).isAfter(now)){ Age -= 1; }
+
+        if(Age < 14){
+            throw new BaseException(POST_USERS_LIMIT_BIRTH);
+        }
+
         try {
             userDao.saveUserExtraInfo(postExtraReq);
             int user_idx = postExtraReq.getUser_idx();
