@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
-import static com.example.demo.config.BaseResponseStatus.POST_COMMENT_EMPTY_CONTENT;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
 @RequestMapping("/scholarships/comment")
@@ -109,16 +108,24 @@ public class ScholarshipCommentCotroller {
      */
     @ResponseBody
     @PatchMapping("/delete/{scholarship_comment_idx}")
-    public BaseResponse<String> deleteScholarshipComment(@PathVariable("scholarship_comment_idx") Integer scholarship_comment_idx, @RequestBody ScholarshipComment scholarshipComment) {
+    public BaseResponse<String> deleteScholarshipComment(@PathVariable("scholarship_comment_idx") Integer scholarship_comment_idx, @RequestBody DeleteScholarshipCommentReq deleteScholarshipCommentReq) {
         try {
+
             Integer userIdxByJwt = jwtService.getUserIdx();
-            Integer user_idx = scholarshipComment.getUser_idx();
+            Integer user_idx = deleteScholarshipCommentReq.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            DeleteScholarshipCommentReq deleteScholarshipCommentReq = new DeleteScholarshipCommentReq(scholarship_comment_idx);
-            scholarshipCommentService.deleteScholarshipComment(deleteScholarshipCommentReq);
+
+            Integer scholarship_idx = deleteScholarshipCommentReq.getScholarship_idx();
+            Integer scholarship_comment_idx_ByReqBody = deleteScholarshipCommentReq.getScholarship_comment_idx();
+            // PathVariable로 들어온 댓글 인덱스와 RequestBody로 받은 댓글 인덱스가 같은지 확인
+            if(scholarship_comment_idx != scholarship_comment_idx_ByReqBody) {
+                return new BaseResponse<>(PATCH_WRONG_COMMENT_INDEX);
+            }
+
+            scholarshipCommentService.deleteScholarshipComment(scholarship_idx, scholarship_comment_idx);
 
             String result = "댓글이 삭제되었습니다.";
             return new BaseResponse<>(result);
