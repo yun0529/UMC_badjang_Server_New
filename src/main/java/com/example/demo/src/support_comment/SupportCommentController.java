@@ -2,6 +2,7 @@ package com.example.demo.src.support_comment;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.scholarship_comment.model.DeleteScholarshipCommentReq;
 import com.example.demo.src.support_comment.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
-import static com.example.demo.config.BaseResponseStatus.POST_COMMENT_EMPTY_CONTENT;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
 @RequestMapping("/supports/comment")
@@ -109,18 +109,24 @@ public class SupportCommentController {
      */
     @ResponseBody
     @PatchMapping("/delete/{support_comment_idx}")
-    public BaseResponse<String> deleteSupportComment(@PathVariable("support_comment_idx") Integer support_comment_idx, @RequestBody SupportComment supportComment) {
+    public BaseResponse<String> deleteSupportComment(@PathVariable("support_comment_idx") Integer support_comment_idx, @RequestBody DeleteSupportCommentReq deleteSupportCommentReq) {
         try {
 
             Integer userIdxByJwt = jwtService.getUserIdx();
-            Integer user_idx = supportComment.getUser_idx();
+            Integer user_idx = deleteSupportCommentReq.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            DeleteSupportCommentReq deleteSupportCommentReq = new DeleteSupportCommentReq(support_comment_idx);
-            supportCommentService.deleteSupportComment(deleteSupportCommentReq);
+            Integer support_idx = deleteSupportCommentReq.getSupport_idx();
+            Integer support_comment_idx_ByReqBody = deleteSupportCommentReq.getSupport_comment_idx();
+            // PathVariable로 들어온 댓글 인덱스와 RequestBody로 받은 댓글 인덱스가 같은지 확인
+            if(support_comment_idx != support_comment_idx_ByReqBody) {
+                return new BaseResponse<>(PATCH_WRONG_COMMENT_INDEX);
+            }
+
+            supportCommentService.deleteSupportComment(support_idx, support_comment_idx);
 
             String result = "댓글이 삭제되었습니다.";
             return new BaseResponse<>(result);

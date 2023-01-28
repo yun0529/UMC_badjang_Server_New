@@ -2,21 +2,16 @@ package com.example.demo.src.scholarship;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.scholarship.model.GetScholarshipMyfilter;
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
 import com.example.demo.src.scholarship.model.PostScholarshipReq;
 import com.example.demo.src.scholarship.model.PostScholarshipRes;
 
-import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentReq;
-import com.example.demo.src.scholarship_comment.model.PostScholarshipCommentRes;
-import com.example.demo.src.user.model.PostUserRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 
@@ -79,12 +74,8 @@ public class ScholarshipController {
      */
     // Path-variable
     @ResponseBody
-    @GetMapping("/{scholarshipIdx}") // (GET) 127.0.0.1:9000/scholarship/:scholarshipIdx
+    @GetMapping("/{scholarshipIdx}") // (GET) 127.0.0.1:9000/scholarships/:scholarshipIdx
     public BaseResponse<GetScholarshipRes> getScholarship(@PathVariable("scholarshipIdx") long scholarshipIdx) {
-        // @PathVariable RESTful(URL)에서 명시된 파라미터({})를 받는 어노테이션, 이 경우 scholarshipId값을 받아옴.
-        //  null값 or 공백값이 들어가는 경우는 적용하지 말 것
-        //  .(dot)이 포함된 경우, .을 포함한 그 뒤가 잘려서 들어감
-        // Get Users
         try {
             if (scholarshipProvider.checkScholarshipIdx(scholarshipIdx) == 0) {
                 throw new BaseException(SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX);
@@ -112,6 +103,20 @@ public class ScholarshipController {
         try {
             PostScholarshipRes postScholarshipRes = scholarshipService.createScholarship(postScholarshipReq);
             return new BaseResponse<>(postScholarshipRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * myfilter로 조회 API
+     * */
+    @ResponseBody
+    @GetMapping("/myfilter")
+    public BaseResponse<List<GetScholarshipRes>> getScholarshipMyfilter(@RequestBody GetScholarshipMyfilter getScholarshipMyfilter) {
+        try {
+            List<GetScholarshipRes> getScholarshipRes = scholarshipProvider.getScholarshipMyfilter(getScholarshipMyfilter);
+            return new BaseResponse<>(getScholarshipRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

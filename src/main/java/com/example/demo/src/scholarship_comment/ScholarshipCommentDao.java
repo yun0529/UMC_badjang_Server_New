@@ -29,6 +29,10 @@ public class ScholarshipCommentDao {
         Object[] createScholarshipCommentParams = new Object[]{postScholarshipCommentReq.getScholarship_idx(), postScholarshipCommentReq.getUser_idx(), postScholarshipCommentReq.getScholarship_comment_content()}; // 동적 쿼리의 ?부분에 주입될 값
         this.jdbcTemplate.update(createScholarshipCommentQuery, createScholarshipCommentParams);
 
+        String scholarshipCommentCountUpQuery = "update Scholarship set scholarship_comment = scholarship_comment + 1 where scholarship_idx = ?";
+        int scholarshipCommentCountUpParams = postScholarshipCommentReq.getScholarship_idx();
+        this.jdbcTemplate.update(scholarshipCommentCountUpQuery,scholarshipCommentCountUpParams);
+
         String lastInsertIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값은 가져온다.
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Integer.class); // 해당 쿼리문의 결과 마지막으로 삽인된 유저의 BoardIdx번호를 반환한다.
     }
@@ -63,9 +67,13 @@ public class ScholarshipCommentDao {
     /**
      * 댓글 삭제 API
      */
-    public int deleteScholarshipComment(DeleteScholarshipCommentReq deleteScholarshipCommentReq) {
+    public int deleteScholarshipComment(Integer scholarship_idx, Integer scholarship_comment_idx) {
+
+        String scholarshipCommentCountDownQuery = "update Scholarship set scholarship_comment = scholarship_comment - 1 where scholarship_idx = ?";
+        this.jdbcTemplate.update(scholarshipCommentCountDownQuery,scholarship_idx);
+
         String deleteScholarshipCommentQuery = "update Scholarship_Comment set scholarship_comment_status = 'N' where scholarship_comment_idx = ?";
-        Object[] deleteScholarshipCommentParams = new Object[]{deleteScholarshipCommentReq.getScholarship_comment_idx()};
+        Object[] deleteScholarshipCommentParams = new Object[]{scholarship_comment_idx};
 
         return this.jdbcTemplate.update(deleteScholarshipCommentQuery,deleteScholarshipCommentParams);
 
