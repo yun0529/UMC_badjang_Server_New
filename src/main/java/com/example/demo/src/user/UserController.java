@@ -115,7 +115,7 @@ public class UserController {
      * 학교, 지역 정보 저장 API
      * [POST] /users/info
      *
-     * @return BaseResponse<PostUserRes>
+     * @return BaseResponse<String>
      */
 
     @ResponseBody
@@ -136,6 +136,48 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+
+    /**
+     * 소셜 로그인 추가 정보 API
+     * [POST] /users/sns
+     *
+     * @return BaseResponse<PostUserRes>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PostMapping("/sns")
+    public BaseResponse<PostUserRes> saveUserExtraInfo(@RequestBody PostExtraReq postExtraReq) {
+        if(postExtraReq.getUser_name() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_NAME);
+        }
+        if(postExtraReq.getUser_name().length() < 2 || postExtraReq.getUser_name().length() > 20){
+            return new BaseResponse<>(POST_USERS_INVALID_NAME);
+        }
+        if(postExtraReq.getUser_birth() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_BIRTH);
+        }
+        if(!isRegexBirth(postExtraReq.getUser_birth())){
+            return new BaseResponse<>(POST_USERS_INVALID_BIRTH);
+        }
+        if(postExtraReq.getUser_phone() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_PHONE);
+        }
+        if(!isRegexPhone(postExtraReq.getUser_phone())){
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
+        }
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postExtraReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            PostUserRes postUserRes = userService.saveUserExtraInfo(postExtraReq);
+            return new BaseResponse<>(postUserRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
 
 
 
