@@ -41,4 +41,29 @@ public class OAuthDao {
         return user_idx;
     }
 
+
+    public int checkEmail(String user_email) {
+        String checkEmailQuery = "select exists(select user_email from User where user_email = ?)";
+        String checkEmailParams = user_email;
+        return this.jdbcTemplate.queryForObject(checkEmailQuery,
+                int.class,
+                checkEmailParams);
+    }
+
+    public int checkSavedUser(String user_email) {
+        String checkSavedUserQuery = "select exists(select user_idx from User u NATURAL JOIN User_OAuth o " +
+                "WHERE u.user_email=? and u.user_type='KAKAO')";
+        String checkSavedUserParams = user_email;
+
+        return this.jdbcTemplate.queryForObject(checkSavedUserQuery,
+                int.class,
+                checkSavedUserParams);
+    }
+
+    public int findUserByEmail(KakaoProfile profile) {
+        String findUserByEmailQuery = "SELECT user_idx FROM User WHERE user_email = ? and user_type = 'KAKAO'";
+        String findUserByEmailParams = profile.getKakao_account().getEmail();
+
+        return this.jdbcTemplate.queryForObject(findUserByEmailQuery, int.class, findUserByEmailParams);
+    }
 }

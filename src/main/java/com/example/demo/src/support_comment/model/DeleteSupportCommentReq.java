@@ -9,4 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DeleteSupportCommentReq {
     private Integer support_comment_idx;
+    private Integer support_idx;
+    private Integer user_idx;
 }

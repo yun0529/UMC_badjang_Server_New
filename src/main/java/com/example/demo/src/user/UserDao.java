@@ -1,6 +1,13 @@
 package com.example.demo.src.user;
 
+
+import com.example.demo.src.user.model.GetUserRes;
+import com.example.demo.src.user.model.PostExtraReq;
+import com.example.demo.src.user.model.PostInfoReq;
+import com.example.demo.src.user.model.PostUserReq;
+
 import com.example.demo.src.user.model.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -124,6 +131,17 @@ public class UserDao {
     }
 
 
+    public void saveUserExtraInfo(PostExtraReq postExtraReq) {
+        String saveUserExtraInfoQuery = "UPDATE User " +
+                "SET user_name = ?, user_birth = ?, user_phone = ?, user_push_yn = ? " +
+                "WHERE user_idx = ?";
+        Object[] saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
+                postExtraReq.getUser_phone(), postExtraReq.getUser_push_yn(), postExtraReq.getUser_idx()};
+
+        this.jdbcTemplate.update(saveUserExtraInfoQuery, saveUserExtraInfoParams);
+    }
+
+
 
     /*public int modifyUserStatusLogIn(int user_idx){
         String modifyUserNameQuery = "update User set user_status = ? where user_idx = ? ";
@@ -166,5 +184,6 @@ public class UserDao {
 
         return this.jdbcTemplate.update(modifyUserNameQuery, modifyUserNameParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
+
 
 }
