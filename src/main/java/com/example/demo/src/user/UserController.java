@@ -178,8 +178,8 @@ public class UserController {
             return new BaseResponse<>(postUserRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
-
-
+        }
+    }
 
 
 
