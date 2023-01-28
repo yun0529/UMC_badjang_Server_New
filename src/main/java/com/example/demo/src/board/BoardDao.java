@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 @Repository
 public class BoardDao {
@@ -67,7 +66,7 @@ public class BoardDao {
     }
 
     //게시글 수정
-    public List<PatchBoardRes> patchBoard(PatchBoardReq patchBoardReq){
+    public List<GetBoardRes> patchBoard(PatchBoardReq patchBoardReq){
         String createBoardQuery = "UPDATE Board set post_category = ? , post_name = ? , post_content = ? , post_image = ? , " +
                 "post_updateAt = CURRENT_TIMESTAMP where post_idx = ? " ;
 
@@ -81,7 +80,7 @@ public class BoardDao {
     }
 
     //게시글 삭제
-    public List<DeleteBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq){
+    public List<GetBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq){
         String deleteBoardQuery = "DELETE from Board where post_idx = ?" ;
 
         Object[] deleteParam = new Object[]{
@@ -142,5 +141,61 @@ public class BoardDao {
                         rs.getString("comment_status")
                 ),getPostIdx);
     }
+//게시글 댓글 작성
 
+    public PostCommentRes postComment(PostCommentReq postCommentReq){
+        String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_recommend, comment_anonymity, " +
+                "comment_createAt, comment_updatedAt, comment_status) " +
+                "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?)" ;
+
+        Object[] createCommentParams = new Object[]{
+                postCommentReq.getPost_idx(), postCommentReq.getUser_idx(), postCommentReq.getComment_content(),
+                postCommentReq.getComment_recommend(), postCommentReq.getComment_anonymity(), postCommentReq.getComment_status()
+        };
+
+        this.jdbcTemplate.update(createCommentQuery,createCommentParams);
+
+        String lastInsertIdQuery = "select comment_idx, post_idx, comment_content, comment_createAt " +
+                "from badjangDB.Comment order by comment_idx desc limit 1 ";
+
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,(rs, rowNum) -> new PostCommentRes(
+                rs.getInt("comment_idx"),
+                rs.getInt("post_idx"),
+                rs.getString("comment_content"),
+                rs.getString("comment_createAt")
+        ));
+    }
+
+    public GetCommentRes patchComment(PatchCommentReq patchCommentReq){
+        String updateQuery = "UPDATE Comment set comment_content = ? , " +
+                "comment_updatedAt = CURRENT_TIMESTAMP where comment_idx = ? " ;
+
+        Object[] updateParams = new Object[]{
+                patchCommentReq.getComment_content(), patchCommentReq.getComment_idx()
+        };
+
+        this.jdbcTemplate.update(updateQuery, updateParams);
+        String updateResultQuery = "select comment_idx, comment_content, comment_updatedAt " +
+                "from badjangDB.Comment where comment_idx = ? " ;
+
+        Object[] resultParams = new Object[]{
+                patchCommentReq.getComment_idx()
+        };
+
+        return this.jdbcTemplate.queryForObject(updateResultQuery, (rs, rowNum) -> new GetCommentRes(
+                rs.getInt("comment_idx"),
+                rs.getString("comment_content"),
+                rs.getString("comment_updatedAt")
+        ),resultParams);
+    }
+
+    public GetCommentRes deleteComment(DeleteCommentReq deleteCommentReq){
+        String deleteQuery = "DELETE from Comment where comment_idx = ? ";
+
+        Object[] deleteResult = new Object[]{
+                deleteCommentReq.getComment_idx()
+        };
+        this.jdbcTemplate.update(deleteQuery,deleteResult);
+        return null;
+    }
 }

@@ -116,7 +116,7 @@ public class BoardController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @PatchMapping("/board/modify/{post_idx}")
-    public BaseResponse<List<PatchBoardRes>> patchBoard(@PathVariable("post_idx") int post_idx,
+    public BaseResponse<List<GetBoardRes>> patchBoard(@PathVariable("post_idx") int post_idx,
                                                        @RequestBody PatchBoardReq patchBoardReq) {
             try{
                 if(post_idx != patchBoardReq.getPost_idx()){
@@ -125,7 +125,7 @@ public class BoardController {
                 else if(post_idx == 0){
                     return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
                 }
-                List<PatchBoardRes> patchBoardRes = boardProvider.patchBoard(patchBoardReq);
+                List<GetBoardRes> patchBoardRes = boardProvider.patchBoard(patchBoardReq);
                 return new BaseResponse<>(patchBoardRes);
 
             } catch(BaseException exception){
@@ -137,7 +137,7 @@ public class BoardController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @DeleteMapping("/board/delete/{post_idx}")
-    public BaseResponse<List<DeleteBoardRes>> deleteBoard(@PathVariable("post_idx") int post_idx,
+    public BaseResponse<List<GetBoardRes>> deleteBoard(@PathVariable("post_idx") int post_idx,
                                                           @RequestBody DeleteBoardReq deleteBoardReq){
         try{
             if(post_idx != deleteBoardReq.getPost_idx()){
@@ -146,7 +146,7 @@ public class BoardController {
             else if(post_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
             }
-            List<DeleteBoardRes> deleteBoardRes = boardProvider.deleteBoard(deleteBoardReq);
+            List<GetBoardRes> deleteBoardRes = boardProvider.deleteBoard(deleteBoardReq);
             return new BaseResponse<>(deleteBoardRes);
 
         } catch(BaseException exception){
@@ -162,6 +162,80 @@ public class BoardController {
         try{
             List<GetCommentRes> getCommentRes = boardProvider.getComment(post_idx);
             return new BaseResponse<>(getCommentRes);
+        } catch(BaseException exception){
+            System.out.println(exception);
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //[POST] 댓글 작성 (게시글 인덱스 사용)
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @PostMapping("/board/comment/add/{post_idx}")
+    public BaseResponse<PostCommentRes> postComment(@PathVariable("post_idx") int post_idx,
+                                                    @RequestBody PostCommentReq postCommentReq){
+        try{
+            if(post_idx != postCommentReq.getPost_idx()){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
+            }
+            else if(post_idx == 0){
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
+            }
+            else if (postCommentReq.getComment_content() == null) {
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_CONTENT);
+            }
+            else if (postCommentReq.getComment_anonymity() == null) {
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_ANONYMITY);
+            }
+            else if (postCommentReq.getComment_status() == null) {
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_STATUS);
+            }
+
+            PostCommentRes postCommentRes = boardProvider.postComment(postCommentReq);
+            return new BaseResponse<>(postCommentRes);
+        }catch(BaseException exception){
+            System.out.println(exception);
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //[PATCH] 댓글 수정 (댓글 인덱스 사용)
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @PatchMapping("/board/comment/modify/{comment_idx}")
+    public BaseResponse<GetCommentRes> patchBoard(@PathVariable("comment_idx") int comment_idx,
+                                                        @RequestBody PatchCommentReq patchCommentReq) {
+        try{
+            if(comment_idx != patchCommentReq.getComment_idx()){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_COMMENT_IDX);
+            }
+            else if(comment_idx == 0){
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
+            }
+            GetCommentRes patchCommentRes = boardProvider.patchComment(patchCommentReq);
+            return new BaseResponse<>(patchCommentRes);
+
+        } catch(BaseException exception){
+            System.out.println(exception);
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+    //[DELETE] 댓글 삭제 (댓글 인덱스 사용)
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @DeleteMapping("/board/comment/delete/{comment_idx}")
+    public BaseResponse<GetCommentRes> deleteComment(@PathVariable("comment_idx") int comment_idx,
+                                                          @RequestBody DeleteCommentReq deleteCommentReq){
+        try{
+            if(comment_idx != deleteCommentReq.getComment_idx()){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_COMMENT_IDX);
+            }
+            else if(comment_idx == 0){
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
+            }
+            GetCommentRes deleteBoardRes = boardProvider.deleteComment(deleteCommentReq);
+            return new BaseResponse<>(deleteBoardRes);
+
         } catch(BaseException exception){
             System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));

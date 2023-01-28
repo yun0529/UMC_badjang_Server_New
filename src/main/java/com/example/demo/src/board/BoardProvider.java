@@ -69,9 +69,9 @@ public class BoardProvider {
         }
     }
 
-    public List<PatchBoardRes> patchBoard(PatchBoardReq patchBoardReq) throws BaseException{
+    public List<GetBoardRes> patchBoard(PatchBoardReq patchBoardReq) throws BaseException{
         try{
-            List<PatchBoardRes> patchBoardRes = boardDao.patchBoard(patchBoardReq);
+            List<GetBoardRes> patchBoardRes = boardDao.patchBoard(patchBoardReq);
             return patchBoardRes;
         }
         catch (Exception exception) {
@@ -80,9 +80,9 @@ public class BoardProvider {
         }
     }
 
-    public List<DeleteBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq) throws BaseException{
+    public List<GetBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq) throws BaseException{
         try{
-            List<DeleteBoardRes> deleteBoardRes = boardDao.deleteBoard(deleteBoardReq);
+            List<GetBoardRes> deleteBoardRes = boardDao.deleteBoard(deleteBoardReq);
             return deleteBoardRes;
         }catch (Exception exception) {
             System.out.println(exception);
@@ -100,6 +100,38 @@ public class BoardProvider {
             return getCommentRes;
         }
         catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostCommentRes postComment(PostCommentReq postCommentReq) throws BaseException {
+        try {
+            PostCommentRes postCommentRes = boardDao.postComment(postCommentReq);
+            return new PostCommentRes(postCommentRes.getComment_idx(),postCommentRes.getPost_idx(),
+                    postCommentRes.getComment_content(), postCommentRes.getComment_createAt());
+
+        }catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetCommentRes patchComment(PatchCommentReq patchCommentReq) throws BaseException {
+        try{
+            GetCommentRes patchCommentRes = boardDao.patchComment(patchCommentReq);
+            return patchCommentRes;
+        }catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetCommentRes deleteComment(DeleteCommentReq deleteCommentReq) throws BaseException {
+        try {
+            GetCommentRes deleteCommentRes = boardDao.deleteComment(deleteCommentReq);
+            return deleteCommentRes;
+        }catch (Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }

@@ -17,4 +17,10 @@ public class GetCommentRes {
     private String comment_createAt;
     private String comment_updatedAt;
     private String comment_status;
+
+    public GetCommentRes(int comment_idx, String comment_content, String comment_updatedAt) {
+        this.comment_idx = comment_idx;
+        this.comment_content = comment_content;
+        this.comment_updatedAt = comment_updatedAt;
+    }
 }

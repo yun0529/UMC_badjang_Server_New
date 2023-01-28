@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostCommentRes {
+
+public class DeleteCommentReq {
     private int comment_idx;
-    private int post_idx;
-    private String comment_content;
-    private String comment_createAt;
+
+    public DeleteCommentReq(){}
 }
