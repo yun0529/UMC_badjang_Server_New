@@ -35,43 +35,41 @@ public class OAuthService {
     }
 
 
-    public KakaoOauthToken getAccessToken(String code) throws BaseException {
+//    public KakaoOauthToken getAccessToken(String code) throws BaseException {
+//
+//        RestTemplate rt = new RestTemplate();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//
+//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//        params.add("grant_type", "authorization_code");
+//        params.add("client_id", KAKAO_API_KEY);
+//        params.add("redirect_uri", "http://localhost:9000/oauth/kakao");
+//        params.add("code", code);
+//
+//        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+//
+//        ResponseEntity<String> accessTokenResponse = rt.exchange(
+//                "https://kauth.kakao.com/oauth/token",
+//                HttpMethod.POST,
+//                kakaoTokenRequest,
+//                String.class
+//        );
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        KakaoOauthToken kakaoOauthToken = null;
+//        try {
+//            kakaoOauthToken = objectMapper.readValue(accessTokenResponse.getBody(), KakaoOauthToken.class);
+//        } catch (Exception exception) {
+//            throw new BaseException(KAKAO_CONNECTION_ERROR);
+//        }
+//
+//        return kakaoOauthToken;
+//    }
 
-        RestTemplate rt = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", KAKAO_API_KEY);
-        params.add("redirect_uri", "http://localhost:9000/oauth/kakao");
-        params.add("code", code);
-
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
-
-        ResponseEntity<String> accessTokenResponse = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoOauthToken kakaoOauthToken = null;
-        try {
-            kakaoOauthToken = objectMapper.readValue(accessTokenResponse.getBody(), KakaoOauthToken.class);
-        } catch (Exception exception) {
-            throw new BaseException(KAKAO_CONNECTION_ERROR);
-        }
-
-        return kakaoOauthToken;
-    }
-
-
-    public PostUserRes saveUser(String token, String refresh_token) throws BaseException {
+    public PostUserRes saveUser(String token) throws BaseException {
         KakaoProfile profile = findProfile(token);
-
         if(oAuthProvider.checkSavedUser(profile.getKakao_account().getEmail()) == 1) {
             return loginUser(profile);
         }
@@ -81,13 +79,34 @@ public class OAuthService {
         }
 
         try {
-            int user_idx = oAuthDao.createUser(profile, refresh_token);
+            int user_idx = oAuthDao.createUser(profile);
             String jwt = jwtService.createJwt(user_idx);
             return new PostUserRes(user_idx, jwt);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+
     }
+
+//    public PostUserRes saveUser(String token, String refresh_token) throws BaseException {
+//        KakaoProfile profile = findProfile(token);
+//
+//        if(oAuthProvider.checkSavedUser(profile.getKakao_account().getEmail()) == 1) {
+//            return loginUser(profile);
+//        }
+//
+//        if(oAuthProvider.checkEmail(profile.getKakao_account().getEmail()) == 1) {
+//            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+//        }
+//
+//        try {
+//            int user_idx = oAuthDao.createUser(profile, refresh_token);
+//            String jwt = jwtService.createJwt(user_idx);
+//            return new PostUserRes(user_idx, jwt);
+//        } catch (Exception exception) {
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+//    }
 
     public PostUserRes loginUser(KakaoProfile profile) throws BaseException {
         try {
