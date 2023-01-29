@@ -41,7 +41,8 @@ public class SchoolBoardDao {
                         rs.getInt("post_comment"),
                         rs.getString("post_anonymity"),
                         rs.getString("post_category"),
-                        rs.getString("post_school_name")
+                        rs.getString("post_school_name"),
+                        rs.getString("post_createAt")
                 ), getSchoolBoardParams
         );
 

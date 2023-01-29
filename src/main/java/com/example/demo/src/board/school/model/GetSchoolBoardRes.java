@@ -22,4 +22,5 @@ public class GetSchoolBoardRes {
     private String post_anonymity;
     private String post_category;
     private String post_school_name;
+    private String post_createAt;
 }
