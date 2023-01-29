@@ -101,7 +101,7 @@ public class BoardDao {
     }
 
     //게시글 상세조회(댓글수 증감)
-    public List<GetBoardRes> updateCommentCount(int post_idx){
+    public GetBoardRes updateCommentCount(int post_idx){
         String updateCommentQuery = "UPDATE Board set post_comment = (select count(Comment.post_idx) " +
                 "from Comment where Comment.post_idx = Board.post_idx) " +
                 "where Board.post_idx = ? " ;
@@ -111,7 +111,7 @@ public class BoardDao {
         return null;
     }
     //게시글 상세조회(추천 증가)
-    public List<GetBoardRes> updateRecommendCount(int post_idx){
+    public GetBoardRes updateRecommendCount(int post_idx){
         String updateCommentQuery = "UPDATE Board set post_recommend = (select count(Board_Recommend.post_idx) " +
                 "from Board_Recommend where Board_Recommend.post_idx = Board.post_idx) " +
                 "where Board.post_idx = ? " ;
@@ -132,6 +132,23 @@ public class BoardDao {
 
         this.jdbcTemplate.update(createRecommendQuery, createParams);
         return null;
+    }
+    //추천 취소
+    public void deleteRecommend(PostRecommendReq postRecommendReq) {
+        String deleteRecommend = "DELETE FROM Board_Recommend where post_idx = ? and user_idx = ? " ;
+
+        Object[] deleteParams = new Object[]{
+                postRecommendReq.getPost_idx(), postRecommendReq.getUser_idx()
+        };
+        this.jdbcTemplate.update(deleteRecommend, deleteParams);
+    }
+
+    //추천 수 중복 여부 체크
+    public int checkRecommend (PostRecommendReq postRecommendReq){
+        String checkRecommend = "SELECT COUNT(*) FROM Board_Recommend WHERE post_idx = ? AND user_idx = ?" ;
+
+        return this.jdbcTemplate.queryForObject(checkRecommend, int.class,
+                postRecommendReq.getPost_idx(), postRecommendReq.getUser_idx());
     }
     /**
      * 댓글 관련 시작부분
@@ -236,7 +253,7 @@ public class BoardDao {
         ));
     }
 
-    public List<GetCommentRes> updateCommentRecommendCount(int comment_idx) {
+    public GetCommentRes updateCommentRecommendCount(int comment_idx) {
         String updateCommentQuery = "UPDATE Comment set comment_updatedAt = CURRENT_TIMESTAMP, " +
                 "comment_recommend = (select count(Comment_Recommend.comment_idx) " +
                 "from Comment_Recommend where Comment_Recommend.comment_idx = Comment.comment_idx) " +
@@ -246,4 +263,22 @@ public class BoardDao {
         this.jdbcTemplate.update(updateCommentQuery, updateRecommendCount);
         return null;
     }
+
+    public void deleteCommentRecommend(PostCommentRecommendReq postCommentRecommendReq) {
+        String deleteRecommend = "DELETE FROM Comment_Recommend where comment_idx = ? and user_idx = ? " ;
+
+        Object[] deleteParams = new Object[]{
+                postCommentRecommendReq.getComment_idx(), postCommentRecommendReq.getUser_idx()
+        };
+        this.jdbcTemplate.update(deleteRecommend, deleteParams);
+    }
+
+    //댓글 추천 수 중복 여부 체크
+    public int checkCommentRecommend (PostCommentRecommendReq postCommentRecommendReq){
+        String checkRecommend = "SELECT COUNT(*) FROM Comment_Recommend WHERE comment_idx = ? AND user_idx = ?" ;
+
+        return this.jdbcTemplate.queryForObject(checkRecommend, int.class,
+                postCommentRecommendReq.getComment_idx(), postCommentRecommendReq.getUser_idx());
+    }
+
 }

@@ -46,9 +46,9 @@ public class BoardProvider {
         }
     }
 
-    public List<GetBoardRes> updateCommentCount(int post_idx) throws BaseException {
+    public GetBoardRes updateCommentCount(int post_idx) throws BaseException {
         try{
-            List<GetBoardRes> updateCommentCount = boardDao.updateCommentCount(post_idx);
+            GetBoardRes updateCommentCount = boardDao.updateCommentCount(post_idx);
             return updateCommentCount;
         }
         catch (Exception exception) {
@@ -57,9 +57,9 @@ public class BoardProvider {
         }
     }
 
-    public List<GetBoardRes> updateRecommendCount(int post_idx) throws BaseException {
+    public GetBoardRes updateRecommendCount(int post_idx) throws BaseException {
         try{
-            List<GetBoardRes> updateRecommendCount = boardDao.updateRecommendCount(post_idx);
+            GetBoardRes updateRecommendCount = boardDao.updateRecommendCount(post_idx);
             return updateRecommendCount;
         }
         catch (Exception exception) {
@@ -106,6 +106,14 @@ public class BoardProvider {
             PostRecommendRes postRecommendRes = boardDao.postRecommend(postRecommendReq);
             return postRecommendRes;
         } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public void deleteRecommend(PostRecommendReq postRecommendReq) throws BaseException {
+        try {
+            boardDao.deleteRecommend(postRecommendReq);
+        }catch (Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
@@ -169,12 +177,30 @@ public class BoardProvider {
         }
     }
 
-    public List<GetCommentRes> updateCommentRecommendCount(int comment_idx) throws BaseException {
+    public GetCommentRes updateCommentRecommendCount(int comment_idx) throws BaseException {
         try{
-            List<GetCommentRes> updateCommentRecommendCount = boardDao.updateCommentRecommendCount(comment_idx);
+            GetCommentRes updateCommentRecommendCount = boardDao.updateCommentRecommendCount(comment_idx);
             return updateCommentRecommendCount;
         }
         catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostCommentRecommendRes postCommentRecommend(PostCommentRecommendReq postCommentRecommendReq) throws BaseException {
+        try {
+            PostCommentRecommendRes postCommentRecommendRes = boardDao.postCommentRecommend(postCommentRecommendReq);
+            return postCommentRecommendRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public void deleteCommentRecommend(PostCommentRecommendReq postCommentRecommendReq) throws BaseException {
+        try {
+            boardDao.deleteCommentRecommend(postCommentRecommendReq);
+        }catch (Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }

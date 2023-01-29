@@ -10,6 +10,6 @@ import lombok.Setter;
 
 public class DeleteCommentReq {
     private int comment_idx;
-
+    private int post_idx;
     public DeleteCommentReq(){}
 }

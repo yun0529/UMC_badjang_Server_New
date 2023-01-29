@@ -23,13 +23,16 @@ public class BoardController {
     @Autowired
     private final BoardProvider boardProvider;
     @Autowired
+    private final BoardDao boardDao;
+    @Autowired
     private final JwtService jwtService;
 
 
 
 
-    public BoardController(BoardProvider boardProvider, JwtService jwtService){
+    public BoardController(BoardProvider boardProvider, BoardDao boardDao, JwtService jwtService){
         this.boardProvider = boardProvider;
+        this.boardDao = boardDao;
         this.jwtService = jwtService;
     }
 
@@ -60,32 +63,6 @@ public class BoardController {
         try{
             List<GetBoardRes> getBoardDetailRes = boardProvider.getBoardDetail(post_idx);
             return new BaseResponse<>(getBoardDetailRes);
-        } catch(BaseException exception){
-            System.out.println(exception);
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
-
-    @ResponseBody
-    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/board/detail/comment/{post_idx}")
-    public BaseResponse<List<GetBoardRes>> getUpdateCommentCount(@PathVariable("post_idx")int post_idx){
-        try{
-            List<GetBoardRes> getBoardCommentRes = boardProvider.updateCommentCount(post_idx);
-            return new BaseResponse<>(getBoardCommentRes);
-        } catch(BaseException exception){
-            System.out.println(exception);
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
-
-    @ResponseBody
-    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/board/detail/recommend/{post_idx}")
-    public BaseResponse<List<GetBoardRes>> getUpdateRecommendCount(@PathVariable("post_idx")int post_idx){
-        try{
-            List<GetBoardRes> getBoardCommentRes = boardProvider.updateRecommendCount(post_idx);
-            return new BaseResponse<>(getBoardCommentRes);
         } catch(BaseException exception){
             System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
@@ -125,7 +102,7 @@ public class BoardController {
         }
     }
 
-
+    //게시글 수정
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @PatchMapping("/board/modify/{post_idx}")
@@ -146,7 +123,7 @@ public class BoardController {
                 return new BaseResponse<>((exception.getStatus()));
             }
     }
-
+    //게시물 삭제
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @DeleteMapping("/board/delete/{post_idx}")
@@ -167,28 +144,37 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
+    //게시물 추천 및 취소
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @PostMapping("/board/recommend/{post_idx}")
     public BaseResponse<PostRecommendRes> postRecommend(@PathVariable("post_idx")int post_idx,
                                                     @RequestBody PostRecommendReq postRecommendReq){
         try {
+            int checkRecommend = boardDao.checkRecommend(postRecommendReq);
             if(post_idx != postRecommendReq.getPost_idx()){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
             }
             else if(postRecommendReq.getUser_idx() == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_USER_IDX);
             }
-            else if(postRecommendReq.getPost_idx() == 0){
+            else if(postRecommendReq.getPost_idx() == 0) {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
             }
-            PostRecommendRes postRecommendRes = boardProvider.postRecommend(postRecommendReq);
-            return new BaseResponse<>(postRecommendRes);
+            else if(checkRecommend == 1){
+                boardProvider.deleteRecommend(postRecommendReq);
+                boardProvider.updateRecommendCount(postRecommendReq.getPost_idx());
+            }
+            else{
+                PostRecommendRes postRecommendRes = boardProvider.postRecommend(postRecommendReq);
+                boardProvider.updateRecommendCount(postRecommendReq.getPost_idx());
+                return new BaseResponse<>(postRecommendRes);
+            }
         } catch (BaseException exception) {
             System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
+        return null;
     }
 
     //[GET] 댓글 조회 (게시글 인덱스 사용)
@@ -227,9 +213,9 @@ public class BoardController {
             else if (postCommentReq.getComment_status() == null) {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_STATUS);
             }
-
-            PostCommentRes postCommentRes = boardProvider.postComment(postCommentReq);
-            return new BaseResponse<>(postCommentRes);
+                PostCommentRes postCommentRes = boardProvider.postComment(postCommentReq);
+                boardProvider.updateCommentCount(post_idx);
+                return new BaseResponse<>(postCommentRes);
         }catch(BaseException exception){
             System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
@@ -271,6 +257,7 @@ public class BoardController {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
             }
             GetCommentRes deleteBoardRes = boardProvider.deleteComment(deleteCommentReq);
+            boardProvider.updateCommentCount(deleteCommentReq.getPost_idx());
             return new BaseResponse<>(deleteBoardRes);
 
         } catch(BaseException exception){
@@ -279,39 +266,34 @@ public class BoardController {
         }
     }
 
-    //[Post] 댓글 추천(댓글 인덱스 사용)
+    //[Post] 댓글 추천 증감(댓글 인덱스 사용)
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @PostMapping("/board/detail/comment/recommend/{comment_idx}")
     public BaseResponse<PostCommentRecommendRes> getUpdateCommentRecommendCount(@PathVariable("comment_idx")int comment_idx,
                                                                                 @RequestBody PostCommentRecommendReq postCommentRecommendReq){
         try{
+            int checkCommentRecommend = boardDao.checkCommentRecommend(postCommentRecommendReq);
             if(comment_idx != postCommentRecommendReq.getComment_idx()){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_COMMENT_IDX);
             }
             else if(comment_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
             }
-            PostCommentRecommendRes getCommentRes = boardProvider.updateCommentRecommend(postCommentRecommendReq);
-            return new BaseResponse<>(getCommentRes);
+            else if(checkCommentRecommend == 1){
+                boardProvider.deleteCommentRecommend(postCommentRecommendReq);
+                boardProvider.updateCommentRecommendCount(postCommentRecommendReq.getComment_idx());
+            }
+            else {
+                PostCommentRecommendRes getCommentRes = boardProvider.updateCommentRecommend(postCommentRecommendReq);
+                boardProvider.updateCommentRecommendCount(postCommentRecommendReq.getComment_idx());
+                return new BaseResponse<>(getCommentRes);
+            }
         } catch(BaseException exception){
             System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
-    }
-
-    //[Get/Patch] 댓글 추천 수 증감(댓글 인덱스 사용)
-    @ResponseBody
-    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/board/comment/recommend/{comment_idx}")
-    public BaseResponse<List<GetCommentRes>> getUpdateCommentRecommendCount(@PathVariable("comment_idx")int comment_idx){
-        try{
-            List<GetCommentRes> getCommentRes = boardProvider.updateCommentRecommendCount(comment_idx);
-            return new BaseResponse<>(getCommentRes);
-        } catch(BaseException exception){
-            System.out.println(exception);
-            return new BaseResponse<>((exception.getStatus()));
-        }
+        return null;
     }
 }
 
