@@ -49,6 +49,9 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_PHONE(false, 2060, "전화번호를 입력해주세요."),
     POST_USERS_INVALID_PHONE(false, 2061, "전화번호 형식에 맞게 입력해주세요."),
 
+    POST_USERS_EMPTY_INFO(false, 2070, "전화번호나 이름이 없습니다."),
+    POST_USERS_MORE_INFO(false, 2071, "전화번호나 이름 중 한 가지만 입력해주세요."),
+
     GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
 
     GET_SEARCH_INVALID_QUERY(false, 2251, "검색어는 50자 내로 입력해주세요."),
