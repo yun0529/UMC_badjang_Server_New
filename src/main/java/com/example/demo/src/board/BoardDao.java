@@ -16,7 +16,11 @@ public class BoardDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    //게시글 작성
+    /**게시글 작성
+     *
+     * @param postBoardReq
+     * @return
+     */
     public List<PostBoardRes> postBoard(PostBoardReq postBoardReq){
         String createBoardQuery = "insert into Board (user_idx, post_category, post_name, post_content, post_image, post_view, " +
                 "                   post_recommend, post_comment, post_createAt, post_updateAt, post_status, post_anonymity) " +
@@ -41,7 +45,10 @@ public class BoardDao {
         ));
     }
 
-    //게시글 전체 조회
+    /**게시글 전체 조회
+     *
+     * @return
+     */
     public List<GetBoardRes> getBoard(){
         String getBoardResQuery = "SELECT post_idx, Board.user_idx, post_category, post_name, post_content, post_image, post_view, post_recommend, post_comment, " +
                 "post_createAt, post_updateAt, post_status, post_anonymity " +
@@ -65,7 +72,11 @@ public class BoardDao {
                         rs.getString("post_anonymity")));
     }
 
-    //게시글 수정
+    /**게시글 수정
+     *
+     * @param patchBoardReq
+     * @return
+     */
     public List<GetBoardRes> patchBoard(PatchBoardReq patchBoardReq){
         String createBoardQuery = "UPDATE Board set post_category = ? , post_name = ? , post_content = ? , post_image = ? , " +
                 "post_updateAt = CURRENT_TIMESTAMP where post_idx = ? " ;
@@ -79,7 +90,11 @@ public class BoardDao {
         return null;
     }
 
-    //게시글 삭제
+    /**게시글 삭제
+     *
+     * @param deleteBoardReq
+     * @return
+     */
     public List<GetBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq){
         String deleteBoardQuery = "DELETE from Board where post_idx = ?" ;
 
@@ -90,7 +105,11 @@ public class BoardDao {
         return null;
     }
 
-    //게시글 상세 조회 (조회수 증감)
+    /**게시글 상세 조회 (조회수 증감)
+     *
+     * @param post_idx
+     * @return
+     */
     public List<GetBoardRes> getBoardDetail(int post_idx){
         String getBoardQuery = "UPDATE Board set post_view = post_view + 1 " +
                 "where post_idx = ? " ;
@@ -100,7 +119,11 @@ public class BoardDao {
         return null;
     }
 
-    //게시글 상세조회(댓글수 증감)
+    /**게시글 상세조회(댓글수 증감)
+     *
+     * @param post_idx
+     * @return
+     */
     public GetBoardRes updateCommentCount(int post_idx){
         String updateCommentQuery = "UPDATE Board set post_comment = (select count(Comment.post_idx) " +
                 "from Comment where Comment.post_idx = Board.post_idx) " +
@@ -110,7 +133,12 @@ public class BoardDao {
         this.jdbcTemplate.update(updateCommentQuery, updateCommentCount);
         return null;
     }
-    //게시글 상세조회(추천 증가)
+
+    /**게시글 상세조회(추천 증가)
+     *
+     * @param post_idx
+     * @return
+     */
     public GetBoardRes updateRecommendCount(int post_idx){
         String updateCommentQuery = "UPDATE Board set post_recommend = (select count(Board_Recommend.post_idx) " +
                 "from Board_Recommend where Board_Recommend.post_idx = Board.post_idx) " +
@@ -121,7 +149,11 @@ public class BoardDao {
         return null;
     }
 
-    //게시글 상세조회(추천 등록)
+    /**게시글 상세조회(추천 등록)
+     *
+     * @param postRecommendReq
+     * @return
+     */
     public PostRecommendRes postRecommend(PostRecommendReq postRecommendReq){
         String createRecommendQuery = "INSERT INTO Board_Recommend (user_idx, post_idx)" +
                 "VALUES (?, ?) " ;
@@ -133,7 +165,11 @@ public class BoardDao {
         this.jdbcTemplate.update(createRecommendQuery, createParams);
         return null;
     }
-    //추천 취소
+
+    /**추천 취소
+     *
+     * @param postRecommendReq
+     */
     public void deleteRecommend(PostRecommendReq postRecommendReq) {
         String deleteRecommend = "DELETE FROM Board_Recommend where post_idx = ? and user_idx = ? " ;
 
@@ -143,17 +179,23 @@ public class BoardDao {
         this.jdbcTemplate.update(deleteRecommend, deleteParams);
     }
 
-    //추천 수 중복 여부 체크
+    /**추천 수 중복 여부 체크
+     *
+     * @param postRecommendReq
+     * @return
+     */
     public int checkRecommend (PostRecommendReq postRecommendReq){
         String checkRecommend = "SELECT COUNT(*) FROM Board_Recommend WHERE post_idx = ? AND user_idx = ?" ;
 
         return this.jdbcTemplate.queryForObject(checkRecommend, int.class,
                 postRecommendReq.getPost_idx(), postRecommendReq.getUser_idx());
     }
-    /**
-     * 댓글 관련 시작부분
+
+    /**게시글 댓글 조회
+     *
+     * @param post_idx
+     * @return
      */
-//게시글 댓글 조회
     public List<GetCommentRes> getComment(int post_idx){
         String getCommentQuery = "SELECT comment_idx, User.user_idx, Board.post_idx, comment_content, comment_recommend, " +
                 "comment_anonymity, comment_createAt, comment_updatedAt, comment_status " +
@@ -177,7 +219,12 @@ public class BoardDao {
                         rs.getString("comment_status")
                 ),getPostIdx);
     }
-//게시글 댓글 작성
+
+    /**게시글 댓글 작성
+     *
+     * @param postCommentReq
+     * @return
+     */
     public PostCommentRes postComment(PostCommentReq postCommentReq){
         String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_recommend, comment_anonymity, " +
                 "comment_createAt, comment_updatedAt, comment_status) " +
@@ -201,6 +248,11 @@ public class BoardDao {
         ));
     }
 
+    /**댓글 수정
+     *
+     * @param patchCommentReq
+     * @return
+     */
     public GetCommentRes patchComment(PatchCommentReq patchCommentReq){
         String updateQuery = "UPDATE Comment set comment_content = ? , " +
                 "comment_updatedAt = CURRENT_TIMESTAMP where comment_idx = ? " ;
@@ -224,6 +276,11 @@ public class BoardDao {
         ),resultParams);
     }
 
+    /**댓글 삭제
+     *
+     * @param deleteCommentReq
+     * @return
+     */
     public GetCommentRes deleteComment(DeleteCommentReq deleteCommentReq){
         String deleteQuery = "DELETE from Comment where comment_idx = ? ";
 
@@ -234,6 +291,11 @@ public class BoardDao {
         return null;
     }
 
+    /**댓글 추천
+     *
+     * @param postCommentRecommendReq
+     * @return
+     */
     public PostCommentRecommendRes postCommentRecommend(PostCommentRecommendReq postCommentRecommendReq) {
         String createRecommendQuery = "INSERT INTO Comment_Recommend (comment_idx, user_idx)" +
                 "VALUES (?, ?) " ;
@@ -253,6 +315,11 @@ public class BoardDao {
         ));
     }
 
+    /**댓글 추천수
+     *
+     * @param comment_idx
+     * @return
+     */
     public GetCommentRes updateCommentRecommendCount(int comment_idx) {
         String updateCommentQuery = "UPDATE Comment set comment_updatedAt = CURRENT_TIMESTAMP, " +
                 "comment_recommend = (select count(Comment_Recommend.comment_idx) " +
@@ -264,6 +331,10 @@ public class BoardDao {
         return null;
     }
 
+    /**댓글 추천 취소
+     *
+     * @param postCommentRecommendReq
+     */
     public void deleteCommentRecommend(PostCommentRecommendReq postCommentRecommendReq) {
         String deleteRecommend = "DELETE FROM Comment_Recommend where comment_idx = ? and user_idx = ? " ;
 
@@ -273,7 +344,11 @@ public class BoardDao {
         this.jdbcTemplate.update(deleteRecommend, deleteParams);
     }
 
-    //댓글 추천 수 중복 여부 체크
+    /**댓글 추천 수 중복 여부 체크
+     *
+     * @param postCommentRecommendReq
+     * @return
+     */
     public int checkCommentRecommend (PostCommentRecommendReq postCommentRecommendReq){
         String checkRecommend = "SELECT COUNT(*) FROM Comment_Recommend WHERE comment_idx = ? AND user_idx = ?" ;
 
