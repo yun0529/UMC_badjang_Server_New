@@ -181,6 +181,48 @@ public class UserController {
         }
     }
 
+    /**
+     * 회원 정보 변경 API
+     * [POST] /users/modify
+     *
+     * @return BaseResponse<String>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PostMapping("/modify")
+    public BaseResponse<String> modifyUserInfo(@RequestBody PostModifyReq postModifyReq) {
+        if (postModifyReq.getUser_idx() == 0) {
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+        }
+        if (postModifyReq.getUser_name() == null && postModifyReq.getUser_phone() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_INFO);
+        }
+        if (postModifyReq.getUser_name() != null && postModifyReq.getUser_phone() != null) {
+            return new BaseResponse<>(POST_USERS_MORE_INFO);
+        }
+        if (postModifyReq.getUser_name() != null && (postModifyReq.getUser_name().length() < 2 || postModifyReq.getUser_name().length() > 20)) {
+            return new BaseResponse<>(POST_USERS_INVALID_NAME);
+        }
+        if (postModifyReq.getUser_phone() != null && !(isRegexPhone(postModifyReq.getUser_phone()))) {
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
+        }
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postModifyReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            String resultString = userService.modifyUserInfo(postModifyReq);
+            return new BaseResponse<>(resultString);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
+
 
 
     /**

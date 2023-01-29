@@ -185,5 +185,24 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserNameQuery, modifyUserNameParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
 
+    public String modifyUserInfo(PostModifyReq postModifyReq) {
+        String modifyUserInfoQuery = "UPDATE User SET ";
+        String resultString = "";
 
+        if (postModifyReq.getUser_name() != null) {
+            modifyUserInfoQuery += "user_name = " + "'" + postModifyReq.getUser_name() + "'";
+            resultString = "이름이 변경되었습니다.";
+        }
+        else if (postModifyReq.getUser_phone() != null) {
+            modifyUserInfoQuery += "user_phone = " + "'" + postModifyReq.getUser_phone() + "'";
+            resultString = "전화번호가 변경되었습니다.";
+        }
+
+        modifyUserInfoQuery += " WHERE user_idx = ?";
+        int modifyUserInfoParams = postModifyReq.getUser_idx();
+
+        this.jdbcTemplate.update(modifyUserInfoQuery, modifyUserInfoParams);
+
+        return resultString;
+    }
 }
