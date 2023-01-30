@@ -125,12 +125,12 @@ public class UserDao {
 
 
 
-    /*public int modifyUserStatusLogIn(int user_idx){
-        String modifyUserNameQuery = "update User set user_status = ? where user_idx = ? ";
-        Object[] modifyUserNameParams = new Object[]{"NORMAL", user_idx};
+    public int modifyUserStatusLogIn(int user_idx){
+        String modifyUserNameQuery = "update User set user_on_off = ? where user_idx = ? ";
+        Object[] modifyUserNameParams = new Object[]{"ON", user_idx};
 
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
-    }*/
+    }
 
     // 로그인: 해당 email에 해당되는 user의 암호화된 비밀번호 값을 가져온다.
     public User getPwd(PostLoginReq postLoginReq) {
