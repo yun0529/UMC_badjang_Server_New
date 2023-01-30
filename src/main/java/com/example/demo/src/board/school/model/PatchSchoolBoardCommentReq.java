@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PatchSchoolBoardCommentReq {
     private String comment_content;
+    private String comment_anonymity;
 }

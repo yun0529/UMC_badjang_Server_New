@@ -172,7 +172,19 @@ public class SchoolBoardDao {
                     "where post_idx = ?";
 
             Object[] patchSchoolBoardParams = new Object[]{
-                    patchSchoolBoardReq.getPost_content(),
+                    patchSchoolBoardReq.getPost_image(),
+                    postIdx
+            };
+            this.jdbcTemplate.update(patchSchoolBoardQuery, patchSchoolBoardParams);
+        }
+
+        if (patchSchoolBoardReq.getPost_anonymity() != null) {
+            patchSchoolBoardQuery = "update Board " +
+                    "set post_anonymity = ? " +
+                    "where post_idx = ?";
+
+            Object[] patchSchoolBoardParams = new Object[]{
+                    patchSchoolBoardReq.getPost_anonymity(),
                     postIdx
             };
             this.jdbcTemplate.update(patchSchoolBoardQuery, patchSchoolBoardParams);

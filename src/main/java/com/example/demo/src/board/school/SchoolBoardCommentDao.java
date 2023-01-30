@@ -104,18 +104,35 @@ public class SchoolBoardCommentDao {
     }
 
     public void patchSchoolBoardComment(int commentIdx, PatchSchoolBoardCommentReq patchSchoolBoardCommentReq) {
+        String patchSchoolBoardCommentQuery;
+        Object[] patchSchoolBoardCommentParams;
 
-
-        String patchSchoolBoardCommentQuery = "update Comment " +
+        if (patchSchoolBoardCommentReq.getComment_content() != null) {
+            patchSchoolBoardCommentQuery = "update Comment " +
                     "set comment_content = ? " +
                     "where comment_idx = ?";
 
-        Object[] patchSchoolBoardCommentParams = new Object[]{
-                patchSchoolBoardCommentReq.getComment_content(),
-                commentIdx
-        };
+            patchSchoolBoardCommentParams = new Object[]{
+                    patchSchoolBoardCommentReq.getComment_content(),
+                    commentIdx
+            };
 
-        this.jdbcTemplate.update(patchSchoolBoardCommentQuery, patchSchoolBoardCommentParams);
+            this.jdbcTemplate.update(patchSchoolBoardCommentQuery, patchSchoolBoardCommentParams);
+        }
+
+        if (patchSchoolBoardCommentReq.getComment_anonymity() != null) {
+            patchSchoolBoardCommentQuery = "update Comment " +
+                    "set comment_anonymity = ? " +
+                    "where comment_idx = ?";
+
+            patchSchoolBoardCommentParams = new Object[]{
+                    patchSchoolBoardCommentReq.getComment_anonymity(),
+                    commentIdx
+            };
+            this.jdbcTemplate.update(patchSchoolBoardCommentQuery, patchSchoolBoardCommentParams);
+        }
+
+
 
 
     }
