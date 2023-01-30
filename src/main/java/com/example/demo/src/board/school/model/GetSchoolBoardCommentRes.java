@@ -14,4 +14,5 @@ public class GetSchoolBoardCommentRes {
     private String comment_content;
     private int comment_recommend;
     private String comment_anonymity;
+    private String comment_createAt;
 }
