@@ -16,6 +16,7 @@ public class PostScholarshipReq {
     private String scholarship_scale;
     private String scholarship_term;
     private String scholarship_presentation;
+    private String scholarship_createAt;
     private String scholarship_univ;
     private String scholarship_college;
     private String scholarship_department;
