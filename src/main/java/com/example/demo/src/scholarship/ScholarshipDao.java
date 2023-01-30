@@ -41,7 +41,7 @@ public class ScholarshipDao {
     }
 
     // 해당 filter에 맞는 장학금의 정보 조회
-    public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) {
+    public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)String category, @RequestParam(required = false)String filter, @RequestParam(required = false)String order) {
 
         String getScholarshipsByFilterQuery="select * from Scholarship where scholarship_status = 'Y'";
 
@@ -49,33 +49,63 @@ public class ScholarshipDao {
         String filterCondition="";
         String orderCondition="";
 
-        if(category==null){
+        if(category.equals("")){
             categoryCondition = "";
         }
-        else if(category==1){
-            categoryCondition = " and scholarship_category = '교내 재학생 장학금'";
+        else if(category.equals("국가장학")){
+            categoryCondition = " and (scholarship_category = '국가장학' or scholarship_category = '국가장학금')";
         }
-        else if(category==2){
-            categoryCondition = " and scholarship_category = '교내 신입생 입학성적 우수장학금'";
+        else if(category.equals("KRA와 함께하는 농어촌 희망재단 장학금")){
+            categoryCondition = " and (scholarship_category = 'KRA와 함께하는 농어촌 희망재단 장학' or scholarship_category = 'KRA와 함께하는 농어촌 희망재단 장학금')";
+        }
+        else if(category.equals("교내 신입생 입학성적 우수장학금")){
+            categoryCondition = " and (scholarship_category = '교내 신입생 입학성적 우수장학' or scholarship_category = '교내 신입생 입학성적 우수장학금')";
+        }
+        else if(category.equals("교내 재학생 장학금")){
+            categoryCondition = " and (scholarship_category = '교내 재학생 장학' or scholarship_category = '교내 재학생 장학금')";
+        }
+        else if(category.equals("교외장학")){
+            categoryCondition = " and (scholarship_category = '교외장학' or scholarship_category = '교외장학금')";
+        }
+        else if(category.equals("교내장학")){
+            categoryCondition = " and (scholarship_category = '교내장학' or scholarship_category = '교내장학금')";
+        }
+        else if(category.equals("학비대출")){
+            categoryCondition = " and scholarship_category = '학비대출'";
+        }
+        else if(category.equals("기타")){
+            categoryCondition = " and scholarship_category = '기타'";
+        }
+        else if(category.equals("국가근로")){
+            categoryCondition = " and scholarship_category = '국가근로'";
+        }
+        else if(category.equals("성적우수장학금")){
+            categoryCondition = " and (scholarship_category = '성적우수장학' or scholarship_category = '성적우수장학금')";
+        }
+        else if(category.equals("특별감면장학금")){
+            categoryCondition = " and (scholarship_category = '특별감면장학' or scholarship_category = '특별감면장학금')";
+        }
+        else if(category.equals("가계곤란자 장학금")){
+            categoryCondition = " and (scholarship_category = '가계곤란자 장학' or scholarship_category = '가계곤란자 장학금')";
+        }
+        else if(category.equals("근로 장학금")){
+            categoryCondition = " and (scholarship_category = '근로 장학' or scholarship_category = '근로 장학금')";
         }
 
-        if(filter==null){
+        if(filter.equals("") || filter.equals("인기순")){
             filterCondition = " order by scholarship_view";
         }
-        else if(filter==1){
+        else if(filter.equals("날짜순")){
             filterCondition = " order by scholarship_createAt";
         }
-        else if(filter==2){
-            filterCondition = " order by scholarship_view";
-        }
-        else if(filter==3){
+        else if(filter.equals("댓글순")){
             filterCondition = " order by scholarship_comment";
         }
 
-        if(order==null){
+        if(order.equals("") || order.equals("desc")){
             orderCondition = " desc";
         }
-        else if(order==1){
+        else if(order.equals("asc")){
             orderCondition = " asc";
         }
 
@@ -161,6 +191,7 @@ public class ScholarshipDao {
                 "scholarship_scale, " +
                 "scholarship_term, " +
                 "scholarship_presentation, " +
+                "scholarship_createAt, " +
                 "scholarship_univ, " +
                 "scholarship_college, " +
                 "scholarship_department, " +
@@ -168,7 +199,7 @@ public class ScholarshipDao {
                 "scholarship_semester, " +
                 "scholarship_province, " +
                 "scholarship_city, " +
-                "scholarship_category) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; // 실행될 동적 쿼리문
+                "scholarship_category) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; // 실행될 동적 쿼리문
         Object[] createScholarshipParams = new Object[]{
                 postScholarshipReq.getScholarship_name(),
                 postScholarshipReq.getScholarship_institution(),
@@ -178,6 +209,7 @@ public class ScholarshipDao {
                 postScholarshipReq.getScholarship_scale(),
                 postScholarshipReq.getScholarship_term(),
                 postScholarshipReq.getScholarship_presentation(),
+                postScholarshipReq.getScholarship_createAt(),
                 postScholarshipReq.getScholarship_univ(),
                 postScholarshipReq.getScholarship_college(),
                 postScholarshipReq.getScholarship_department(),
