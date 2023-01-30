@@ -28,9 +28,7 @@ public enum BaseResponseStatus {
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
-
-    USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요. "),
-
+    
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2021, "이메일 형식에 맞게 입력해주세요."),
@@ -88,11 +86,34 @@ public enum BaseResponseStatus {
     SUPPORT_EMPTY_SUPPORT_IDX(false, 2355, "해당 지원금idx 값이 존재하지 않습니다."),
 
     /**
+     * 2200 ~ 2250 : 메인화면 오류처리(옆마당)
+     */
+    USERS_EMPTY_USER_IDX(false, 2200, "유저 인덱스 값을 확인해주세요. "),
+    NON_MATCH_UNIV(false, 2201, "일치하는 장학금이 없습니다."),
+    /**
+     * 2400 ~ 2450 : 게시판 오류처리(옆마당)
+     */
+    EMPTY_BOARD_NAME(false, 2400, "게시물 제목을 입력해주세요"),
+    EMPTY_BOARD_CONTENT(false, 2401, "게시물 본문을 입력해주세요"),
+    INVALID_POST_IDX(false, 2402, "요청한 게시글 인덱스와 일치하지 않습니다."),
+    EMPTY_POST_IDX(false, 2403, "게시글 인덱스를 확인하세요."),
+    EMPTY_USER_IDX(false, 2404, "유저 인덱스를 확인하세요."),
+    EMPTY_CATEGORY_IDX(false, 2405, "게시글 카테고리를 확인하세요."),
+    EMPTY_COMMENT_IDX(false, 2406, "댓글 인덱스를 확인하세요."),
+    EMPTY_COMMENT_ANONYMITY(false, 2407, "댓글의 익명성 여부를 확인하세요"),
+    EMPTY_COMMENT_STATUS(false, 2408, "댓글의 존재유무를 확인하세요."),
+    EMPTY_COMMENT_CONTENT(false, 2409, "댓글 내용을 입력하세요"),
+    INVALID_COMMENT_IDX(false, 2410, "댓글 인덱스가 일치하지 않습니다."),
+
+
+
+
+    /**
      * 3000 : Response 오류
+     * 3400 ~ 3450 : 게시판 오류처리(옆마당)
      */
     // Common
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
-
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
