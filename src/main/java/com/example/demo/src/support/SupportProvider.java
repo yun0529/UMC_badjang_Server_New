@@ -33,7 +33,7 @@ public class SupportProvider {
 
 
     // 해당 filter에 맞는 지원금들의 정보 조회
-    public List<GetSupportRes> getSupportsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) throws BaseException {
+    public List<GetSupportRes> getSupportsByFilter(@RequestParam(required = false)String category, @RequestParam(required = false)String filter, @RequestParam(required = false)String order) throws BaseException {
         try {
             List<GetSupportRes> getSupportsRes = supportDao.getSupportsByFilter(category, filter, order);
             return getSupportsRes;

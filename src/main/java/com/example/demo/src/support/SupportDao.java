@@ -33,7 +33,7 @@ public class SupportDao {
     }
 
     // 해당 filter에 맞는 지원금의 정보 조회
-    public List<GetSupportRes> getSupportsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) {
+    public List<GetSupportRes> getSupportsByFilter(@RequestParam(required = false)String category, @RequestParam(required = false)String filter, @RequestParam(required = false)String order) {
 
         String getSupportsByFilterQuery="select * from Support where support_status = 'Y'";
 
@@ -41,36 +41,43 @@ public class SupportDao {
         String filterCondition="";
         String orderCondition="";
 
-        if(category==null){
+        if(category.equals("")){
             categoryCondition = "";
         }
-        else if(category==1){
+        else if(category.equals("창업지원")){
             categoryCondition = " and support_category = '창업지원'";
         }
-        else if(category==2){
+        else if(category.equals("취업지원")){
             categoryCondition = " and support_category = '취업지원'";
         }
-        else if(category==3){
-            categoryCondition = " and support_category = '경기 포천시 창업 지원사업'";
+        else if(category.equals("주거·금융")){
+            categoryCondition = " and support_category = '주거·금융'";
+        }
+        else if(category.equals("생활·복지")){
+            categoryCondition = " and support_category = '생활·복지'";
+        }
+        else if(category.equals("정책참여")){
+            categoryCondition = " and support_category = '정책참여'";
+        }
+        else if(category.equals("코로나19")){
+            categoryCondition = " and support_category = '코로나19'";
         }
 
-        if(filter==null){
+
+        if(filter.equals("") || filter.equals("인기순")){
             filterCondition = " order by support_view";
         }
-        else if(filter==1){
+        else if(filter.equals("날짜순")){
             filterCondition = " order by support_createAt";
         }
-        else if(filter==2){
-            filterCondition = " order by support_view";
-        }
-        else if(filter==3){
+        else if(filter.equals("댓글순")){
             filterCondition = " order by support_comment";
         }
 
-        if(order==null){
+        if(order.equals("") || order.equals("desc")){
             orderCondition = " desc";
         }
-        else if(order==1){
+        else if(order.equals("asc")){
             orderCondition = " asc";
         }
 

@@ -55,14 +55,8 @@ public class ScholarshipController {
         //  defaultValue를 통해, 기본값(파라미터가 없는 경우, 해당 파라미터의 기본값 설정)을 지정할 수 있음
 
         //  카테고리 null : 전체
-        //	           1 : 교내 재학생 장학금
-        //	           2 : 교내 신입생 입학성적 우수장학금
         //  필터 	null : 인기순(조회순)
-        //	           1 : 생성시간
-        //	           2 : 인기순(조회순)
-        //	           3 : 댓글순
         //  정렬	    null : desc
-        //	           1 : asc
 
         try {
             List<GetScholarshipRes> getScholarshipsRes = scholarshipProvider.getScholarshipsByFilter(category, filter, order);
