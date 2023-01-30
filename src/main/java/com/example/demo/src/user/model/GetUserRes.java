@@ -5,20 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class GetUserRes {
-    private int userIdx;
-    private String userNickname;
-    private String userImageUrl;
-    private String userBackgroundImageUrl;
-    private int subscribeCount;
-    private int videoCount;
-    private String userComment;
-    private String userAccount;
-    private String userSubscribeAccess;
-    private String userSavePlayListAccess;
-    private String createdAt;
-    private String totalViews;
+    private int user_idx;
+    private String user_email;
+    private String user_name;
+    private String user_birth;
+    private String user_phone;
+    private Date user_reg;
 }
