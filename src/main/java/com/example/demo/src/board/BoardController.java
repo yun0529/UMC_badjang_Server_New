@@ -303,7 +303,7 @@ public class BoardController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @PostMapping("/board/detail/comment/recommend/{comment_idx}")
-    public BaseResponse<PostCommentRecommendRes> getUpdateCommentRecommendCount(@PathVariable("comment_idx")int comment_idx,
+    public BaseResponse<String> getUpdateCommentRecommendCount(@PathVariable("comment_idx")int comment_idx,
                                                                                 @RequestBody PostCommentRecommendReq postCommentRecommendReq){
         try{
             int checkCommentRecommend = boardDao.checkCommentRecommend(postCommentRecommendReq);
@@ -316,17 +316,19 @@ public class BoardController {
             else if(checkCommentRecommend == 1){
                 boardProvider.deleteCommentRecommend(postCommentRecommendReq);
                 boardProvider.updateCommentRecommendCount(postCommentRecommendReq.getComment_idx());
+                String result = "댓글을 추천을 취소했습니다.";
+                return new BaseResponse<>(result);
             }
             else {
-                PostCommentRecommendRes getCommentRes = boardProvider.postCommentRecommend(postCommentRecommendReq);
+                boardProvider.postCommentRecommend(postCommentRecommendReq);
                 boardProvider.updateCommentRecommendCount(postCommentRecommendReq.getComment_idx());
-                return new BaseResponse<>(getCommentRes);
+                String result = "댓글을 추천했습니다.";
+                return new BaseResponse<>(result);
             }
         } catch(BaseException exception){
             System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
-        return null;
     }
 }
 

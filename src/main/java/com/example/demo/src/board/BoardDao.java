@@ -312,14 +312,7 @@ public class BoardDao {
         };
 
         this.jdbcTemplate.update(createRecommendQuery, createParams);
-
-        String lastInsertIdQuery = "select comment_recommend_idx, comment_idx " +
-                "from badjangDB.Comment_Recommend order by comment_recommend_idx desc limit 1 ";
-
-        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,(rs, rowNum) -> new PostCommentRecommendRes(
-                rs.getInt("comment_recommend_idx"),
-                rs.getInt("comment_idx")
-        ));
+        return null;
     }
 
     /**댓글 추천수
