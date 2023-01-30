@@ -32,11 +32,23 @@ public class BoardProvider {
         }
     }
 
-    public List<GetBoardRes> getBoardDetail(int post_idx) throws BaseException{
+    public List<GetBoardRes> getBoardDetail(int user_idx, int post_idx) throws BaseException{
         try{
-            List<GetBoardRes> getBoardDetailRes = boardDao.getBoardDetail(post_idx);
+            List<GetBoardRes> getBoardDetailRes = boardDao.getBoardDetail(user_idx, post_idx);
             return getBoardDetailRes;
         }catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetBoardRes updateViewCount(int post_idx) throws BaseException {
+        try{
+            GetBoardRes updateCommentCount = boardDao.updateViewCount(post_idx);
+            boardDao.updateAt(post_idx);
+            return updateCommentCount;
+        }
+        catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
@@ -45,6 +57,7 @@ public class BoardProvider {
     public GetBoardRes updateCommentCount(int post_idx) throws BaseException {
         try{
             GetBoardRes updateCommentCount = boardDao.updateCommentCount(post_idx);
+            boardDao.updateAt(post_idx);
             return updateCommentCount;
         }
         catch (Exception exception) {
@@ -56,6 +69,7 @@ public class BoardProvider {
     public GetBoardRes updateRecommendCount(int post_idx) throws BaseException {
         try{
             GetBoardRes updateRecommendCount = boardDao.updateRecommendCount(post_idx);
+            boardDao.updateAt(post_idx);
             return updateRecommendCount;
         }
         catch (Exception exception) {

@@ -58,10 +58,15 @@ public class BoardController {
      */
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/board/detail/{post_idx}")
-    public BaseResponse<List<GetBoardRes>> getBoardDetail(@PathVariable("post_idx")int post_idx){
+    @GetMapping("/board/detail/{user_idx}/{post_idx}")
+    public BaseResponse<List<GetBoardRes>> getBoardDetail(@PathVariable("user_idx")int user_idx,
+                                                          @PathVariable("post_idx")int post_idx){
         try{
-            List<GetBoardRes> getBoardDetailRes = boardProvider.getBoardDetail(post_idx);
+            List<GetBoardRes> getBoardDetailRes = boardProvider.getBoardDetail(user_idx, post_idx);
+            boardProvider.updateViewCount(post_idx);
+            boardProvider.updateCommentCount(post_idx);
+            boardProvider.updateCommentRecommendCount(post_idx);
+
             return new BaseResponse<>(getBoardDetailRes);
         } catch(BaseException exception){
             System.out.println(exception);
@@ -105,18 +110,21 @@ public class BoardController {
     //게시글 수정
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @PatchMapping("/board/modify/{post_idx}")
-    public BaseResponse<List<GetBoardRes>> patchBoard(@PathVariable("post_idx") int post_idx,
+    @PatchMapping("/board/modify/{post_idx}/{user_idx}")
+    public BaseResponse<String> patchBoard(@PathVariable("post_idx") int post_idx, @PathVariable("user_idx") int user_idx,
                                                        @RequestBody PatchBoardReq patchBoardReq) {
             try{
+                int idx = jwtService.getUserIdx();
                 if(post_idx != patchBoardReq.getPost_idx()){
                     return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
-                }
-                else if(post_idx == 0){
+                } else if (idx != user_idx) {
+                    return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+                } else if(post_idx == 0){
                     return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
                 }
-                List<GetBoardRes> patchBoardRes = boardProvider.patchBoard(patchBoardReq);
-                return new BaseResponse<>(patchBoardRes);
+                boardProvider.patchBoard(patchBoardReq);
+                String result = "게시글이 수정되었습니다";
+                return new BaseResponse<>(result);
 
             } catch(BaseException exception){
                 System.out.println(exception);
@@ -126,18 +134,24 @@ public class BoardController {
     //게시물 삭제
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @DeleteMapping("/board/delete/{post_idx}")
-    public BaseResponse<List<GetBoardRes>> deleteBoard(@PathVariable("post_idx") int post_idx,
+    @DeleteMapping("/board/delete/{post_idx}/{user_idx}")
+    public BaseResponse<String> deleteBoard(@PathVariable("post_idx") int post_idx,@PathVariable("user_idx") int user_idx,
                                                           @RequestBody DeleteBoardReq deleteBoardReq){
         try{
-            if(post_idx != deleteBoardReq.getPost_idx()){
+            int idx = jwtService.getUserIdx();
+            if(idx != user_idx){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            else if(post_idx != deleteBoardReq.getPost_idx()){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
             }
             else if(post_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
             }
-            List<GetBoardRes> deleteBoardRes = boardProvider.deleteBoard(deleteBoardReq);
-            return new BaseResponse<>(deleteBoardRes);
+            boardProvider.deleteBoard(deleteBoardReq);
+
+            String result = "삭제에 성공하였습니다.";
+            return new BaseResponse<>(result);
 
         } catch(BaseException exception){
             System.out.println(exception);
@@ -148,7 +162,7 @@ public class BoardController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @PostMapping("/board/recommend/{post_idx}")
-    public BaseResponse<PostRecommendRes> postRecommend(@PathVariable("post_idx")int post_idx,
+    public BaseResponse<String> postRecommend(@PathVariable("post_idx")int post_idx,
                                                     @RequestBody PostRecommendReq postRecommendReq){
         try {
             int checkRecommend = boardDao.checkRecommend(postRecommendReq);
@@ -164,17 +178,19 @@ public class BoardController {
             else if(checkRecommend == 1){
                 boardProvider.deleteRecommend(postRecommendReq);
                 boardProvider.updateRecommendCount(postRecommendReq.getPost_idx());
+                String result = "추천을 취소하였습니다." ;
+                return new BaseResponse<>(result);
             }
-            else{
-                PostRecommendRes postRecommendRes = boardProvider.postRecommend(postRecommendReq);
-                boardProvider.updateRecommendCount(postRecommendReq.getPost_idx());
-                return new BaseResponse<>(postRecommendRes);
-            }
+
+            boardProvider.postRecommend(postRecommendReq);
+            boardProvider.updateRecommendCount(postRecommendReq.getPost_idx());
+            String result = "본 게시물을 추천하였습니다.";
+            return new BaseResponse<>(result);
+
         } catch (BaseException exception) {
             System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
-        return null;
     }
 
     //[GET] 댓글 조회 (게시글 인덱스 사용)
@@ -194,10 +210,12 @@ public class BoardController {
     //[POST] 댓글 작성 (게시글 인덱스 사용)
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @PostMapping("/board/comment/add/{post_idx}")
+    @PostMapping("/board/comment/add/{post_idx}/{user_idx}")
     public BaseResponse<PostCommentRes> postComment(@PathVariable("post_idx") int post_idx,
+                                                    @PathVariable("user_idx") int user_idx,
                                                     @RequestBody PostCommentReq postCommentReq){
         try{
+            int idx = jwtService.getUserIdx();
             if(post_idx != postCommentReq.getPost_idx()){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
             }
@@ -213,6 +231,9 @@ public class BoardController {
             else if (postCommentReq.getComment_status() == null) {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_STATUS);
             }
+            else if(idx != user_idx){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
                 PostCommentRes postCommentRes = boardProvider.postComment(postCommentReq);
                 boardProvider.updateCommentCount(post_idx);
                 return new BaseResponse<>(postCommentRes);
@@ -225,18 +246,24 @@ public class BoardController {
     //[PATCH] 댓글 수정 (댓글 인덱스 사용)
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @PatchMapping("/board/comment/modify/{comment_idx}")
-    public BaseResponse<GetCommentRes> patchBoard(@PathVariable("comment_idx") int comment_idx,
+    @PatchMapping("/board/comment/modify/{comment_idx}/{user_idx}")
+    public BaseResponse<String> patchBoard(@PathVariable("comment_idx") int comment_idx,
+                                                  @PathVariable("user_idx") int user_idx,
                                                         @RequestBody PatchCommentReq patchCommentReq) {
         try{
+            int idx = jwtService.getUserIdx();
             if(comment_idx != patchCommentReq.getComment_idx()){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_COMMENT_IDX);
             }
             else if(comment_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
             }
-            GetCommentRes patchCommentRes = boardProvider.patchComment(patchCommentReq);
-            return new BaseResponse<>(patchCommentRes);
+            else if(idx != user_idx){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            boardProvider.patchComment(patchCommentReq);
+            String result = "댓글을 수정하였습니다.";
+            return new BaseResponse<>(result);
 
         } catch(BaseException exception){
             System.out.println(exception);
@@ -246,19 +273,25 @@ public class BoardController {
     //[DELETE] 댓글 삭제 (댓글 인덱스 사용)
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @DeleteMapping("/board/comment/delete/{comment_idx}")
-    public BaseResponse<GetCommentRes> deleteComment(@PathVariable("comment_idx") int comment_idx,
+    @DeleteMapping("/board/comment/delete/{comment_idx}/{user_idx}")
+    public BaseResponse<String> deleteComment(@PathVariable("comment_idx") int comment_idx,
+                                                     @PathVariable("user_idx") int user_idx,
                                                           @RequestBody DeleteCommentReq deleteCommentReq){
         try{
+            int idx = jwtService.getUserIdx();
             if(comment_idx != deleteCommentReq.getComment_idx()){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_COMMENT_IDX);
             }
             else if(comment_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
             }
-            GetCommentRes deleteBoardRes = boardProvider.deleteComment(deleteCommentReq);
+            else if(idx != user_idx){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            boardProvider.deleteComment(deleteCommentReq);
             boardProvider.updateCommentCount(deleteCommentReq.getPost_idx());
-            return new BaseResponse<>(deleteBoardRes);
+            String result = "댓글을 삭제했습니다.";
+            return new BaseResponse<>(result);
 
         } catch(BaseException exception){
             System.out.println(exception);

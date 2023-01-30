@@ -14,6 +14,7 @@ public class PatchBoardReq {
     private String post_name;
     private String post_content;
     private String post_image;
+    private int user_idx;
 }
 
 

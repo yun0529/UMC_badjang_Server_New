@@ -67,6 +67,7 @@ public class BoardDao {
                         rs.getString("post_updateAt"),
                         rs.getString("post_status"),
                         rs.getString("post_anonymity"),
+                        rs.getInt("school_name_idx"),
                         rs.getInt("post_bookmark")),user_idx);
     }
 
@@ -75,11 +76,11 @@ public class BoardDao {
      */
     public List<GetBoardRes> patchBoard(PatchBoardReq patchBoardReq){
         String createBoardQuery = "UPDATE Board set post_category = ? , post_name = ? , post_content = ? , post_image = ? , " +
-                "post_updateAt = CURRENT_TIMESTAMP where post_idx = ? " ;
+                "post_updateAt = CURRENT_TIMESTAMP where post_idx = ? and user_idx = ?" ;
 
         Object[] createParams = new Object[]{
                 patchBoardReq.getPost_category(), patchBoardReq.getPost_name(), patchBoardReq.getPost_content(),
-                patchBoardReq.getPost_image(), patchBoardReq.getPost_idx()
+                patchBoardReq.getPost_image(), patchBoardReq.getPost_idx(), patchBoardReq.getUser_idx()
         };
 
         this.jdbcTemplate.update(createBoardQuery, createParams);
@@ -90,10 +91,10 @@ public class BoardDao {
      *
      */
     public List<GetBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq){
-        String deleteBoardQuery = "DELETE from Board where post_idx = ?" ;
+        String deleteBoardQuery = "DELETE from Board where post_idx = ? and user_idx = ?" ;
 
         Object[] deleteParam = new Object[]{
-                deleteBoardReq.getPost_idx()
+                deleteBoardReq.getPost_idx(), deleteBoardReq.getUser_idx()
         };
         this.jdbcTemplate.update(deleteBoardQuery, deleteParam);
         return null;
@@ -102,15 +103,37 @@ public class BoardDao {
     /**게시글 상세 조회 (조회수 증감)
      *
      */
-    public List<GetBoardRes> getBoardDetail(int post_idx){
-        String getBoardQuery = "UPDATE Board set post_view = post_view + 1 " +
+    public GetBoardRes updateViewCount(int post_idx){
+        String updateBoardQuery = "UPDATE Board set post_view = post_view + 1 " +
                 "where post_idx = ? " ;
 
         int updateView = post_idx;
-        this.jdbcTemplate.update(getBoardQuery, updateView);
-
-
+        this.jdbcTemplate.update(updateBoardQuery, updateView);
         return null;
+    }
+
+    public List<GetBoardRes> getBoardDetail(int user_idx, int post_idx){
+        String getBoardQuery = "SELECT * ,(select exists(select post_idx, user_idx from Bookmark " +
+                "where post_idx = Board.post_idx " +
+                "and user_idx = ?)) " +
+                "as post_bookmark FROM Board where post_idx = ? " ;
+
+        return this.jdbcTemplate.query(getBoardQuery, (rs, rowNum) -> new GetBoardRes(
+                rs.getInt("post_idx"),
+                rs.getInt("user_idx"),
+                rs.getString("post_category"),
+                rs.getString("post_name"),
+                rs.getString("post_content"),
+                rs.getString("post_image"),
+                rs.getInt("post_view"),
+                rs.getInt("post_recommend"),
+                rs.getInt("post_comment"),
+                rs.getString("post_createAt"),
+                rs.getString("post_updateAt"),
+                rs.getString("post_status"),
+                rs.getString("post_anonymity"),
+                rs.getInt("school_name_idx"),
+                rs.getInt("post_bookmark")),user_idx, post_idx);
     }
 
     /**게시글 상세조회(댓글수 증감)
@@ -120,6 +143,15 @@ public class BoardDao {
         String updateCommentQuery = "UPDATE Board set post_comment = (select count(Comment.post_idx) " +
                 "from Comment where Comment.post_idx = Board.post_idx) " +
                 "where Board.post_idx = ? " ;
+
+        int updateCommentCount = post_idx;
+        this.jdbcTemplate.update(updateCommentQuery, updateCommentCount);
+        return null;
+    }
+
+    public GetBoardRes updateAt (int post_idx){
+        String updateCommentQuery = "UPDATE Board set post_updateAt = CURRENT_TIMESTAMP " +
+                "where post_idx = ? " ;
 
         int updateCommentCount = post_idx;
         this.jdbcTemplate.update(updateCommentQuery, updateCommentCount);
