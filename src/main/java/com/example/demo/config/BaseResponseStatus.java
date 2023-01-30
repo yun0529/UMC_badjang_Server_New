@@ -14,6 +14,17 @@ public enum BaseResponseStatus {
     DELETE_SEARCH_HISTORY_SUCCESS(true, 1250, "최근 검색어 삭제 요청을 성공하였습니다."),
     POST_BOOKMARK_SUCCESS(true, 1251, "즐겨찾기가 추가되었습니다."),
     DELETE_BOOKMARK_SUCCESS(true, 1252, "즐겨찾기가 취소되었습니다."),
+    POST_SCHOOL_BOARD_SUCCESS(true, 1253, "게시판을 추가하였습니다."),
+    PATCH_SCHOOL_BOARD_SUCCESS(true, 1254, "게시판을 수정하였습니다."),
+    DELETE_SCHOOL_BOARD_SUCCESS(true, 1255, "게시판을 삭제하였습니다."),
+    POST_SCHOOL_BOARD_COMMENT_SUCCESS(true, 1256, "댓글이 추가되었습니다."),
+
+    PATCH_SCHOOL_BOARD_COMMENT_SUCCESS(true, 1257, "댓글이 수정되었습니다."),
+    DELETE_SCHOOL_BOARD_COMMENT_SUCCESS(true, 1258, "댓글이 삭제되었습니다."),
+    POST_SCHOOL_BOARD_RECOMMEND_SUCCESS(true, 1259, "게시판을 추천하였습니다."),
+    DELETE_SCHOOL_BOARD_RECOMMEND_SUCCESS(true, 1260, "게시판 추천을 취소하였습니다."),
+    POST_SCHOOL_BOARD_COMMENT_RECOMMEND_SUCCESS(true, 1261, "댓글을 추천하였습니다."),
+    DELETE_SCHOOL_BOARD_COMMENT_RECOMMEND_SUCCESS(true, 1262, "댓글 추천을 취소하였습니다."),
 
 
 
@@ -57,6 +68,16 @@ public enum BaseResponseStatus {
     DELETE_SEARCH_HISTORY_FAIL(false, 2252, "최근 검색어 삭제를 실패하였습니다."),
 
     POST_BOOKMARK_FAIL(false, 2253, "즐겨찾기를 실패하셨습니다."),
+
+    SCHOOL_BOARD_AUTH_FAIL(false, 2254, "해당 게시판의 권한이 없습니다."),
+
+    SCHOOL_BOARD_COMMENT_AUTH_FAIL(false, 2255, "해당 댓글의 권한이 없습니다."),
+
+    POST_SCHOOL_BOARD_RECOMMEND_MINE(false, 2256, "게시판 작성자는 자신의 게시물을 추천할 수 없습니다."),
+    POST_SCHOOL_BOARD_RECOMMEND_FAIL(false, 2257, "게시판 추천을 실패하였습니다."),
+    POST_SCHOOL_BOARD_COMMENT_RECOMMEND_MINE(false, 2258, "댓글 작성자는 자신의 댓글을 추천할 수 없습니다."),
+    POST_SCHOOL_BOARD_COMMENT_RECOMMEND_FAIL(false, 2259, "댓글 추천을 실패하였습니다."),
+
 
 
     POST_COMMENT_EMPTY_CONTENT(false, 2301,"댓글을 입력해주세요."),

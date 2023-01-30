@@ -162,6 +162,55 @@ public class BookmarkController {
     }
 
     /**
+     * 자유게시판 즐겨찾기 추가 및 취소
+     * [POST] /board/detail/:post_idx/bookmark
+     */
+    @PostMapping("/board/detail/{post_idx}/bookmark")
+    public BaseResponse<String> postBookmarkBoard(@PathVariable("post_idx") int postIdx) throws BaseException {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            PostBookmarkBoardReq postBookmarkBoardReq = new PostBookmarkBoardReq(userIdx, postIdx);
+            String postBookmarkBoardRes = bookmarkService.postBookmarkBoard(postBookmarkBoardReq);
+
+            if (postBookmarkBoardRes == "삭제") {
+                return new BaseResponse<>(DELETE_BOOKMARK_SUCCESS);
+            } else if (postBookmarkBoardRes == "추가") {
+                return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            } else {
+                return new BaseResponse<>(POST_BOOKMARK_FAIL);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 학교게시판 즐겨찾기 추가 및 취소
+     * [POST] /board/school/:schoolNameIdx/:postIdx/bookmark
+     */
+    @PostMapping("/board/school/{schoolNameIdx}/{postIdx}/bookmark")
+    public BaseResponse<String> postBookmarkSchoolBoard(@PathVariable("postIdx") int postIdx) throws BaseException {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            PostBookmarkBoardReq postBookmarkBoardReq = new PostBookmarkBoardReq(userIdx, postIdx);
+            String postBookmarkBoardRes = bookmarkService.postBookmarkBoard(postBookmarkBoardReq);
+
+            if (postBookmarkBoardRes == "삭제") {
+                return new BaseResponse<>(DELETE_BOOKMARK_SUCCESS);
+            } else if (postBookmarkBoardRes == "추가") {
+                return new BaseResponse<>(POST_BOOKMARK_SUCCESS);
+            } else {
+                return new BaseResponse<>(POST_BOOKMARK_FAIL);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+    /**
      * 우리학교 장학금 페이지 즐겨찾기 추가 및 취소
      * [POST] /menu/school/:schoolIdx/bookmark
      */
