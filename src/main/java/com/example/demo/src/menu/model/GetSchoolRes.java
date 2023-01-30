@@ -9,7 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class GetSchoolRes {
-    private int school_idx;
     private int scholarship_idx;
     private int user_idx;
     private String scholarship_createAt;

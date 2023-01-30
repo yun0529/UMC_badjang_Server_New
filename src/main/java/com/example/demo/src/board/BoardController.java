@@ -285,7 +285,7 @@ public class BoardController {
                 boardProvider.updateCommentRecommendCount(postCommentRecommendReq.getComment_idx());
             }
             else {
-                PostCommentRecommendRes getCommentRes = boardProvider.updateCommentRecommend(postCommentRecommendReq);
+                PostCommentRecommendRes getCommentRes = boardProvider.postCommentRecommend(postCommentRecommendReq);
                 boardProvider.updateCommentRecommendCount(postCommentRecommendReq.getComment_idx());
                 return new BaseResponse<>(getCommentRes);
             }

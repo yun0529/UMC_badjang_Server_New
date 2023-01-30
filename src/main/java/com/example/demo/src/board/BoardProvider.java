@@ -2,7 +2,6 @@ package com.example.demo.src.board;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.board.model.*;
-import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +14,12 @@ import static com.example.demo.config.BaseResponseStatus.*;
 public class BoardProvider {
 
     private final BoardDao boardDao;
-    private final JwtService jwtService;
-
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public BoardProvider(BoardDao boardDao, JwtService jwtService) {
+    public BoardProvider(BoardDao boardDao) {
         this.boardDao = boardDao;
-        this.jwtService = jwtService;
     }
 
     public List<GetBoardRes> getBoard() throws BaseException {
@@ -161,17 +157,6 @@ public class BoardProvider {
             GetCommentRes deleteCommentRes = boardDao.deleteComment(deleteCommentReq);
             return deleteCommentRes;
         }catch (Exception exception){
-            System.out.println(exception);
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public PostCommentRecommendRes updateCommentRecommend (PostCommentRecommendReq postCommentRecommendReq) throws BaseException {
-        try {
-            PostCommentRecommendRes postCommentRecommendRes = boardDao.postCommentRecommend(postCommentRecommendReq);
-            return new PostCommentRecommendRes(
-                    postCommentRecommendRes.getComment_recommend_idx(),postCommentRecommendRes.getComment_idx());
-        } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
