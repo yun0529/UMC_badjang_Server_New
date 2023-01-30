@@ -22,9 +22,9 @@ public class BoardProvider {
         this.boardDao = boardDao;
     }
 
-    public List<GetBoardRes> getBoard() throws BaseException {
+    public List<GetBoardRes> getBoard(int user_idx) throws BaseException {
         try{
-            List<GetBoardRes> getBoardRes = boardDao.getBoard();
+            List<GetBoardRes> getBoardRes = boardDao.getBoard(user_idx);
             return getBoardRes;
         }
         catch (Exception exception) {

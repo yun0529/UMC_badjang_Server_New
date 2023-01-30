@@ -42,10 +42,10 @@ public class BoardController {
     //Query String
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/board") // (GET) 127.0.0.1:9000/board
-    public BaseResponse<List<GetBoardRes>> getBoard() {
+    @GetMapping("/board/{user_idx}") // (GET) 127.0.0.1:9000/board
+    public BaseResponse<List<GetBoardRes>> getBoard(@PathVariable("user_idx")int user_idx) {
         try{
-            List<GetBoardRes> getBoardRes = boardProvider.getBoard();
+            List<GetBoardRes> getBoardRes = boardProvider.getBoard(user_idx);
             return new BaseResponse<>(getBoardRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));

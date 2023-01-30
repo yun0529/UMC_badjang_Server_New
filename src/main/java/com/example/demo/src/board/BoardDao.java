@@ -46,11 +46,11 @@ public class BoardDao {
     /**게시글 전체 조회
      *
      */
-    public List<GetBoardRes> getBoard(){
-        String getBoardResQuery = "SELECT post_idx, Board.user_idx, post_category, post_name, post_content, post_image, post_view, post_recommend, post_comment, " +
-                "post_createAt, post_updateAt, post_status, post_anonymity " +
-                "from badjangDB.Board " +
-                "join User on User.user_idx = Board.user_idx " ;
+    public List<GetBoardRes> getBoard(int user_idx){
+        String getBoardResQuery = "SELECT * ,(select exists(select post_idx, user_idx from Bookmark " +
+                "where post_idx = Board.post_idx " +
+                "and user_idx = ?)) " +
+                "as post_bookmark FROM Board " ;
 
         return this.jdbcTemplate.query(getBoardResQuery,
                 (rs, rowNum) -> new GetBoardRes(
@@ -66,7 +66,8 @@ public class BoardDao {
                         rs.getString("post_createAt"),
                         rs.getString("post_updateAt"),
                         rs.getString("post_status"),
-                        rs.getString("post_anonymity")));
+                        rs.getString("post_anonymity"),
+                        rs.getInt("post_bookmark")),user_idx);
     }
 
     /**게시글 수정

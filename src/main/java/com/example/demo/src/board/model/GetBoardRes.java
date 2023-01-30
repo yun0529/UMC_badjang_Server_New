@@ -21,4 +21,5 @@ public class GetBoardRes {
     private String post_updateAt;
     private String post_status;
     private String post_anonymity;
+    private int post_bookmark;
 }
