@@ -58,27 +58,27 @@ public class BookmarkDao {
                 "FROM Bookmark " +
                 "inner JOIN Scholarship " +
                 "ON Bookmark.scholarship_idx = Scholarship.scholarship_idx " +
-                "where Bookmark.user_idx = ? " +
-                "union " +
-                "select Bookmark.bookmark_idx, Scholarship.scholarship_idx, Scholarship.scholarship_name, " +
-                "scholarship_institution, scholarship_content, scholarship_image, scholarship_homepage, scholarship_view, " +
-                "scholarship_comment, scholarship_scale, scholarship_term, scholarship_presentation " +
-                "FROM Bookmark " +
-                "inner JOIN School " +
-                "on Bookmark.school_idx = School.school_idx " +
-                "left JOIN Scholarship " +
-                "ON School.scholarship_idx = Scholarship.scholarship_idx " +
-                "where Bookmark.user_idx = ? " +
-                "union " +
-                "select Bookmark.bookmark_idx, Scholarship.scholarship_idx, Scholarship.scholarship_name, " +
-                "scholarship_institution, scholarship_content, scholarship_image, scholarship_homepage, scholarship_view, " +
-                "scholarship_comment, scholarship_scale, scholarship_term, scholarship_presentation " +
-                "FROM Bookmark " +
-                "inner JOIN Total " +
-                "on Total.total_idx = Bookmark.total_idx " +
-                "left JOIN Scholarship " +
-                "ON Total.scholarship_idx = Scholarship.scholarship_idx " +
                 "where Bookmark.user_idx = ? ";
+//                "union " +
+//                "select Bookmark.bookmark_idx, Scholarship.scholarship_idx, Scholarship.scholarship_name, " +
+//                "scholarship_institution, scholarship_content, scholarship_image, scholarship_homepage, scholarship_view, " +
+//                "scholarship_comment, scholarship_scale, scholarship_term, scholarship_presentation " +
+//                "FROM Bookmark " +
+//                "inner JOIN School " +
+//                "on Bookmark.school_idx = School.school_idx " +
+//                "left JOIN Scholarship " +
+//                "ON School.scholarship_idx = Scholarship.scholarship_idx " +
+//                "where Bookmark.user_idx = ? " +
+//                "union " +
+//                "select Bookmark.bookmark_idx, Scholarship.scholarship_idx, Scholarship.scholarship_name, " +
+//                "scholarship_institution, scholarship_content, scholarship_image, scholarship_homepage, scholarship_view, " +
+//                "scholarship_comment, scholarship_scale, scholarship_term, scholarship_presentation " +
+//                "FROM Bookmark " +
+//                "inner JOIN Total " +
+//                "on Total.total_idx = Bookmark.total_idx " +
+//                "left JOIN Scholarship " +
+//                "ON Total.scholarship_idx = Scholarship.scholarship_idx " +
+//                "where Bookmark.user_idx = ? ";
 
 
         return this.jdbcTemplate.query(getBookmarkScholarshipQuery,
@@ -96,7 +96,7 @@ public class BookmarkDao {
                         rs.getString("scholarship_term"),
                         rs.getString("scholarship_presentation")
                 ),
-                userIdxParams, userIdxParams, userIdxParams
+                userIdxParams
         );
     }
 
@@ -110,17 +110,17 @@ public class BookmarkDao {
                 "FROM Bookmark " +
                 "inner JOIN Support " +
                 "ON Bookmark.support_idx = Support.support_idx " +
-                "where Bookmark.user_idx = ? " +
-                "union " +
-                "select bookmark_idx, Total.fund_idx, support_policy, support_name, support_institution, " +
-                "support_content, support_image, support_homepage, support_view, " +
-                "support_comment, support_scale, support_term, support_presentation " +
-                "FROM Bookmark " +
-                "inner JOIN Total " +
-                "on Total.total_idx = Bookmark.total_idx " +
-                "left JOIN Support " +
-                "ON Total.fund_idx = Support.support_idx " +
                 "where Bookmark.user_idx = ? ";
+//                "union " +
+//                "select bookmark_idx, Total.fund_idx, support_policy, support_name, support_institution, " +
+//                "support_content, support_image, support_homepage, support_view, " +
+//                "support_comment, support_scale, support_term, support_presentation " +
+//                "FROM Bookmark " +
+//                "inner JOIN Total " +
+//                "on Total.total_idx = Bookmark.total_idx " +
+//                "left JOIN Support " +
+//                "ON Total.fund_idx = Support.support_idx " +
+//                "where Bookmark.user_idx = ? ";
 
         return this.jdbcTemplate.query(getBookmarkSupportQuery,
                 (rs, rowNum) -> new GetBookmarkSupportRes(
@@ -138,7 +138,7 @@ public class BookmarkDao {
                         rs.getString("support_term"),
                         rs.getString("support_presentation")
                 ),
-                userIdxParams, userIdxParams
+                userIdxParams
         );
     }
 
@@ -199,8 +199,8 @@ public class BookmarkDao {
     //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
     public String postBookmarkScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
         int bookmarkScholarshipNullCheck = bookmarkScholarshipNullCheck(postBookmarkScholarshipReq);
-        int nullCheckSchoolForScholarship = nullCheckSchoolForScholarship(postBookmarkScholarshipReq);
-        int nullCheckTotalForScholarship = nullCheckTotalForScholarship(postBookmarkScholarshipReq);
+//        int nullCheckSchoolForScholarship = nullCheckSchoolForScholarship(postBookmarkScholarshipReq);
+//        int nullCheckTotalForScholarship = nullCheckTotalForScholarship(postBookmarkScholarshipReq);
 
         String postBookmarkScholarshipQuery;
         Object[] postBookmarkScholarshipParams = new Object[]{postBookmarkScholarshipReq.getUser_idx(), postBookmarkScholarshipReq.getScholarship_idx()};
@@ -212,27 +212,29 @@ public class BookmarkDao {
             this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
             return "삭제";
 
-        } else if (nullCheckSchoolForScholarship == 1) {
-            postBookmarkScholarshipQuery = "delete a " +
-                    "from Bookmark a " +
-                    "left join School b " +
-                    "on a.School_idx = b.School_idx " +
-                    "where a.user_idx = ? " +
-                    "and b.scholarship_idx = ? ";
-            this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
-            return "삭제";
-
-        } else if (nullCheckTotalForScholarship == 1) {
-            postBookmarkScholarshipQuery = "delete a " +
-                    "from Bookmark a " +
-                    "left join Total b " +
-                    "on a.total_idx = b.total_idx " +
-                    "where a.user_idx = ? " +
-                    "and b.scholarship_idx = ? ";
-            this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
-            return "삭제";
-
-        } else {
+        }
+//        else if (nullCheckSchoolForScholarship == 1) {
+//            postBookmarkScholarshipQuery = "delete a " +
+//                    "from Bookmark a " +
+//                    "left join School b " +
+//                    "on a.School_idx = b.School_idx " +
+//                    "where a.user_idx = ? " +
+//                    "and b.scholarship_idx = ? ";
+//            this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
+//            return "삭제";
+//
+//        } else if (nullCheckTotalForScholarship == 1) {
+//            postBookmarkScholarshipQuery = "delete a " +
+//                    "from Bookmark a " +
+//                    "left join Total b " +
+//                    "on a.total_idx = b.total_idx " +
+//                    "where a.user_idx = ? " +
+//                    "and b.scholarship_idx = ? ";
+//            this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
+//            return "삭제";
+//
+//        }
+        else {
             postBookmarkScholarshipQuery = "insert into Bookmark (user_idx, scholarship_idx) " +
                     "VALUES (?, ?) ";
             this.jdbcTemplate.update(postBookmarkScholarshipQuery, postBookmarkScholarshipParams);
@@ -279,7 +281,7 @@ public class BookmarkDao {
     //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
     public String postBookmarkSupport(PostBookmarkSupportReq postBookmarkSupportReq) {
         int bookmarkSupportNullCheck = bookmarkSupportNullCheck(postBookmarkSupportReq);
-        int nullCheckTotalForSupport = nullCheckTotalForSupport(postBookmarkSupportReq);
+//        int nullCheckTotalForSupport = nullCheckTotalForSupport(postBookmarkSupportReq);
 
         String postBookmarkSupportQuery;
         Object[] postBookmarkSupportParams = new Object[]{postBookmarkSupportReq.getUser_idx(), postBookmarkSupportReq.getSupport_idx()};
@@ -292,17 +294,19 @@ public class BookmarkDao {
             this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
             return "삭제";
 
-        } else if (nullCheckTotalForSupport == 1) {
-            postBookmarkSupportQuery = "delete a " +
-                    "from Bookmark a " +
-                    "left join Total b " +
-                    "on a.total_idx = b.total_idx " +
-                    "where a.user_idx = ? " +
-                    "and b.fund_idx = ? ";
-            this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
-            return "삭제";
-
-        } else {
+        }
+//        else if (nullCheckTotalForSupport == 1) {
+//            postBookmarkSupportQuery = "delete a " +
+//                    "from Bookmark a " +
+//                    "left join Total b " +
+//                    "on a.total_idx = b.total_idx " +
+//                    "where a.user_idx = ? " +
+//                    "and b.fund_idx = ? ";
+//            this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
+//            return "삭제";
+//
+//        }
+        else {
             postBookmarkSupportQuery = "insert into Bookmark (user_idx, support_idx) " +
                     "VALUES (?, ?) ";
             this.jdbcTemplate.update(postBookmarkSupportQuery, postBookmarkSupportParams);
