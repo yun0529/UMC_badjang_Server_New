@@ -23,7 +23,7 @@ public class SchoolBoardCommentDao {
 
 
         String getSchoolBoardCommentQuery = "select Board.post_idx, Comment.user_idx, User.user_name, comment_content, " +
-                "comment_recommend, comment_anonymity " +
+                "comment_recommend, comment_anonymity, comment_createAt " +
                 "from Board " +
                 "join Comment " +
                 "on Board.post_idx = Comment.post_idx " +
@@ -41,7 +41,8 @@ public class SchoolBoardCommentDao {
                         rs.getString("user_name"),
                         rs.getString("comment_content"),
                         rs.getInt("comment_recommend"),
-                        rs.getString("comment_anonymity")
+                        rs.getString("comment_anonymity"),
+                        rs.getString("comment_createAt")
                 ), getSchoolBoardCommentParams
         );
 

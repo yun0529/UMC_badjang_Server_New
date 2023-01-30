@@ -62,7 +62,7 @@ public class SchoolBoardDao {
 
 
         String getOneOfSchoolBoardResQuery = "select Board.user_idx, user_name, post_name, post_content, post_image, " +
-                "post_view, post_recommend, post_comment, post_anonymity, post_category, post_school_name " +
+                "post_view, post_recommend, post_comment, post_anonymity, post_category, post_school_name, post_createAt " +
                 "from Board " +
                 "join User " +
                 "on Board.user_idx = User.user_idx " +
@@ -84,7 +84,8 @@ public class SchoolBoardDao {
                         rs.getInt("post_comment"),
                         rs.getString("post_anonymity"),
                         rs.getString("post_category"),
-                        rs.getString("post_school_name")
+                        rs.getString("post_school_name"),
+                        rs.getString("post_createAt")
                 ), getOneOfSchoolBoardResParams
         );
 
