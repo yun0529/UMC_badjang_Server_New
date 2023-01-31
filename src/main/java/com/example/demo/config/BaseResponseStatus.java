@@ -97,7 +97,7 @@ public enum BaseResponseStatus {
     KAKAO_CONNECTION_ERROR(false, 4020, "카카오톡 연결에 실패하였습니다."),
 
     MODIFY_FAIL_USERPASSWORD(false,4100,"유저 비밀번호 변경 실패"),
-
+    MODIFY_FAIL_USERPROFILE(false,4101,"유저 프로필 변경 실패"),
     INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
