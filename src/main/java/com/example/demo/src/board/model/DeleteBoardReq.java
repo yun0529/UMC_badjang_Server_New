@@ -10,6 +10,7 @@ import lombok.Setter;
 
 public class DeleteBoardReq {
     private int post_idx;
+    private int user_idx;
 
     public DeleteBoardReq(){}
 }
