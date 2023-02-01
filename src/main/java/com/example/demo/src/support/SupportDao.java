@@ -29,7 +29,7 @@ public class SupportDao {
 
     // 지원금 조회수 1증가
     public int increaseSupportView(long supportIdx) {
-        String increaseSupportViewQuery = "update Support set support_view = support_view + 1 where support_idx = ? "; // 해당 scholarshipIdx를 만족하는 Scholarship을 1증가한다.
+        String increaseSupportViewQuery = "update Support set support_view = support_view + 1 where support_idx = ? "; // 해당 supportIdx를 만족하는 Support을 1증가한다.
         Object[] increaseSupportViewQueryParams = new Object[]{supportIdx}; // 주입될 값
 
         return this.jdbcTemplate.update(increaseSupportViewQuery, increaseSupportViewQueryParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
@@ -209,14 +209,13 @@ public class SupportDao {
         String college = getSupportMyfilter.getSupport_college();
         String department = getSupportMyfilter.getSupport_department();
         Integer grade = getSupportMyfilter.getSupport_grade();
-        Integer semester = getSupportMyfilter.getSupport_semester();
+        String semester = getSupportMyfilter.getSupport_semester();
         String province = getSupportMyfilter.getSupport_province();
         String city = getSupportMyfilter.getSupport_city();
 
         String universityQuery = "";
         String collegeQuery= "";
         String departmentQuery= "";
-        String gradeQuery= "";
         String semesterQuery= "";
         String provinceQuery= "";
         String cityQuery= "";
@@ -239,21 +238,47 @@ public class SupportDao {
             departmentQuery = " and 1 = ?";
             department= "1";
         } else {
-            departmentQuery = " and support_department = ?";
+            department = "%"+department+"%";
+            departmentQuery = " and support_department like ?";
         }
 
-        if(grade == null) {
-            gradeQuery = " and 1 = ?";
-            grade = 1;
-        } else {
-            gradeQuery = " and support_grade = ?";
-        }
 
-        if(semester == null) {
-            semester = 1;
+        if(semester == null && grade == null) {
+            semester = "1";
             semesterQuery = " and 1 = ?";
-        } else {
-            semesterQuery = " and support_semester = ?";
+        }
+        else if(grade != null && semester == null) {
+            if(grade == 1) {
+                semester = "%2%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%1%')";
+            }
+            else if(grade == 2) {
+                semester = "%4%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%3%')";
+            }
+            else if(grade == 3) {
+                semester = "%6%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%5%')";
+            }
+            else {
+                semester = "%8%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%7%')";
+            }
+        }
+        else if(grade == null && semester != null) {
+            if(semester == "1") {
+                semester = "%1%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%3%' or support_semester like '%5%' or support_semester like '%7%')";
+            }
+            else{
+                semester = "%2%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%4%' or support_semester like '%6%' or support_semester like '%8%')";
+            }
+
+        }
+        else {
+            semester = "%" + Integer.toString((grade - 1) * 2 + Integer.valueOf(semester)) + "%";
+            semesterQuery = " and support_semester like ?";
         }
 
         if(province == null) {
@@ -272,7 +297,7 @@ public class SupportDao {
 
 
         MyfilterQuery = MyfilterQuery + universityQuery + collegeQuery + departmentQuery
-                + gradeQuery + semesterQuery + provinceQuery + cityQuery;
+                + semesterQuery + provinceQuery + cityQuery;
 
         return this.jdbcTemplate.query(MyfilterQuery,
                 (rs, rowNum) -> new GetSupportRes(
@@ -299,7 +324,7 @@ public class SupportDao {
                         rs.getString("support_grade"),
                         rs.getString("support_semester"),
                         rs.getString("support_category")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
-                university,college,department,grade,semester,province,city); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+                university,college,department,semester,province,city); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
 
     }
 }
