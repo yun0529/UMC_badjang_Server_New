@@ -99,7 +99,8 @@ public enum BaseResponseStatus {
     MODIFY_FAIL_USERPASSWORD(false,4100,"유저 비밀번호 변경 실패"),
     MODIFY_FAIL_USERPROFILE(false,4101,"유저 프로필 변경 실패"),
     MODIFY_FAIL_USERINFO(false,4102,"유저 학교 및 지역 정보 변경 실패"),
-    INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패");
+    INCREASE_FAIL_SCHOLARSHIP_VIEW(false,4350,"장학금 조회수 증가 실패"),
+    INCREASE_FAIL_SUPPORT_VIEW(false,4356,"지원금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
 
