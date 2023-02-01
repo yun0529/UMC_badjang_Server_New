@@ -1,12 +1,16 @@
 package com.example.demo.src.mypage;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.mypage.model.GetBoardRes;
+import com.example.demo.src.mypage.model.GetCommentRes;
 import com.example.demo.src.mypage.model.GetMypageRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -29,6 +33,27 @@ public class MypageProvider {
             GetMypageRes getmypageRes = mypageDao.getMypage(user_idx);
             return getmypageRes;
         } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    //내가작성한 게시글 조회
+    public List<GetBoardRes> getBoard(int user_idx) throws BaseException {
+        try{
+            List<GetBoardRes> getBoardRes = mypageDao.getBoard(user_idx);
+            return getBoardRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetCommentRes> getComment(int user_idx) throws BaseException {
+        try{
+            List<GetCommentRes> getCommentRes = mypageDao.getComment(user_idx);
+            return getCommentRes;
+        }
+        catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

@@ -2,18 +2,20 @@ package com.example.demo.src.mypage;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.mypage.model.GetMypageRes;
-import com.example.demo.src.mypage.model.PatchUserReq;
+import com.example.demo.src.mypage.model.*;
 import com.example.demo.src.search.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
+import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 
 @RestController
 @RequestMapping("/mypage")
@@ -72,5 +74,55 @@ public class MypageController {
         }
     }
 
+    /**
+     * 내가 작성한 게시글 조회 API
+     * [GET] /myboard
+     */
+    //Query String
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/myboard") // (GET) 127.0.0.1:9000/board
+    public BaseResponse<List<GetBoardRes>> getBoard() {
+        try{
+            int user_idx = jwtService.getUserIdx();
+            List<GetBoardRes> getBoardRes = mypageProvider.getBoard(user_idx);
+            return new BaseResponse<>(getBoardRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 내가 작성한 댓글 조회 API
+     * [GET] /myboard
+     */
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/mycomment") // (GET) 127.0.0.1:9000/board
+    public BaseResponse<List<GetCommentRes>> getComment() {
+        try{
+            int user_idx = jwtService.getUserIdx();
+            List<GetCommentRes> getCommentRes = mypageProvider.getComment(user_idx);
+            return new BaseResponse<>(getCommentRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 학교 및 지역 변경 API
+     * [PATCH] /info
+     */
+    @ResponseBody
+    @PatchMapping("/info")
+    public BaseResponse<String> saveUserUnivInfo(@RequestBody PatchInfoReq patchInfoReq) {
+        try {
+            int user_idx = jwtService.getUserIdx();
+            mypageService.saveUserUnivInfo(user_idx, patchInfoReq);
+            return new BaseResponse<>("정보가 저장되었습니다.");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }

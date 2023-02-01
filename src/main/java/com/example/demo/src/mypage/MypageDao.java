@@ -1,12 +1,12 @@
 package com.example.demo.src.mypage;
 
-import com.example.demo.src.mypage.model.GetMypageRes;
-import com.example.demo.src.mypage.model.PatchUserReq;
+import com.example.demo.src.mypage.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class MypageDao {
@@ -33,6 +33,50 @@ public class MypageDao {
         Object[] modifyUserProfileParams = new Object[]{patchUserReq.getUser_name(), patchUserReq.getUser_profileimage_url(), user_idx}; // 주입될 값들(nickname, userIdx) 순
         //user_idx를 object에 주입해야하나??, x-access token 사용한이유가 현재 사용자 정보를 얻기 위해서 인가?왜 uri에 user_idx를 바로 사용하지 않는가?
         return this.jdbcTemplate.update(modifyUserProfileQuery, modifyUserProfileParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
+    }
+
+    //내가 작성한 게시글 조회
+    public List<GetBoardRes> getBoard(int user_idx){
+        String getBoardResQuery = "select * from Board where user_idx = ? order by post_view desc";
+        int getBoardResParams = user_idx;
+        return this.jdbcTemplate.query(getBoardResQuery,
+                (rs, rowNum) -> new GetBoardRes(
+                        rs.getInt("post_idx"),
+                        rs.getString("post_name"),
+                        rs.getString("post_content"),
+                        rs.getString("post_image"),
+                        rs.getInt("post_view"),
+                        rs.getInt("post_recommend"),
+                        rs.getInt("post_comment"),
+                        rs.getString("post_category"),
+                        rs.getString("post_anonymity")),
+                getBoardResParams);
+    }
+
+
+    public List<GetCommentRes> getComment(int user_idx){
+        String getCommentResQuery = "select * from Comment where user_idx = ?";
+        int getCommentResParams = user_idx;
+        return this.jdbcTemplate.query(getCommentResQuery,
+                (rs, rowNum) -> new GetCommentRes(
+                        rs.getInt("comment_idx"),
+                        rs.getInt("post_idx"),
+                        rs.getString("post_category"),
+                        rs.getString("comment_content")),
+                getCommentResParams);
+    }
+
+    //학교 및 지역 변경
+    public int saveUserUnivInfo(int user_idx, PatchInfoReq patchInfoReq) {
+        String saveUserUnivInfoQuery = "update User set user_univ = ?, " +
+                "user_college = ?, user_department = ?, user_grade = ?," +
+                " user_semester = ?, user_province = ?, user_city = ?" +
+                " Where user_idx = ? ";
+        Object[] saveUserUnivInfoParams = new Object[]{patchInfoReq.getUser_univ(),
+                patchInfoReq.getUser_college(), patchInfoReq.getUser_department(), patchInfoReq.getUser_grade(),
+                patchInfoReq.getUser_semester(), patchInfoReq.getUser_province(), patchInfoReq.getUser_city(),
+                user_idx};
+        return this.jdbcTemplate.update(saveUserUnivInfoQuery, saveUserUnivInfoParams);
     }
 
 }
