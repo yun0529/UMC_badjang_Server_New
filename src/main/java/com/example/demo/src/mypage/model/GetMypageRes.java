@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter // 해당 클래스에 대한 설정자 생성
 @AllArgsConstructor
 public class GetMypageRes {
-    private String user_profileimage_url;
     private String user_name;
+    private String user_profileimage_url;
 }
