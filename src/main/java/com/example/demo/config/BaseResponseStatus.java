@@ -26,6 +26,8 @@ public enum BaseResponseStatus {
     POST_SCHOOL_BOARD_COMMENT_RECOMMEND_SUCCESS(true, 1261, "댓글을 추천하였습니다."),
     DELETE_SCHOOL_BOARD_COMMENT_RECOMMEND_SUCCESS(true, 1262, "댓글 추천을 취소하였습니다."),
 
+    POST_BOARD_REGISTRATION_SUCCESS(true, 1263, "게시판 만들기를 신청하였습니다."),
+
 
 
     /**
