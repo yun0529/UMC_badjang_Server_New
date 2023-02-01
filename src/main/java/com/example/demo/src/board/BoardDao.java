@@ -350,4 +350,8 @@ public class BoardDao {
                 postCommentRecommendReq.getComment_idx(), postCommentRecommendReq.getUser_idx());
     }
 
+    /**
+     * 인기글 조회
+     */
+
 }
