@@ -64,8 +64,7 @@ public class PopularBoardDao {
     }
 
     public GetPopularRes removeDup(){
-        String deleteQuery = "DELETE a FROM Popular_Board a, Popular_Board b " +
-                "WHERE a.popular_idx > b.popular_idx AND a.post_idx = b.post_idx " ;
+        String deleteQuery = "TRUNCATE Popular_Board";
 
         this.jdbcTemplate.update(deleteQuery);
         return null;

@@ -60,8 +60,8 @@ public class PopularBoardController {
     @PostMapping("/popularBoard/add")
     public BaseResponse<String> postPopularBoard() {
         try{
-            popularBoardProvider.postPopular();
             popularBoardProvider.removeDup();
+            popularBoardProvider.postPopular();
             String result = "추가를 완료하였습니다.";
             return new BaseResponse<>(result);
         } catch(BaseException exception){
