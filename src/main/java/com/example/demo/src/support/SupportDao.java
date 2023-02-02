@@ -29,14 +29,14 @@ public class SupportDao {
 
     // 지원금 조회수 1증가
     public int increaseSupportView(long supportIdx) {
-        String increaseSupportViewQuery = "update Support set support_view = support_view + 1 where support_idx = ? "; // 해당 scholarshipIdx를 만족하는 Scholarship을 1증가한다.
+        String increaseSupportViewQuery = "update Support set support_view = support_view + 1 where support_idx = ? "; // 해당 supportIdx를 만족하는 Support을 1증가한다.
         Object[] increaseSupportViewQueryParams = new Object[]{supportIdx}; // 주입될 값
 
         return this.jdbcTemplate.update(increaseSupportViewQuery, increaseSupportViewQueryParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
 
     // 해당 filter에 맞는 지원금의 정보 조회
-    public List<GetSupportRes> getSupportsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) {
+    public List<GetSupportRes> getSupportsByFilter(@RequestParam(required = false)String category, @RequestParam(required = false)String filter, @RequestParam(required = false)String order) {
 
         String getSupportsByFilterQuery="select * from Support where support_status = 'Y'";
 
@@ -44,36 +44,43 @@ public class SupportDao {
         String filterCondition="";
         String orderCondition="";
 
-        if(category==null){
+        if(category.equals("")){
             categoryCondition = "";
         }
-        else if(category==1){
+        else if(category.equals("창업지원")){
             categoryCondition = " and support_category = '창업지원'";
         }
-        else if(category==2){
+        else if(category.equals("취업지원")){
             categoryCondition = " and support_category = '취업지원'";
         }
-        else if(category==3){
-            categoryCondition = " and support_category = '경기 포천시 창업 지원사업'";
+        else if(category.equals("주거·금융")){
+            categoryCondition = " and support_category = '주거·금융'";
+        }
+        else if(category.equals("생활·복지")){
+            categoryCondition = " and support_category = '생활·복지'";
+        }
+        else if(category.equals("정책참여")){
+            categoryCondition = " and support_category = '정책참여'";
+        }
+        else if(category.equals("코로나19")){
+            categoryCondition = " and support_category = '코로나19'";
         }
 
-        if(filter==null){
+
+        if(filter.equals("") || filter.equals("인기순")){
             filterCondition = " order by support_view";
         }
-        else if(filter==1){
+        else if(filter.equals("날짜순")){
             filterCondition = " order by support_createAt";
         }
-        else if(filter==2){
-            filterCondition = " order by support_view";
-        }
-        else if(filter==3){
+        else if(filter.equals("댓글순")){
             filterCondition = " order by support_comment";
         }
 
-        if(order==null){
+        if(order.equals("") || order.equals("desc")){
             orderCondition = " desc";
         }
-        else if(order==1){
+        else if(order.equals("asc")){
             orderCondition = " asc";
         }
 
@@ -202,14 +209,13 @@ public class SupportDao {
         String college = getSupportMyfilter.getSupport_college();
         String department = getSupportMyfilter.getSupport_department();
         Integer grade = getSupportMyfilter.getSupport_grade();
-        Integer semester = getSupportMyfilter.getSupport_semester();
+        String semester = getSupportMyfilter.getSupport_semester();
         String province = getSupportMyfilter.getSupport_province();
         String city = getSupportMyfilter.getSupport_city();
 
         String universityQuery = "";
         String collegeQuery= "";
         String departmentQuery= "";
-        String gradeQuery= "";
         String semesterQuery= "";
         String provinceQuery= "";
         String cityQuery= "";
@@ -232,21 +238,47 @@ public class SupportDao {
             departmentQuery = " and 1 = ?";
             department= "1";
         } else {
-            departmentQuery = " and support_department = ?";
+            department = "%"+department+"%";
+            departmentQuery = " and support_department like ?";
         }
 
-        if(grade == null) {
-            gradeQuery = " and 1 = ?";
-            grade = 1;
-        } else {
-            gradeQuery = " and support_grade = ?";
-        }
 
-        if(semester == null) {
-            semester = 1;
+        if(semester == null && grade == null) {
+            semester = "1";
             semesterQuery = " and 1 = ?";
-        } else {
-            semesterQuery = " and support_semester = ?";
+        }
+        else if(grade != null && semester == null) {
+            if(grade == 1) {
+                semester = "%2%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%1%')";
+            }
+            else if(grade == 2) {
+                semester = "%4%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%3%')";
+            }
+            else if(grade == 3) {
+                semester = "%6%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%5%')";
+            }
+            else {
+                semester = "%8%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%7%')";
+            }
+        }
+        else if(grade == null && semester != null) {
+            if(semester == "1") {
+                semester = "%1%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%3%' or support_semester like '%5%' or support_semester like '%7%')";
+            }
+            else{
+                semester = "%2%";
+                semesterQuery = " and (support_semester like ? or support_semester like '%4%' or support_semester like '%6%' or support_semester like '%8%')";
+            }
+
+        }
+        else {
+            semester = "%" + Integer.toString((grade - 1) * 2 + Integer.valueOf(semester)) + "%";
+            semesterQuery = " and support_semester like ?";
         }
 
         if(province == null) {
@@ -265,7 +297,7 @@ public class SupportDao {
 
 
         MyfilterQuery = MyfilterQuery + universityQuery + collegeQuery + departmentQuery
-                + gradeQuery + semesterQuery + provinceQuery + cityQuery;
+                + semesterQuery + provinceQuery + cityQuery;
 
         return this.jdbcTemplate.query(MyfilterQuery,
                 (rs, rowNum) -> new GetSupportRes(
@@ -292,7 +324,7 @@ public class SupportDao {
                         rs.getString("support_grade"),
                         rs.getString("support_semester"),
                         rs.getString("support_category")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
-                university,college,department,grade,semester,province,city); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+                university,college,department,semester,province,city); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
 
     }
 }

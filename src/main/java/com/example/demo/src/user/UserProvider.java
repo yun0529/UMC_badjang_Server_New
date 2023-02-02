@@ -73,16 +73,17 @@ public class UserProvider {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR); //비밀번호 암호화 에러
         }
         // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 의미적 validation
-        /*if(user.getUser_status().equals("STOP")){
+       if(user.getUser_status().equals("STOP")){
             throw new BaseException(INVALID_USER_JWT);
         }
+        /*
         if(user.getUser_status().equals("REST")){
             throw new BaseException(INVALID_USER_JWT);
         }*/
 
         if (user.getUser_password().equals(encryptPwd)){ //비말번호가 일치한다면 userIdx를 가져온다.
             int user_idx = user.getUser_idx();
-            //userDao.modifyUserStatusLogIn(user_idx);
+            userDao.modifyUserStatusLogIn(user_idx);
             String jwt = jwtService.createJwt(user_idx);
             return new PostLoginRes(user_idx,jwt);
         }

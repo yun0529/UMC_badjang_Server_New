@@ -24,15 +24,13 @@ public class MenuController {
     @Autowired
     private final MenuProvider menuProvider;
     @Autowired
-    private final MenuService menuService;
     private  final JwtService jwtService;
 
 
 
 
-    public MenuController(MenuProvider menuProvider, MenuService menuService, JwtService jwtService){
+    public MenuController(MenuProvider menuProvider, JwtService jwtService){
         this.menuProvider = menuProvider;
-        this.menuService = menuService;
         this.jwtService = jwtService;
     }
 
@@ -44,11 +42,11 @@ public class MenuController {
     //Query String
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/menu/total") // (GET) 127.0.0.1:9000/menu/total
-    public BaseResponse<List<GetTotalRes>> getTotal() {
+    @GetMapping("/menu/total/{user_idx}") // (GET) 127.0.0.1:9000/menu/total
+    public BaseResponse<GetListRes> getTotal(@PathVariable("user_idx") int user_idx) {
         try{
-                List<GetTotalRes> getTotalRes = menuProvider.getTotal();
-                return new BaseResponse<>(getTotalRes);
+                GetListRes getScholarshipRes = menuProvider.getTotal(user_idx);
+                return new BaseResponse<>(getScholarshipRes);
 
         } catch(BaseException exception){
             System.out.println(exception);
@@ -77,27 +75,28 @@ public class MenuController {
         }
     }
 
-    //Query String
+    //우리학교 장학금 조회
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/menu/school") // (GET) 127.0.0.1:9000/menu/school
-    public BaseResponse<List<GetSchoolRes>> getSchool(@RequestParam(defaultValue = "0") int userIdx) throws BaseException {
-        int idx = jwtService.getUserIdx();
-        if(idx != userIdx){
-            return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
-        }
-        else if(userIdx == 0){
-            return new BaseResponse<>(BaseResponseStatus.USERS_EMPTY_USER_IDX);
-        }
-        else{
+    @GetMapping("/menu/school/{user_idx}")
+    public BaseResponse<List<GetSchoolRes>> getSchool(@PathVariable("user_idx")int user_idx) {
             try {
-                List<GetSchoolRes> getSchoolRes = menuProvider.getSchool(userIdx);
+                int idx = jwtService.getUserIdx();
+                if(idx != user_idx){
+                    return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+                }
+
+                else if(user_idx == 0){
+                    return new BaseResponse<>(BaseResponseStatus.USERS_EMPTY_USER_IDX);
+                }
+
+                List<GetSchoolRes> getSchoolRes = menuProvider.getSchool(user_idx);
                 return new BaseResponse<>(getSchoolRes);
 
             } catch (BaseException exception) {
                 System.out.println(exception);
                 return new BaseResponse<>((exception.getStatus()));
             }
-        }
+
     }
 }

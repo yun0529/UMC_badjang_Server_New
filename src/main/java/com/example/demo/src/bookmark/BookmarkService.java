@@ -2,10 +2,7 @@ package com.example.demo.src.bookmark;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.bookmark.model.PostBookmarkScholarshipReq;
-import com.example.demo.src.bookmark.model.PostBookmarkSchoolReq;
-import com.example.demo.src.bookmark.model.PostBookmarkSupportReq;
-import com.example.demo.src.bookmark.model.PostBookmarkTotalReq;
+import com.example.demo.src.bookmark.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,15 @@ public class BookmarkService {
         try {
             String postBookmarkSupportRes = bookmarkDao.postBookmarkSupport(postBookmarkSupportReq);
             return postBookmarkSupportRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String postBookmarkBoard(PostBookmarkBoardReq postBookmarkBoardReq) throws BaseException {
+        try {
+            String postBookmarkBoardRes = bookmarkDao.postBookmarkBoard(postBookmarkBoardReq);
+            return postBookmarkBoardRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

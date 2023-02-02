@@ -39,7 +39,7 @@ public class ScholarshipProvider {
 
 
     // 해당 filter에 맞는 장학금들의 정보 조회
-    public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) throws BaseException {
+    public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)String category, @RequestParam(required = false)String filter, @RequestParam(required = false)String order) throws BaseException {
         try {
             List<GetScholarshipRes> getScholarshipsRes = scholarshipDao.getScholarshipsByFilter(category, filter, order);
             return getScholarshipsRes;
