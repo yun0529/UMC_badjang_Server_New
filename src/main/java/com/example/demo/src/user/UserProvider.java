@@ -102,6 +102,22 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int checkStatus(String user_email) throws BaseException {
+        try {
+            return userDao.checkStatus(user_email);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String checkOnOff(int user_idx) throws BaseException {
+        try {
+            return userDao.checkOnOff(user_idx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
 
 

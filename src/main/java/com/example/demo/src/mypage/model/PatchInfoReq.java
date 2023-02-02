@@ -10,8 +10,8 @@ public class PatchInfoReq {
     private String user_univ;
     private String user_college;
     private String user_department;
-    private String user_grade;
-    private String user_semester;
+    private int user_grade;
+    private int user_semester;
     private String user_province;
     private String user_city;
 }
