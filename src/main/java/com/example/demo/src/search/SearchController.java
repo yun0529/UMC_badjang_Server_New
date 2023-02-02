@@ -80,7 +80,7 @@ public class SearchController {
     public BaseResponse<GetSearchAllRes> searchAll(@RequestParam(value="query") String query) {
         try {
             if (query == null || query.equals("")) {
-                return new BaseResponse<>(REQUEST_ERROR);
+                return new BaseResponse<>(GET_SEARCH_EMPTY_QUERY);
             }
             if (query.length() > 50) {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
