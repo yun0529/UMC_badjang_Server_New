@@ -79,8 +79,15 @@ public class SchoolBoardController {
     public BaseResponse<String> postSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @RequestBody PostSchoolBoardReq postSchoolBoardReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+
+            if (postSchoolBoardReq.getPost_name() == null || postSchoolBoardReq.getPost_name().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_NULL);
+            }
             if (postSchoolBoardReq.getPost_name().length() > 50) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_INVALID);
+            }
+            if (postSchoolBoardReq.getPost_content() == null || postSchoolBoardReq.getPost_content().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_NULL);
             }
             if (postSchoolBoardReq.getPost_content().length() > 500) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_INVALID);
@@ -106,12 +113,21 @@ public class SchoolBoardController {
     public BaseResponse<String> patchSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx, @RequestBody PatchSchoolBoardReq patchSchoolBoardReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+
+            if (patchSchoolBoardReq.getPost_name() == null || patchSchoolBoardReq.getPost_name().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_NULL);
+            }
             if (patchSchoolBoardReq.getPost_name().length() > 50) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_INVALID);
+            }
+            if (patchSchoolBoardReq.getPost_content() == null || patchSchoolBoardReq.getPost_content().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_NULL);
             }
             if (patchSchoolBoardReq.getPost_content().length() > 500) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_INVALID);
             }
+
+
             schoolBoardService.patchSchoolBoard(userIdx, postIdx, patchSchoolBoardReq);
 
             return new BaseResponse<>(PATCH_SCHOOL_BOARD_SUCCESS);
@@ -148,6 +164,10 @@ public class SchoolBoardController {
     public BaseResponse<String> postSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx, @RequestBody PostSchoolBoardCommentReq postSchoolBoardCommentReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+
+            if (postSchoolBoardCommentReq.getComment_content() == null || postSchoolBoardCommentReq.getComment_content().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_NULL);
+            }
             if (postSchoolBoardCommentReq.getComment_content().length() > 100) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_INVALID);
             }
@@ -170,6 +190,10 @@ public class SchoolBoardController {
     public BaseResponse<String> patchSchoolBoardComment(@PathVariable("commentIdx") int commentIdx, @RequestBody PatchSchoolBoardCommentReq patchSchoolBoardCommentReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+
+            if (patchSchoolBoardCommentReq.getComment_content() == null || patchSchoolBoardCommentReq.getComment_content().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_NULL);
+            }
             if (patchSchoolBoardCommentReq.getComment_content().length() > 100) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_INVALID);
             }

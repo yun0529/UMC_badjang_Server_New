@@ -83,7 +83,10 @@ public enum BaseResponseStatus {
     POST_SCHOOL_BOARD_CONTENT_INVALID(false, 2262, "게시글 내용은 500자까지 작성 가능합니다."),
     POST_BOARD_REGISTRATION_PURPOSE_INVALID(false, 2263, "게시판 만들기의 운영목적은 10자~500자 내로 작성 해주세요."),
     POST_BOARD_REGISTRATION_RULE_INVALID(false, 2264, "게시판 만들기의 규칙은 10자~500자로 작성 해주세요."),
-    POST_BOARD_REGISTRATION_RULE(false, 2265, "모든 내용을 작성해주세요."),
+    POST_BOARD_REGISTRATION_RULE(false, 2265, "게시판 만들기의 모든 내용을 작성해주세요."),
+    POST_SCHOOL_BOARD_TITLE_NULL(false, 2266, "게시판의 제목을 입력해주세요."),
+    POST_SCHOOL_BOARD_CONTENT_NULL(false, 2267, "게시판의 내용을 입력해주세요."),
+    POST_SCHOOL_BOARD_COMMENT_NULL(false, 2268, "댓글을 입력해주세요."),
 
 
 
