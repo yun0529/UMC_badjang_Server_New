@@ -60,7 +60,7 @@ public class SchoolBoardController {
     @GetMapping("/board/school/{schoolNameIdx}/{postIdx}")
     public BaseResponse<GetSchoolBoardDetailRes> getOneOfSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx) {
         try {
-            GetSchoolBoardDetailRes getSchoolBoardDetailRes = schoolBoardProvider.getSchoolBoardDetail(schoolNameIdx, postIdx);
+            GetSchoolBoardDetailRes getSchoolBoardDetailRes = schoolBoardProvider.getSchoolBoardDetail(postIdx);
 
             return new BaseResponse<>(getSchoolBoardDetailRes);
         } catch (BaseException exception) {
@@ -92,6 +92,9 @@ public class SchoolBoardController {
             if (postSchoolBoardReq.getPost_content().length() > 500) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_INVALID);
             }
+            if (postSchoolBoardReq.getPost_anonymity() == null || postSchoolBoardReq.getPost_anonymity().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_ANONYMITY_NULL);
+            }
 
             schoolBoardService.postSchoolBoard(userIdx, schoolNameIdx, postSchoolBoardReq);
 
@@ -114,17 +117,22 @@ public class SchoolBoardController {
         try {
             int userIdx = jwtService.getUserIdx();
 
-            if (patchSchoolBoardReq.getPost_name() == null || patchSchoolBoardReq.getPost_name().equals("")) {
-                return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_NULL);
+            if (patchSchoolBoardReq.getPost_name() != null) {
+                if (patchSchoolBoardReq.getPost_name().length() > 50) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_INVALID);
+                }
+                if (patchSchoolBoardReq.getPost_name().equals("")) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_NULL);
+                }
             }
-            if (patchSchoolBoardReq.getPost_name().length() > 50) {
-                return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_INVALID);
-            }
-            if (patchSchoolBoardReq.getPost_content() == null || patchSchoolBoardReq.getPost_content().equals("")) {
-                return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_NULL);
-            }
-            if (patchSchoolBoardReq.getPost_content().length() > 500) {
-                return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_INVALID);
+
+            if (patchSchoolBoardReq.getPost_content() != null) {
+                if (patchSchoolBoardReq.getPost_content().equals("")) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_NULL);
+                }
+                if (patchSchoolBoardReq.getPost_content().length() > 500) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_INVALID);
+                }
             }
 
 
@@ -171,6 +179,9 @@ public class SchoolBoardController {
             if (postSchoolBoardCommentReq.getComment_content().length() > 100) {
                 return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_INVALID);
             }
+            if (postSchoolBoardCommentReq.getComment_anonymity() == null || postSchoolBoardCommentReq.getComment_anonymity().equals("")) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_ANONYMITY_NULL);
+            }
 
             schoolBoardService.postSchoolBoardComment(userIdx, postIdx, postSchoolBoardCommentReq);
 
@@ -191,12 +202,20 @@ public class SchoolBoardController {
         try {
             int userIdx = jwtService.getUserIdx();
 
-            if (patchSchoolBoardCommentReq.getComment_content() == null || patchSchoolBoardCommentReq.getComment_content().equals("")) {
-                return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_NULL);
+            if (patchSchoolBoardCommentReq.getComment_content() != null) {
+                if (patchSchoolBoardCommentReq.getComment_content().equals("")) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_NULL);
+                }
+                if (patchSchoolBoardCommentReq.getComment_content().length() > 100) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_INVALID);
+                }
             }
-            if (patchSchoolBoardCommentReq.getComment_content().length() > 100) {
-                return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_INVALID);
+            if (patchSchoolBoardCommentReq.getComment_anonymity() != null) {
+                if (patchSchoolBoardCommentReq.getComment_content().equals("")) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_ANONYMITY_NULL);
+                }
             }
+
             schoolBoardService.patchSchoolBoardComment(userIdx, commentIdx, patchSchoolBoardCommentReq);
 
             return new BaseResponse<>(PATCH_SCHOOL_BOARD_COMMENT_SUCCESS);
