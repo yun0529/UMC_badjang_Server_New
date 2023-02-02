@@ -34,32 +34,13 @@ public class OAuthDao {
 
         this.jdbcTemplate.update(createOAuthQuery, createOAuthParams);
 
+        String changeOnlineQuery = "UPDATE User SET user_on_off = 'ON' WHERE user_idx = ?";
+        int changeOnlineParams = user_idx;
+
+        this.jdbcTemplate.update(changeOnlineQuery, changeOnlineParams);
+
         return user_idx;
     }
-
-//    public int createUser(KakaoProfile profile, String refresh_token) {
-//        String createUserQuery = "INSERT INTO User (user_email, user_name, user_type, " +
-//                "user_birth, user_phone, user_push_yn) " +
-//                "VALUES (?,'temp','KAKAO','temp','temp','N')";
-//
-//        Object[] createUserParams = new Object[]{
-//                profile.getKakao_account().getEmail()
-//        };
-//
-//        this.jdbcTemplate.update(createUserQuery, createUserParams);
-//
-//        String lastInsertIdQuery = "select last_insert_id()";
-//        int user_idx = this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
-//
-//        String createOAuthQuery = "INSERT INTO User_OAuth (user_idx, refresh_token) VALUES (?, ?)";
-//        Object[] createOAuthParams = new Object[] {
-//                user_idx, refresh_token
-//        };
-//
-//        this.jdbcTemplate.update(createOAuthQuery, createOAuthParams);
-//
-//        return user_idx;
-//    }
 
 
     public int checkEmail(String user_email) {
@@ -80,10 +61,17 @@ public class OAuthDao {
                 checkSavedUserParams);
     }
 
-    public int findUserByEmail(KakaoProfile profile) {
+    public int loginUser(KakaoProfile profile) {
         String findUserByEmailQuery = "SELECT user_idx FROM User WHERE user_email = ? and user_type = 'KAKAO'";
         String findUserByEmailParams = profile.getKakao_account().getEmail();
 
-        return this.jdbcTemplate.queryForObject(findUserByEmailQuery, int.class, findUserByEmailParams);
+        int user_idx = this.jdbcTemplate.queryForObject(findUserByEmailQuery, int.class, findUserByEmailParams);
+
+        String changeOnlineQuery = "UPDATE User SET user_on_off = 'ON' WHERE user_idx = ?";
+        int changeOnlineParams = user_idx;
+
+        this.jdbcTemplate.update(changeOnlineQuery, changeOnlineParams);
+
+        return user_idx;
     }
 }

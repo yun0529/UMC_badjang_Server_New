@@ -32,6 +32,11 @@ public class UserService {
 
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
 
+        if(userProvider.checkStatus(postUserReq.getUser_email()) == 1) {
+            throw new BaseException(STOPPED_USER);
+        }
+
+
         if(userProvider.checkEmail(postUserReq.getUser_email()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
@@ -66,6 +71,8 @@ public class UserService {
     }
 
     public void saveUserUnivInfo(PostInfoReq postInfoReq) throws BaseException {
+        if (userProvider.checkOnOff(postInfoReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
         try {
             userDao.saveUserUnivInfo(postInfoReq);
         } catch (Exception e) {
@@ -74,6 +81,9 @@ public class UserService {
     }
 
     public PostUserRes saveUserExtraInfo(PostExtraReq postExtraReq) throws BaseException {
+
+        if (userProvider.checkOnOff(postExtraReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
 
         LocalDate now = LocalDate.now();
         LocalDate parsedBirth = LocalDate.parse(postExtraReq.getUser_birth(),
@@ -84,6 +94,9 @@ public class UserService {
         if(parsedBirth.plusYears(Age).isAfter(now)){ Age -= 1; }
 
         if(Age < 14){
+            int result = userDao.deleteUser(postExtraReq.getUser_idx());
+            if(result == 0) throw new BaseException(DATABASE_ERROR);
+
             throw new BaseException(POST_USERS_LIMIT_BIRTH);
         }
 
@@ -116,6 +129,9 @@ public class UserService {
     }
 
     public String modifyUserInfo(PostModifyReq postModifyReq) throws BaseException {
+
+        if (userProvider.checkOnOff(postModifyReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
         try {
             return userDao.modifyUserInfo(postModifyReq);
         } catch (Exception exception) {
@@ -123,4 +139,23 @@ public class UserService {
         }
     }
 
+    public String withdrawUser(PostWithdrawReq postWithdrawReq) throws BaseException {
+        try {
+            int result = userDao.withdrawUser(postWithdrawReq);
+            if(result == 0) throw new BaseException(DATABASE_ERROR);
+            return "회원 탈퇴 되었습니다.";
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String logOut(int user_idx) throws BaseException {
+        try {
+            int result = userDao.logOut(user_idx);
+            if(result == 0) throw new BaseException(DATABASE_ERROR);
+            return "로그아웃 되었습니다.";
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

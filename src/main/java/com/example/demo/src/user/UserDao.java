@@ -205,4 +205,43 @@ public class UserDao {
 
         return resultString;
     }
+
+    public int withdrawUser(PostWithdrawReq postWithdrawReq) {
+        String withdrawUserQuery = "UPDATE User SET user_state = 'STOP', user_on_off = 'OFF' WHERE user_idx = ?";
+        int withdrawUserParams = postWithdrawReq.getUser_idx();
+        return this.jdbcTemplate.update(withdrawUserQuery, withdrawUserParams);
+    }
+
+    public int logOut(int user_idx) {
+        String logOutQuery = "UPDATE User SET user_on_off = 'OFF' WHERE user_idx = ?";
+        int logOutParams = user_idx;
+        return this.jdbcTemplate.update(logOutQuery, logOutParams);
+    }
+
+    public int checkStatus(String user_email) {
+        String checkStatusQuery = "select exists(select user_email from User where user_email = ? and user_status = 'STOP')";
+        String checkStatusParams = user_email;
+        return this.jdbcTemplate.queryForObject(checkStatusQuery,
+                int.class,
+                checkStatusParams);
+    }
+
+    public int deleteUser(int user_idx) {
+        String deleteOAuthQuery = "DELETE User_OAuth WHERE user_idx = ?";
+        int deleteOAuthParams = user_idx;
+
+        String deleteUserQuery = "DELETE User WHERE user_idx = ?";
+        int deleteUserParams = user_idx;
+
+        this.jdbcTemplate.update(deleteOAuthQuery, deleteOAuthParams);
+
+        return this.jdbcTemplate.update(deleteUserQuery, deleteUserParams);
+    }
+
+    public String checkOnOff(int user_idx) {
+        String checkOnOffQuery = "SELECT user_on_off FROM User WHERE user_idx = ?";
+        int checkOnOffParams = user_idx;
+
+        return jdbcTemplate.queryForObject(checkOnOffQuery, String.class, checkOnOffParams);
+    }
 }

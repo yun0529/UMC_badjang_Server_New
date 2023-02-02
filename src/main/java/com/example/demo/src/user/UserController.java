@@ -223,6 +223,65 @@ public class UserController {
 
     }
 
+    /**
+     * 회원 탈퇴 API
+     * [POST] /users/withdraw
+     *
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @Transactional
+    @PostMapping("/withdraw")
+    public BaseResponse<String> withdrawUser(@RequestBody PostWithdrawReq postWithdrawReq) {
+        if (postWithdrawReq.getUser_idx() == 0)
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+        if (postWithdrawReq.getText() == null || postWithdrawReq.getText() != "탈퇴하기")
+            return new BaseResponse<>(POST_USERS_WRONG_TEXT);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postWithdrawReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            String resultString = userService.withdrawUser(postWithdrawReq);
+            return new BaseResponse<>(resultString);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 로그아웃 API
+     * [POST] /users/logout
+     *
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @Transactional
+    @PostMapping("/logout")
+    public BaseResponse<String> logOut(@RequestBody PostLogoutReq postLogoutReq) {
+        if(postLogoutReq.getUser_idx() == 0)
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postLogoutReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            String resultString = userService.logOut(postLogoutReq.getUser_idx());
+
+            return new BaseResponse<>(resultString);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
 
 
     /**
