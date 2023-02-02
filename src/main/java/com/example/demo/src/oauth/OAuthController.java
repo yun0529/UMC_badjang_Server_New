@@ -2,7 +2,6 @@ package com.example.demo.src.oauth;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.oauth.model.KakaoOauthToken;
 import com.example.demo.src.oauth.model.PostKakaoReq;
 import com.example.demo.src.user.model.PostUserRes;
 import org.slf4j.Logger;
@@ -42,17 +41,4 @@ public class OAuthController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
-
-//    @GetMapping("/kakao")
-//    public BaseResponse<PostUserRes> kakaoLogin(@RequestParam("code") String code) {
-//        try{
-//            KakaoOauthToken kakaoOauthToken = OAuthService.getAccessToken(code);
-//            PostUserRes postUserRes = OAuthService.saveUser(kakaoOauthToken.getAccess_token(), kakaoOauthToken.getRefresh_token());
-//
-//            return new BaseResponse<>(postUserRes);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
 }

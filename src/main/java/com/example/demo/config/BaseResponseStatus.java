@@ -41,7 +41,11 @@ public enum BaseResponseStatus {
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
-    
+    STOPPED_USER(false, 2011, "탈퇴한 계정입니다."),
+    OFFLINE_USER(false, 2012, "로그아웃한 계정입니다."),
+    USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요. "),
+
+
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2021, "이메일 형식에 맞게 입력해주세요."),
@@ -62,6 +66,8 @@ public enum BaseResponseStatus {
 
     POST_USERS_EMPTY_INFO(false, 2070, "전화번호나 이름이 없습니다."),
     POST_USERS_MORE_INFO(false, 2071, "전화번호나 이름 중 한 가지만 입력해주세요."),
+
+    POST_USERS_WRONG_TEXT(false, 2080, "'탈퇴하기'를 입력해주세요."),
 
     GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
 
