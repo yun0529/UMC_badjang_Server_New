@@ -79,6 +79,12 @@ public class SchoolBoardController {
     public BaseResponse<String> postSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @RequestBody PostSchoolBoardReq postSchoolBoardReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+            if (postSchoolBoardReq.getPost_name().length() > 50) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_INVALID);
+            }
+            if (postSchoolBoardReq.getPost_content().length() > 500) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_INVALID);
+            }
 
             schoolBoardService.postSchoolBoard(userIdx, schoolNameIdx, postSchoolBoardReq);
 
@@ -100,6 +106,12 @@ public class SchoolBoardController {
     public BaseResponse<String> patchSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx, @RequestBody PatchSchoolBoardReq patchSchoolBoardReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+            if (patchSchoolBoardReq.getPost_name().length() > 50) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_TITLE_INVALID);
+            }
+            if (patchSchoolBoardReq.getPost_content().length() > 500) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_CONTENT_INVALID);
+            }
             schoolBoardService.patchSchoolBoard(userIdx, postIdx, patchSchoolBoardReq);
 
             return new BaseResponse<>(PATCH_SCHOOL_BOARD_SUCCESS);
@@ -136,6 +148,10 @@ public class SchoolBoardController {
     public BaseResponse<String> postSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx, @RequestBody PostSchoolBoardCommentReq postSchoolBoardCommentReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+            if (postSchoolBoardCommentReq.getComment_content().length() > 100) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_INVALID);
+            }
+
             schoolBoardService.postSchoolBoardComment(userIdx, postIdx, postSchoolBoardCommentReq);
 
             return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_SUCCESS);
@@ -154,6 +170,9 @@ public class SchoolBoardController {
     public BaseResponse<String> patchSchoolBoardComment(@PathVariable("commentIdx") int commentIdx, @RequestBody PatchSchoolBoardCommentReq patchSchoolBoardCommentReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+            if (patchSchoolBoardCommentReq.getComment_content().length() > 100) {
+                return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_INVALID);
+            }
             schoolBoardService.patchSchoolBoardComment(userIdx, commentIdx, patchSchoolBoardCommentReq);
 
             return new BaseResponse<>(PATCH_SCHOOL_BOARD_COMMENT_SUCCESS);

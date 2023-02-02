@@ -44,6 +44,24 @@ public class BoardRegistrationController {
     public BaseResponse<String> postBoardRegistration(@RequestBody PostBoardRegistrationReq postBoardRegistrationReq) {
         try {
             int userIdx = jwtService.getUserIdx();
+            if (postBoardRegistrationReq.getBoard_purpose().length() > 500) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_PURPOSE_INVALID);
+            }
+            if (postBoardRegistrationReq.getBoard_purpose().length() < 10) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_PURPOSE_INVALID);
+            }
+            if (postBoardRegistrationReq.getBoard_rule().length() > 500) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_RULE_INVALID);
+            }
+            if (postBoardRegistrationReq.getBoard_rule().length() < 10) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_RULE_INVALID);
+            }
+            if (postBoardRegistrationReq.getBoard_name() == null || postBoardRegistrationReq.getBoard_purpose() == null || postBoardRegistrationReq.getBoard_rule() == null ||
+            postBoardRegistrationReq.getRequester_job() == null || postBoardRegistrationReq.getRequester_phone() == null || postBoardRegistrationReq.getRequester_univ() == null ||
+                    postBoardRegistrationReq.getRequester_name() == null) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_RULE);
+            }
+
             boardRegistrationService.postBoardRegistration(postBoardRegistrationReq);
 
             return new BaseResponse<>(POST_BOARD_REGISTRATION_SUCCESS);
