@@ -117,7 +117,6 @@ public enum BaseResponseStatus {
     /**
      * 2200 ~ 2250 : 메인화면 오류처리(옆마당)
      */
-    USERS_EMPTY_USER_IDX(false, 2200, "유저 인덱스 값을 확인해주세요. "),
     NON_MATCH_UNIV(false, 2201, "일치하는 장학금이 없습니다."),
     /**
      * 2400 ~ 2450 : 게시판 오류처리(옆마당)
