@@ -37,7 +37,7 @@ public class SchoolBoardProvider {
         }
     }
 
-    public GetSchoolBoardDetailRes getSchoolBoardDetail(int schoolNameIdx, int postIdx) throws BaseException {
+    public GetSchoolBoardDetailRes getSchoolBoardDetail(int postIdx) throws BaseException {
 
         try {
             schoolBoardDao.updateView(postIdx);

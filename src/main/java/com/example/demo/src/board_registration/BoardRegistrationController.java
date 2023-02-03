@@ -43,7 +43,30 @@ public class BoardRegistrationController {
     @PostMapping("/board-registration")
     public BaseResponse<String> postBoardRegistration(@RequestBody PostBoardRegistrationReq postBoardRegistrationReq) {
         try {
-            int userIdx = jwtService.getUserIdx();
+            jwtService.getUserIdx();
+            if (postBoardRegistrationReq.getBoard_name() == null || postBoardRegistrationReq.getBoard_name().equals("") ||
+                    postBoardRegistrationReq.getBoard_purpose() == null || postBoardRegistrationReq.getBoard_purpose().equals("") ||
+                    postBoardRegistrationReq.getBoard_rule() == null || postBoardRegistrationReq.getBoard_rule().equals("") ||
+                    postBoardRegistrationReq.getRequester_job() == null || postBoardRegistrationReq.getRequester_job().equals("") ||
+                    postBoardRegistrationReq.getRequester_phone() == null || postBoardRegistrationReq.getRequester_phone().equals("") ||
+                    postBoardRegistrationReq.getRequester_univ() == null || postBoardRegistrationReq.getRequester_univ().equals("") ||
+                    postBoardRegistrationReq.getRequester_name() == null || postBoardRegistrationReq.getRequester_name().equals("") ) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_NULL);
+            }
+            if (postBoardRegistrationReq.getBoard_purpose().length() > 500) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_PURPOSE_INVALID);
+            }
+            if (postBoardRegistrationReq.getBoard_purpose().length() < 10) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_PURPOSE_INVALID);
+            }
+            if (postBoardRegistrationReq.getBoard_rule().length() > 500) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_RULE_INVALID);
+            }
+            if (postBoardRegistrationReq.getBoard_rule().length() < 10) {
+                return new BaseResponse<>(POST_BOARD_REGISTRATION_RULE_INVALID);
+            }
+
+
             boardRegistrationService.postBoardRegistration(postBoardRegistrationReq);
 
             return new BaseResponse<>(POST_BOARD_REGISTRATION_SUCCESS);

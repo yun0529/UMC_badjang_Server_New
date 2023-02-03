@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -64,6 +65,7 @@ public class SchoolBoardService {
         }
     }
 
+    @Transactional
     public String postSchoolBoardRecommend(int userIdx, int postIdx) throws BaseException {
         int checkSchoolBoardWriter = schoolBoardDao.checkSchoolBoardWriter(userIdx, postIdx);
 
@@ -79,6 +81,7 @@ public class SchoolBoardService {
         }
     }
 
+    @Transactional
     public int postSchoolBoardComment(int userIdx, int postIdx, PostSchoolBoardCommentReq postSchoolBoardCommentReq) throws BaseException {
         try {
             schoolBoardCommentDao.postSchoolBoardComment(userIdx, postIdx, postSchoolBoardCommentReq);
@@ -103,6 +106,7 @@ public class SchoolBoardService {
         }
     }
 
+    @Transactional
     public int deleteSchoolBoardComment(int userIdx, int commentIdx) throws BaseException {
         int checkSchoolBoardCommentWriter = schoolBoardCommentDao.checkSchoolBoardCommentWriter(userIdx, commentIdx);
 
@@ -118,6 +122,7 @@ public class SchoolBoardService {
         }
     }
 
+    @Transactional
     public String postSchoolBoardCommentRecommend(int userIdx, int commentIdx) throws BaseException {
         int checkSchoolBoardCommentWriter = schoolBoardCommentDao.checkSchoolBoardCommentWriter(userIdx, commentIdx);
 

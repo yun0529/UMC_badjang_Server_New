@@ -37,7 +37,7 @@ public class NotificationController {
 
     @ResponseBody
     @GetMapping("/notification")
-    public BaseResponse<GetNotificationAllRes> getBookmarkAll() {
+    public BaseResponse<GetNotificationAllRes> getNotification() {
         try {
             int userIdx = jwtService.getUserIdx();
             GetNotificationAllRes getNotificationAllRes = notificationProvider.getNotificationAllRes(userIdx);
