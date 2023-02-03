@@ -126,7 +126,6 @@ public class UserDao {
 
         saveUserUnivInfoQuery += " WHERE user_idx = '" + postInfoReq.getUser_idx() + "'";
 
-        System.out.println(saveUserUnivInfoQuery);
         this.jdbcTemplate.update(saveUserUnivInfoQuery);
     }
 
@@ -207,7 +206,7 @@ public class UserDao {
     }
 
     public int withdrawUser(PostWithdrawReq postWithdrawReq) {
-        String withdrawUserQuery = "UPDATE User SET user_state = 'STOP', user_on_off = 'OFF' WHERE user_idx = ?";
+        String withdrawUserQuery = "UPDATE User SET user_status = 'STOP', user_on_off = 'OFF' WHERE user_idx = ?";
         int withdrawUserParams = postWithdrawReq.getUser_idx();
         return this.jdbcTemplate.update(withdrawUserQuery, withdrawUserParams);
     }

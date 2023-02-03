@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.*;
@@ -235,7 +236,7 @@ public class UserController {
     public BaseResponse<String> withdrawUser(@RequestBody PostWithdrawReq postWithdrawReq) {
         if (postWithdrawReq.getUser_idx() == 0)
             return new BaseResponse<>(USERS_EMPTY_USER_IDX);
-        if (postWithdrawReq.getText() == null || postWithdrawReq.getText() != "탈퇴하기")
+        if (postWithdrawReq.getText() == null || !postWithdrawReq.getText().equals("탈퇴하기"))
             return new BaseResponse<>(POST_USERS_WRONG_TEXT);
 
         try {
