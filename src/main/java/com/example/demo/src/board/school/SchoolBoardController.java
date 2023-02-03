@@ -135,6 +135,12 @@ public class SchoolBoardController {
                 }
             }
 
+            if (patchSchoolBoardReq.getPost_anonymity() != null) {
+                if (patchSchoolBoardReq.getPost_anonymity().equals("")) {
+                    return new BaseResponse<>(POST_SCHOOL_BOARD_ANONYMITY_NULL);
+                }
+            }
+
 
             schoolBoardService.patchSchoolBoard(userIdx, postIdx, patchSchoolBoardReq);
 
@@ -162,6 +168,7 @@ public class SchoolBoardController {
         }
     }
 
+
     /**
      * 게시판 댓글 추가
      * [POST] /board/school/:schoolNameIdx/comment/add/:postIdx
@@ -169,7 +176,7 @@ public class SchoolBoardController {
 
     @ResponseBody
     @PostMapping("/board/school/{schoolNameIdx}/comment/add/{postIdx}")
-    public BaseResponse<String> postSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx, @RequestBody PostSchoolBoardCommentReq postSchoolBoardCommentReq) {
+    public BaseResponse<String> postSchoolBoardComment(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx, @RequestBody PostSchoolBoardCommentReq postSchoolBoardCommentReq) {
         try {
             int userIdx = jwtService.getUserIdx();
 
@@ -211,7 +218,7 @@ public class SchoolBoardController {
                 }
             }
             if (patchSchoolBoardCommentReq.getComment_anonymity() != null) {
-                if (patchSchoolBoardCommentReq.getComment_content().equals("")) {
+                if (patchSchoolBoardCommentReq.getComment_anonymity().equals("")) {
                     return new BaseResponse<>(POST_SCHOOL_BOARD_COMMENT_ANONYMITY_NULL);
                 }
             }

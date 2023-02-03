@@ -159,7 +159,6 @@ public class SearchController {
                 return new BaseResponse<>(GET_SEARCH_INVALID_QUERY);
             }
             int userIdx = jwtService.getUserIdx();
-            System.out.println(userIdx);
             List<GetSearchSupportRes> getSearchSupportRes = searchProvider.searchSupport(query);
             searchProvider.saveQuery(userIdx, query);
 
