@@ -185,8 +185,6 @@ public enum BaseResponseStatus {
     INCREASE_FAIL_SUPPORT_VIEW(false,4356,"지원금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
-
-
     private final boolean isSuccess;
     private final int code;
     private final String message;
