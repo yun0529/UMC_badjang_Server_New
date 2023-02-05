@@ -11,4 +11,5 @@ import lombok.Setter;
 public class PatchCommentReq {
     private int comment_idx;
     private String comment_content;
+    private String anonymity;
 }

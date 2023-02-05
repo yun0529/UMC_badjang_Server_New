@@ -76,11 +76,11 @@ public class BoardDao {
      */
     public List<GetBoardRes> patchBoard(PatchBoardReq patchBoardReq){
         String createBoardQuery = "UPDATE Board set post_category = ? , post_name = ? , post_content = ? , post_image = ? , " +
-                "post_updateAt = CURRENT_TIMESTAMP where post_idx = ? and user_idx = ?" ;
+                "post_updateAt = CURRENT_TIMESTAMP , post_anonymity = ? where post_idx = ? and user_idx = ?" ;
 
         Object[] createParams = new Object[]{
                 patchBoardReq.getPost_category(), patchBoardReq.getPost_name(), patchBoardReq.getPost_content(),
-                patchBoardReq.getPost_image(), patchBoardReq.getPost_idx(), patchBoardReq.getUser_idx()
+                patchBoardReq.getPost_image(), patchBoardReq.getPost_idx(), patchBoardReq.getUser_idx(), patchBoardReq.getAnonymity()
         };
 
         this.jdbcTemplate.update(createBoardQuery, createParams);
@@ -266,14 +266,14 @@ public class BoardDao {
      */
     public GetCommentRes patchComment(PatchCommentReq patchCommentReq){
         String updateQuery = "UPDATE Comment set comment_content = ? , " +
-                "comment_updatedAt = CURRENT_TIMESTAMP where comment_idx = ? " ;
+                "comment_updatedAt = CURRENT_TIMESTAMP , anonymity = ? where comment_idx = ? " ;
 
         Object[] updateParams = new Object[]{
-                patchCommentReq.getComment_content(), patchCommentReq.getComment_idx()
+                patchCommentReq.getComment_content(), patchCommentReq.getComment_idx(), patchCommentReq.getAnonymity()
         };
 
         this.jdbcTemplate.update(updateQuery, updateParams);
-        String updateResultQuery = "select comment_idx, comment_content, comment_updatedAt " +
+        String updateResultQuery = "select comment_idx, comment_content, comment_updatedAt , comment_anonymity" +
                 "from badjangDB.Comment where comment_idx = ? " ;
 
         Object[] resultParams = new Object[]{
@@ -349,9 +349,4 @@ public class BoardDao {
         return this.jdbcTemplate.queryForObject(checkRecommend, int.class,
                 postCommentRecommendReq.getComment_idx(), postCommentRecommendReq.getUser_idx());
     }
-
-    /**
-     * 인기글 조회
-     */
-
 }
