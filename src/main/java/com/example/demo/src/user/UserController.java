@@ -284,6 +284,36 @@ public class UserController {
 
     }
 
+    /**
+     * 자동 로그인 API
+     * [GET] /users/autologin
+     *
+     * @return BaseResponse<PostUserRes>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PostMapping("/autologin")
+    public BaseResponse<PostUserRes> autoLogin(@RequestBody PostLogoutReq postLogoutReq) {
+        if (postLogoutReq.getUser_idx() == 0)
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postLogoutReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            PostUserRes postUserRes = userService.autoLogin(postLogoutReq);
+
+            return new BaseResponse<>(postUserRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
 
     /**
      * 로그인 API
