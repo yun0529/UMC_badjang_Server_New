@@ -243,4 +243,12 @@ public class UserDao {
 
         return jdbcTemplate.queryForObject(checkOnOffQuery, String.class, checkOnOffParams);
     }
+
+    public int checkStatusByUserIdx(int user_idx) {
+        String checkStatusQuery = "select exists(select user_idx from User where user_idx = ? and user_status = 'STOP')";
+        int checkStatusParams = user_idx;
+        return this.jdbcTemplate.queryForObject(checkStatusQuery,
+                int.class,
+                checkStatusParams);
+    }
 }
