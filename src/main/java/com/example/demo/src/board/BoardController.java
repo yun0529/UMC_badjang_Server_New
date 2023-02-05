@@ -91,11 +91,11 @@ public class BoardController {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             } else if (user_idx == 0) {
                 return new BaseResponse<>(BaseResponseStatus.USERS_EMPTY_USER_IDX);
-            } else if (postBoardReq.getPost_name() == null) {
+            } else if (postBoardReq.getPost_name() == null || postBoardReq.getPost_name() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_BOARD_NAME);
-            } else if (postBoardReq.getPost_content() == null) {
+            } else if (postBoardReq.getPost_content() == null || postBoardReq.getPost_content() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_BOARD_CONTENT);
-            } else if (postBoardReq.getPost_category() == null) {
+            } else if (postBoardReq.getPost_category() == null || postBoardReq.getPost_category() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_CATEGORY_IDX);
             }
             List<PostBoardRes> postBoardRes = boardProvider.postBoard(postBoardReq);
@@ -119,7 +119,7 @@ public class BoardController {
                     return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
                 } else if (idx != user_idx) {
                     return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
-                } else if(post_idx == 0){
+                } else if(post_idx== 0){
                     return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
                 }
                 boardProvider.patchBoard(patchBoardReq);
@@ -222,13 +222,13 @@ public class BoardController {
             else if(post_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
             }
-            else if (postCommentReq.getComment_content() == null) {
+            else if (postCommentReq.getComment_content() == null || postCommentReq.getComment_content() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_CONTENT);
             }
-            else if (postCommentReq.getComment_anonymity() == null) {
+            else if (postCommentReq.getComment_anonymity() == null || postCommentReq.getComment_anonymity() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_ANONYMITY);
             }
-            else if (postCommentReq.getComment_status() == null) {
+            else if (postCommentReq.getComment_status() == null || postCommentReq.getComment_status() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_STATUS);
             }
             else if(idx != user_idx){
@@ -260,6 +260,9 @@ public class BoardController {
             }
             else if(idx != user_idx){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            else if (patchCommentReq.getComment_content() == null || patchCommentReq.getComment_content() == "") {
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_CONTENT);
             }
             boardProvider.patchComment(patchCommentReq);
             String result = "댓글을 수정하였습니다.";
