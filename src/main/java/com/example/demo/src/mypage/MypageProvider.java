@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.mypage.model.GetBoardRes;
 import com.example.demo.src.mypage.model.GetCommentRes;
 import com.example.demo.src.mypage.model.GetMypageRes;
+import com.example.demo.src.mypage.model.GetNoticeRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,4 +58,27 @@ public class MypageProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //공지사항 조회
+    public List<GetNoticeRes> getNotice() throws BaseException {
+        try{
+            List<GetNoticeRes> getNoticeRes = mypageDao.getNotice();
+            return getNoticeRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetNoticeRes getNoticeDetail(int notice_idx) throws BaseException {
+        try{
+            GetNoticeRes getNoticeRes = mypageDao.getNoticeDetail(notice_idx);
+            return getNoticeRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
 }
