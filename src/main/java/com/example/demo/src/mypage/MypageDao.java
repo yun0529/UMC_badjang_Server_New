@@ -79,4 +79,34 @@ public class MypageDao {
         return this.jdbcTemplate.update(saveUserUnivInfoQuery, saveUserUnivInfoParams);
     }
 
+    public List<GetNoticeRes> getNotice(){
+        String getNoticeResQuery = "select * from Notice";
+        //int getNoticeResParams = user_idx;
+        return this.jdbcTemplate.query(getNoticeResQuery,
+                (rs, rowNum) -> new GetNoticeRes(
+                        rs.getInt("notice_idx"),
+                        rs.getString("notice_title"),
+                        rs.getString("notice_content"),
+                        rs.getString("notice_image"),
+                        rs.getString("notice_createAt"),
+                        rs.getString("notice_updateAt"))
+        );
+    }
+
+    public GetNoticeRes getNoticeDetail(int notice_idx){
+        String getNoticeResQuery = "select * from Notice where notice_idx = ?";
+        int getNoticeResParams = notice_idx;
+        return this.jdbcTemplate.queryForObject(getNoticeResQuery,
+                (rs, rowNum) -> new GetNoticeRes(
+                        rs.getInt("notice_idx"),
+                        rs.getString("notice_title"),
+                        rs.getString("notice_content"),
+                        rs.getString("notice_image"),
+                        rs.getString("notice_createAt"),
+                        rs.getString("notice_updateAt")),
+                getNoticeResParams);
+    }
+
+
+
 }
