@@ -43,6 +43,7 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
     STOPPED_USER(false, 2011, "탈퇴한 계정입니다."),
     OFFLINE_USER(false, 2012, "로그아웃한 계정입니다."),
+    USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요."),
     
 
     // [POST] /users
