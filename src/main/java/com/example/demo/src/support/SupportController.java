@@ -47,9 +47,20 @@ public class SupportController {
         //  지금 예시와 같이 required 설정으로 필수 값에서 제외 시킬 수 있음
         //  defaultValue를 통해, 기본값(파라미터가 없는 경우, 해당 파라미터의 기본값 설정)을 지정할 수 있음
 
-        //  카테고리 null : 전체
-        //  필터 	null : 인기순(조회순)
-        //  정렬	    null : desc
+        //  카테고리 default 는 전체
+        //          취업지원
+        //          창업지원
+        //          주거·금융
+        //          생활·복지
+        //          정책참여
+        //          코로나19
+        //  필터 	default 는 인기순
+        //          날짜순
+        //          인기순
+        //          댓글순
+        //  정렬	    default 는 desc
+        //          desc
+        //          asc
 
         try {
             List<GetSupportRes> getSupportsRes = supportProvider.getSupportsByFilter(category, filter, order);

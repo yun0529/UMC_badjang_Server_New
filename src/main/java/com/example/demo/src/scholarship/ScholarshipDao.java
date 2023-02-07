@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static java.sql.DriverManager.println;
+
 
 @Repository //  [Persistence Layer에서 DAO를 명시하기 위해 사용]
 
@@ -110,7 +112,6 @@ public class ScholarshipDao {
         }
 
         getScholarshipsByFilterQuery = getScholarshipsByFilterQuery + categoryCondition +filterCondition + orderCondition;
-
 
         return this.jdbcTemplate.query(getScholarshipsByFilterQuery,
 

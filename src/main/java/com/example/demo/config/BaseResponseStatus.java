@@ -72,6 +72,12 @@ public enum BaseResponseStatus {
 
     SUPPORT_EMPTY_SUPPORT_IDX(false, 2355, "해당 지원금idx 값이 존재하지 않습니다."),
 
+    FAQ_EMPTY_FAQ_IDX(false, 2752, "해당 FAQ idx 값이 존재하지 않습니다."),
+
+    EMPTY_TITLE(false, 2750, "제목을 입력해주세요."),
+
+    EMPTY_CONTENT(false, 2751, "내용을 입력해주세요."),
+
     /**
      * 3000 : Response 오류
      */
