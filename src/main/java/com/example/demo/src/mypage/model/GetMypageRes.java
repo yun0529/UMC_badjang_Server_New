@@ -13,15 +13,15 @@ public class GetMypageRes {
     private String user_name;
     private String user_profileimage_url;
     private String user_type;
-    private String user_grade;
-    private String user_phone;
     private String user_birth;
+    private String user_phone;
     private String user_push_yn;
     private String user_on_off;
-    private String user_college;
     private String user_univ;
+    private String user_college;
     private String user_department;
+    private String user_grade;
     private String user_semester;
-    private String user_city;
     private String user_province;
+    private String user_city;
 }
