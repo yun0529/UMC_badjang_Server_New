@@ -25,6 +25,7 @@ public class SearchService {
         this.searchDao = searchDao;
     }
 
+    //최근 검색어에 있는 검색어 삭제
     public void deleteSearchHistory(DeleteSearchHistoryReq deleteSearchHistoryReq) throws BaseException {
         try {
             int result = searchDao.deleteHistoryQuery(deleteSearchHistoryReq);
@@ -37,6 +38,7 @@ public class SearchService {
         }
     }
 
+    //검색 시에 검색어를 최근 검색어 내역에 저장
     public void saveQuery(long userIdx, String query) {
         searchDao.postSearchHistory(userIdx, query);
     }

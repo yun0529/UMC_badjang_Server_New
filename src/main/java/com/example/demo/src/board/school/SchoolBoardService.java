@@ -40,6 +40,8 @@ public class SchoolBoardService {
     @Transactional
     public int patchSchoolBoard(int userIdx, int postIdx, PatchSchoolBoardReq patchSchoolBoardReq) throws BaseException {
         int checkSchoolBoardWriter = schoolBoardDao.checkSchoolBoardWriter(userIdx, postIdx);
+        
+        //자신이 쓴 게시물이 아닐 시에 수정하지 못하도록 예외 처리
         if (checkSchoolBoardWriter == 0) {
             throw new BaseException(SCHOOL_BOARD_AUTH_FAIL);
         }
@@ -55,6 +57,7 @@ public class SchoolBoardService {
     public int deleteSchoolBoard(int userIdx, int postIdx) throws BaseException {
         int checkSchoolBoardWriter = schoolBoardDao.checkSchoolBoardWriter(userIdx, postIdx);
 
+        //자신이 쓴 게시물이 아닐 시에 삭제하지 못하도록 예외 처리
         if (checkSchoolBoardWriter == 0) {
             throw new BaseException(SCHOOL_BOARD_AUTH_FAIL);
         }
@@ -71,6 +74,7 @@ public class SchoolBoardService {
     public String postSchoolBoardRecommend(int userIdx, int postIdx) throws BaseException {
         int checkSchoolBoardWriter = schoolBoardDao.checkSchoolBoardWriter(userIdx, postIdx);
 
+        //자신이 쓴 게시물을 추천할 수 없으므로 예외처리
         if (checkSchoolBoardWriter == 1) {
             throw new BaseException(POST_SCHOOL_BOARD_RECOMMEND_MINE);
         }
@@ -98,6 +102,7 @@ public class SchoolBoardService {
     public int patchSchoolBoardComment(int userIdx, int commentIdx, PatchSchoolBoardCommentReq patchSchoolBoardCommentReq) throws BaseException {
         int checkSchoolBoardCommentWriter = schoolBoardCommentDao.checkSchoolBoardCommentWriter(userIdx, commentIdx);
 
+        //자신이 쓴 댓글이 아닐 시에 수정하지 못하도록 예외 처리
         if (checkSchoolBoardCommentWriter == 0) {
             throw new BaseException(SCHOOL_BOARD_COMMENT_AUTH_FAIL);
         }
@@ -113,6 +118,7 @@ public class SchoolBoardService {
     public int deleteSchoolBoardComment(int userIdx, int commentIdx) throws BaseException {
         int checkSchoolBoardCommentWriter = schoolBoardCommentDao.checkSchoolBoardCommentWriter(userIdx, commentIdx);
 
+        //자신이 쓴 댓글이 아닐 시에 삭제하지 못하도록 예외 처리
         if (checkSchoolBoardCommentWriter == 0) {
             throw new BaseException(SCHOOL_BOARD_COMMENT_AUTH_FAIL);
         }
@@ -129,6 +135,7 @@ public class SchoolBoardService {
     public String postSchoolBoardCommentRecommend(int userIdx, int commentIdx) throws BaseException {
         int checkSchoolBoardCommentWriter = schoolBoardCommentDao.checkSchoolBoardCommentWriter(userIdx, commentIdx);
 
+        //자신이 쓴 댓글을 추천할 수 없으므로 예외처리
         if (checkSchoolBoardCommentWriter == 1) {
             throw new BaseException(POST_SCHOOL_BOARD_COMMENT_RECOMMEND_MINE);
         }
