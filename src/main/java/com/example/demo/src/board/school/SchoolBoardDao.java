@@ -18,6 +18,7 @@ public class SchoolBoardDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //학교게시판에서의 전체 게시글 불러오기
     public List<GetSchoolBoardRes> getSchoolBoard(int schoolNameIdx) {
 
 
@@ -48,6 +49,7 @@ public class SchoolBoardDao {
 
     }
 
+    //게시글 접근 시 자동으로 게시물의 조회수를 올리기 위한 쿼리
     public void updateView(int postIdx) {
         String updateViewQuery = "update Board " +
                 "set post_view = post_view + 1 " +
@@ -58,6 +60,7 @@ public class SchoolBoardDao {
         this.jdbcTemplate.update(updateViewQuery, updateViewParams);
     }
 
+    //학교게시판에 있는 게시물 중 하나의 게시물 불러오기
     public List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes(int postIdx) {
 
 
@@ -91,7 +94,7 @@ public class SchoolBoardDao {
 
     }
 
-
+    //학교게시판에 게시물 추가
     public void postSchoolBoard(int userIdx, int schoolNameIdx, PostSchoolBoardReq postSchoolBoardReq) {
 
         String postSchoolBoardQuery = "insert into Board (" +
@@ -119,7 +122,7 @@ public class SchoolBoardDao {
     }
 
 
-
+    //게시글 작성자인지 확인하는 쿼리
     public int checkSchoolBoardWriter(int userIdx, int postIdx) {
         String checkSchoolBoardWriterQuery = "select Exists( " +
                 "select post_idx " +
@@ -137,6 +140,7 @@ public class SchoolBoardDao {
 
     }
 
+    //게시물 수정
     public void patchSchoolBoard(int postIdx, PatchSchoolBoardReq patchSchoolBoardReq) {
 
 
@@ -193,6 +197,7 @@ public class SchoolBoardDao {
 
     }
 
+    //게시물 삭제
     public void deleteSchoolBoard(int userIdx, int postIdx) {
 
         String postSchoolBoardQuery = "delete from Board " +
@@ -209,7 +214,7 @@ public class SchoolBoardDao {
 
     }
 
-
+    //해당 게시물에 추천이 이미 되어있는지 확인
     public int checkSchoolBoardRecommendDouble(int userIdx, int postIdx) {
 
         String checkSchoolBoardRecommendDoubleQuery = "select Exists( " +
@@ -226,6 +231,7 @@ public class SchoolBoardDao {
 
     }
 
+    //게시물의 추천수를 확인하기 위한 쿼리
     public void schoolBoardRecommendUpdate(int postIdx) {
 
         String schoolBoardRecommendUpQuery = "UPDATE Board " +
@@ -250,6 +256,7 @@ public class SchoolBoardDao {
                 postIdx
         };
 
+        //이미 추천이 되어있는 경우에는 취소하고(DB 내역에서 삭제), 추천이 되어있지 않은 경우에는 추천(DB 내역에 추가)하는 쿼리
         if (checkSchoolBoardRecommendDouble == 1) {
 
             postSchoolBoardRecommendQuery = "delete from Board_Recommend " +
