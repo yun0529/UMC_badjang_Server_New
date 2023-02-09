@@ -37,4 +37,8 @@ public class SearchService {
         }
     }
 
+    public void saveQuery(long userIdx, String query) {
+        searchDao.postSearchHistory(userIdx, query);
+    }
+
 }

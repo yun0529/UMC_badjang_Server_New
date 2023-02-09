@@ -37,6 +37,7 @@ public class SchoolBoardService {
         }
     }
 
+    @Transactional
     public int patchSchoolBoard(int userIdx, int postIdx, PatchSchoolBoardReq patchSchoolBoardReq) throws BaseException {
         int checkSchoolBoardWriter = schoolBoardDao.checkSchoolBoardWriter(userIdx, postIdx);
         if (checkSchoolBoardWriter == 0) {
@@ -50,6 +51,7 @@ public class SchoolBoardService {
         }
     }
 
+    @Transactional
     public int deleteSchoolBoard(int userIdx, int postIdx) throws BaseException {
         int checkSchoolBoardWriter = schoolBoardDao.checkSchoolBoardWriter(userIdx, postIdx);
 
@@ -92,6 +94,7 @@ public class SchoolBoardService {
         }
     }
 
+    @Transactional
     public int patchSchoolBoardComment(int userIdx, int commentIdx, PatchSchoolBoardCommentReq patchSchoolBoardCommentReq) throws BaseException {
         int checkSchoolBoardCommentWriter = schoolBoardCommentDao.checkSchoolBoardCommentWriter(userIdx, commentIdx);
 
