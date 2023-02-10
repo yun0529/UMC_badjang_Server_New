@@ -20,14 +20,11 @@ public class BoardDao {
      *
      */
     public List<PostBoardRes> postBoard(PostBoardReq postBoardReq){
-        String createBoardQuery = "insert into Board (user_idx, post_category, post_name, post_content, post_image, post_view, " +
-                "                   post_recommend, post_comment, post_createAt, post_updateAt, post_status, post_anonymity) " +
-                "VALUES (?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,?,?)" ;
-
+        String createBoardQuery = "insert into Board (user_idx, post_category, post_name, post_content, post_image, post_anonymity) " +
+                "VALUES (?,?,?,?,?,?) " ;
         Object[] createBoardParams = new Object[]{
                 postBoardReq.getUser_idx(), postBoardReq.getPost_category(), postBoardReq.getPost_name(), postBoardReq.getPost_content(),
-                postBoardReq.getPost_image(), postBoardReq.getPost_view(), postBoardReq.getPost_recommend(),
-                postBoardReq.getPost_comment(), postBoardReq.getPost_status(), postBoardReq.getPost_anonymity()
+                postBoardReq.getPost_image(), postBoardReq.getPost_anonymity()
         };
         this.jdbcTemplate.update(createBoardQuery, createBoardParams);
 
@@ -239,13 +236,12 @@ public class BoardDao {
      *
      */
     public PostCommentRes postComment(PostCommentReq postCommentReq){
-        String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_recommend, comment_anonymity, " +
-                "comment_createAt, comment_updatedAt, comment_status) " +
-                "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?)" ;
+        String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_anonymity) " +
+                "VALUES (?, ?, ?, ?)" ;
 
         Object[] createCommentParams = new Object[]{
                 postCommentReq.getPost_idx(), postCommentReq.getUser_idx(), postCommentReq.getComment_content(),
-                postCommentReq.getComment_recommend(), postCommentReq.getComment_anonymity(), postCommentReq.getComment_status()
+                postCommentReq.getComment_anonymity()
         };
 
         this.jdbcTemplate.update(createCommentQuery,createCommentParams);
