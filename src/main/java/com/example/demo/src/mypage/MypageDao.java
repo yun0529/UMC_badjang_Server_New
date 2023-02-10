@@ -37,10 +37,13 @@ public class MypageDao {
 
     //내가 작성한 게시글 조회
     public List<GetBoardRes> getBoard(int user_idx){
-        String getBoardResQuery = "select * from Board where user_idx = ? order by post_view desc";
+        String getBoardResQuery = "select Board.*, User.* from Board join User on Board.user_idx = User.user_idx where Board.user_idx = ? order by post_view desc";
         int getBoardResParams = user_idx;
         return this.jdbcTemplate.query(getBoardResQuery,
                 (rs, rowNum) -> new GetBoardRes(
+                        rs.getString("user_name"),
+                        rs.getString("user_profileimage_url"),
+                        rs.getString("post_createAt"),
                         rs.getInt("post_idx"),
                         rs.getString("post_name"),
                         rs.getString("post_content"),
@@ -55,12 +58,13 @@ public class MypageDao {
 
 
     public List<GetCommentRes> getComment(int user_idx){
-        String getCommentResQuery = "select * from Comment where user_idx = ?";
+        String getCommentResQuery = "select Comment.*, Board.* from Comment join Board on Comment.post_idx = Board.post_idx where Comment.user_idx = ?";
         int getCommentResParams = user_idx;
         return this.jdbcTemplate.query(getCommentResQuery,
                 (rs, rowNum) -> new GetCommentRes(
                         rs.getInt("comment_idx"),
                         rs.getInt("post_idx"),
+                        rs.getString("post_name"),
                         rs.getString("post_category"),
                         rs.getString("comment_content")),
                 getCommentResParams);
