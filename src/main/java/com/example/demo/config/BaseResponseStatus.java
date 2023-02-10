@@ -133,10 +133,6 @@ public enum BaseResponseStatus {
     EMPTY_CONTENT(false, 2751, "내용을 입력해주세요."),
 
     /**
-     * 2200 ~ 2250 : 메인화면 오류처리(옆마당)
-     */
-    NON_MATCH_UNIV(false, 2201, "일치하는 장학금이 없습니다."),
-    /**
      * 2400 ~ 2450 : 게시판 오류처리(옆마당)
      */
     EMPTY_BOARD_NAME(false, 2400, "게시물 제목을 입력해주세요"),
