@@ -8,6 +8,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetBoardRes {
+    private String user_name;
+    private String user_profileimage_url;;
+    private String post_createAt;
     private int post_idx;
     private String post_name;
     private String post_content;

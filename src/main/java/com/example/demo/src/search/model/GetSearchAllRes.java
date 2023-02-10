@@ -1,9 +1,6 @@
 package com.example.demo.src.search.model;
 
 
-import com.example.demo.src.bookmark.model.GetBookmarkBoardRes;
-import com.example.demo.src.bookmark.model.GetBookmarkScholarshipRes;
-import com.example.demo.src.bookmark.model.GetBookmarkSupportRes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
