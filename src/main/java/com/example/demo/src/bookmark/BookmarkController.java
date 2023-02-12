@@ -96,6 +96,23 @@ public class BookmarkController {
         }
     }
 
+
+    /**
+     * 장학금 즐겨찾기 유무 조회
+     * [GET] /scholarships/:scholarshipIdx/bookmark_check
+     */
+    @ResponseBody
+    @GetMapping("/scholarships/{scholarshipIdx}/bookmark_check")
+    public BaseResponse<GetBookmarkCheckScholarshipRes> getBookmarkCheckScholarship(@PathVariable int scholarshipIdx) {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            GetBookmarkCheckScholarshipRes getBookmarkCheckScholarshipRes = bookmarkProvider.getBookmarkCheckScholarship(userIdx, scholarshipIdx);
+            return new BaseResponse<>(getBookmarkCheckScholarshipRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
     /**
      * 즐겨찾기 조회(지원금만)
      * [GET] /bookmark/support
@@ -208,6 +225,8 @@ public class BookmarkController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
 
 
 //    /**

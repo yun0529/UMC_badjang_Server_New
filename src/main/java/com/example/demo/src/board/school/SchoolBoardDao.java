@@ -19,16 +19,20 @@ public class SchoolBoardDao {
     }
 
     //학교게시판에서의 전체 게시글 불러오기
-    public List<GetSchoolBoardRes> getSchoolBoard(int schoolNameIdx) {
+    public List<GetSchoolBoardRes> getSchoolBoard(int userIdx, int schoolNameIdx) {
 
 
-        String getSchoolBoardResQuery = "select * " +
+        String getSchoolBoardResQuery = "select post_idx, user_idx, post_name, post_content, post_image, post_view, " +
+                "post_recommend, post_comment, post_anonymity, post_category, post_school_name, post_createAt, " +
+                "Exists( select post_recommend_idx from Board_Recommend where user_idx = ? and Board_Recommend.post_idx = Board.post_idx ) as isRecommendChk " +
                 "from Board " +
                 "left join School_Board_Name " +
                 "on School_Board_Name.school_name_idx = Board.school_name_idx " +
                 "where School_Board_Name.school_name_idx = ? ";
 
-        int getSchoolBoardParams = schoolNameIdx;
+        Object[] getSchoolBoardResParams = new Object[]{
+                userIdx,
+                schoolNameIdx};
 
         return this.jdbcTemplate.query(getSchoolBoardResQuery,
                 (rs, rowNum) -> new GetSchoolBoardRes(
@@ -43,8 +47,9 @@ public class SchoolBoardDao {
                         rs.getString("post_anonymity"),
                         rs.getString("post_category"),
                         rs.getString("post_school_name"),
-                        rs.getString("post_createAt")
-                ), getSchoolBoardParams
+                        rs.getString("post_createAt"),
+                        rs.getInt("isRecommendChk")
+                ), userIdx, schoolNameIdx
         );
 
     }
@@ -61,11 +66,13 @@ public class SchoolBoardDao {
     }
 
     //학교게시판에 있는 게시물 중 하나의 게시물 불러오기
-    public List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes(int postIdx) {
+    public List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes(int userIdx, int postIdx) {
 
 
         String getOneOfSchoolBoardResQuery = "select Board.user_idx, user_name, post_name, post_content, post_image, " +
-                "post_view, post_recommend, post_comment, post_anonymity, post_category, post_school_name, post_createAt " +
+                "post_view, post_recommend, post_comment, post_anonymity, post_category, post_school_name, post_createAt, " +
+                "Exists( select bookmark_idx from Bookmark where user_idx = ? and post_idx = ? ) as isBookmarkChk, " +
+                "Exists( select post_recommend_idx from Board_Recommend where user_idx = ? and post_idx = ? ) as isRecommendChk " +
                 "from Board " +
                 "join User " +
                 "on Board.user_idx = User.user_idx " +
@@ -73,7 +80,8 @@ public class SchoolBoardDao {
                 "on School_Board_Name.school_name_idx = Board.school_name_idx " +
                 "where post_idx = ? ";
 
-        int getOneOfSchoolBoardResParams = postIdx;
+        Object[] getOneOfSchoolBoardResParams = new Object[]{
+                userIdx, postIdx, userIdx, postIdx, postIdx};
 
         return this.jdbcTemplate.query(getOneOfSchoolBoardResQuery,
                 (rs, rowNum) -> new GetOneOfSchoolBoardRes(
@@ -88,7 +96,9 @@ public class SchoolBoardDao {
                         rs.getString("post_anonymity"),
                         rs.getString("post_category"),
                         rs.getString("post_school_name"),
-                        rs.getString("post_createAt")
+                        rs.getString("post_createAt"),
+                        rs.getInt("isBookmarkChk"),
+                        rs.getInt("isRecommendChk")
                 ), getOneOfSchoolBoardResParams
         );
 

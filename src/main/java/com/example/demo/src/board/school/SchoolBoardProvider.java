@@ -28,9 +28,9 @@ public class SchoolBoardProvider {
     }
 
 
-    public List<GetSchoolBoardRes> getSchoolBoard(int schoolNameIdx) throws BaseException {
+    public List<GetSchoolBoardRes> getSchoolBoard(int userIdx, int schoolNameIdx) throws BaseException {
         try {
-            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardDao.getSchoolBoard(schoolNameIdx);
+            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardDao.getSchoolBoard(userIdx, schoolNameIdx);
 
             return getSchoolBoardRes;
         } catch (Exception exception) {
@@ -39,12 +39,12 @@ public class SchoolBoardProvider {
     }
 
     @Transactional
-    public GetSchoolBoardDetailRes getSchoolBoardDetail(int postIdx) throws BaseException {
+    public GetSchoolBoardDetailRes getSchoolBoardDetail(int userIdx, int postIdx) throws BaseException {
 
         try {
             schoolBoardDao.updateView(postIdx);
-            List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes = schoolBoardDao.getOneOfSchoolBoardRes(postIdx);
-            List<GetSchoolBoardCommentRes> getSchoolBoardCommentRes = schoolBoardCommentDao.getSchoolBoardComment(postIdx);
+            List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes = schoolBoardDao.getOneOfSchoolBoardRes(userIdx, postIdx);
+            List<GetSchoolBoardCommentRes> getSchoolBoardCommentRes = schoolBoardCommentDao.getSchoolBoardComment(userIdx, postIdx);
 
             GetSchoolBoardDetailRes getSchoolBoardDetailRes = new GetSchoolBoardDetailRes(getOneOfSchoolBoardRes, getSchoolBoardCommentRes);
 
