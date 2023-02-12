@@ -20,30 +20,37 @@ public class SchoolBoardCommentDao {
 
 
     //해당 게시글의 댓글 불러오기
-    public List<GetSchoolBoardCommentRes> getSchoolBoardComment(int postIdx) {
+    public List<GetSchoolBoardCommentRes> getSchoolBoardComment(int userIdx, int postIdx) {
 
 
-        String getSchoolBoardCommentQuery = "select Board.post_idx, Comment.user_idx, User.user_name, comment_content, " +
-                "comment_recommend, comment_anonymity, comment_createAt " +
+        String getSchoolBoardCommentQuery = "select Comment.post_idx, Comment.comment_idx,  Comment.user_idx, User.user_name, comment_content, " +
+                "comment_recommend, comment_anonymity, comment_createAt, " +
+                "Exists (select Comment_Recommend_idx from Comment_Recommend " +
+                "where Comment_Recommend.user_idx = ? and Board.post_idx = ? and Comment_Recommend.comment_idx = Comment.comment_idx) as isRecommendChk " +
                 "from Board " +
                 "join Comment " +
                 "on Board.post_idx = Comment.post_idx " +
                 "join User " +
                 "on User.user_idx = Comment.user_idx " +
-                "where Board.post_idx = ? " +
-                "order by Comment.comment_createAt desc ";
+                "where Board.post_idx = ? ";
 
-        int getSchoolBoardCommentParams = postIdx;
+        Object[] getSchoolBoardCommentParams = new Object[]{
+                userIdx,
+                postIdx,
+                postIdx
+        };
 
         return this.jdbcTemplate.query(getSchoolBoardCommentQuery,
                 (rs, rowNum) -> new GetSchoolBoardCommentRes(
                         rs.getInt("post_idx"),
+                        rs.getInt("comment_idx"),
                         rs.getInt("user_idx"),
                         rs.getString("user_name"),
                         rs.getString("comment_content"),
                         rs.getInt("comment_recommend"),
                         rs.getString("comment_anonymity"),
-                        rs.getString("comment_createAt")
+                        rs.getString("comment_createAt"),
+                        rs.getInt("isRecommendChk")
                 ), getSchoolBoardCommentParams
         );
 

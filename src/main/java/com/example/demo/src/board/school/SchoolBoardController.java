@@ -42,7 +42,8 @@ public class SchoolBoardController {
     @GetMapping("/board/school/{schoolNameIdx}")
     public BaseResponse<List<GetSchoolBoardRes>> getSchoolBoardAll(@PathVariable("schoolNameIdx") int schoolNameIdx) {
         try {
-            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardProvider.getSchoolBoard(schoolNameIdx);
+            int userIdx = jwtService.getUserIdx();
+            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardProvider.getSchoolBoard(userIdx, schoolNameIdx);
 
             return new BaseResponse<>(getSchoolBoardRes);
         } catch (BaseException exception) {
@@ -60,7 +61,8 @@ public class SchoolBoardController {
     @GetMapping("/board/school/{schoolNameIdx}/{postIdx}")
     public BaseResponse<GetSchoolBoardDetailRes> getOneOfSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx) {
         try {
-            GetSchoolBoardDetailRes getSchoolBoardDetailRes = schoolBoardProvider.getSchoolBoardDetail(postIdx);
+            int userIdx = jwtService.getUserIdx();
+            GetSchoolBoardDetailRes getSchoolBoardDetailRes = schoolBoardProvider.getSchoolBoardDetail(userIdx, postIdx);
 
             return new BaseResponse<>(getSchoolBoardDetailRes);
         } catch (BaseException exception) {
