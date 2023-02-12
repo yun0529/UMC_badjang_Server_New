@@ -25,32 +25,36 @@ public class PopularBoardDao {
      * @return
      */
     public List<GetPopularRes> getPopularAll(){
-        String getPopularQuery = "SELECT popular_idx, post_idx, user_idx, school_name_idx, " +
-                "popular_createAt, popular_updateAt, popular_status FROM Popular_Board order by count DESC " ;
+        String getPopularQuery = "SELECT popular_idx, post_idx, user_idx, user_name, school_name_idx, " +
+                "popular_createAt, popular_updateAt, popular_status, board_category FROM Popular_Board order by count DESC " ;
 
         return this.jdbcTemplate.query(getPopularQuery, (rs, rowNum) -> new GetPopularRes(
                 rs.getInt("popular_idx"),
                 rs.getInt("post_idx"),
                 rs.getInt("user_idx"),
+                rs.getString("user_name"),
                 rs.getInt("school_name_idx"),
                 rs.getString("popular_createAt"),
                 rs.getString("popular_updateAt"),
-                rs.getString("popular_status")
+                rs.getString("popular_status"),
+                rs.getString("board_category")
                 ));
     }
 
     public List<GetPopularRes> getPopular(){
-        String getPopularQuery = "SELECT popular_idx, post_idx, user_idx, school_name_idx, " +
-                "popular_createAt, popular_updateAt, popular_status FROM Popular_Board order by count DESC LIMIT 2" ;
+        String getPopularQuery = "SELECT popular_idx, post_idx, user_idx, user_name, school_name_idx, " +
+                "popular_createAt, popular_updateAt, popular_status, board_category FROM Popular_Board order by count DESC LIMIT 2" ;
 
         return this.jdbcTemplate.query(getPopularQuery, (rs, rowNum) -> new GetPopularRes(
                 rs.getInt("popular_idx"),
                 rs.getInt("post_idx"),
                 rs.getInt("user_idx"),
+                rs.getString("user_name"),
                 rs.getInt("school_name_idx"),
                 rs.getString("popular_createAt"),
                 rs.getString("popular_updateAt"),
-                rs.getString("popular_status")
+                rs.getString("popular_status"),
+                rs.getString("board_category")
         ));
     }
 
