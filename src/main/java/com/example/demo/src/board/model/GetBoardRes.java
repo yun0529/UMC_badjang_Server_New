@@ -23,6 +23,8 @@ public class GetBoardRes {
     private String post_anonymity;
     private int school_name_idx;
     private int post_bookmark;
+    private String user_name;
+    private String user_profileimage_url;
 
     public GetBoardRes(String post_category, int school_name_idx) {
         this.post_category = post_category ;

@@ -2,16 +2,8 @@ package com.example.demo.src.popularBoard;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.board.model.GetBoardRes;
 import com.example.demo.src.popularBoard.model.GetPopularRes;
-import com.example.demo.src.popularBoard.model.PostPopularReq;
 import com.example.demo.src.popularBoard.model.PostPopularRes;
-import com.example.demo.src.user.model.GetUserRes;
-import com.example.demo.src.user.model.PostLoginReq;
-import com.example.demo.src.user.model.PostLoginRes;
-import com.example.demo.src.user.model.User;
-import com.example.demo.utils.JwtService;
-import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

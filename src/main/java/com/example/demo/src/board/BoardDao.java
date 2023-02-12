@@ -33,11 +33,11 @@ public class BoardDao {
      *
      */
     public List<PostBoardRes> postBoard(PostBoardReq postBoardReq){
-        String createBoardQuery = "insert into Board (user_idx, post_category, post_name, post_content, post_image, post_anonymity) " +
-                "VALUES (?,?,?,?,?,?) " ;
+        String createBoardQuery = "INSERT INTO Board (user_idx, post_category, post_name, post_content, post_image, post_anonymity, user_name, user_profileimage_url) " +
+            "VALUES (?,?,?,?,?,?,(select user_name FROM User where User.user_idx = ?),(select user_profileimage_url FROM User where User.user_idx = ?)) " ;
         Object[] createBoardParams = new Object[]{
                 postBoardReq.getUser_idx(), postBoardReq.getPost_category(), postBoardReq.getPost_name(), postBoardReq.getPost_content(),
-                postBoardReq.getPost_image(), postBoardReq.getPost_anonymity()
+                postBoardReq.getPost_image(), postBoardReq.getPost_anonymity(), postBoardReq.getUser_idx(), postBoardReq.getUser_idx()
         };
         this.jdbcTemplate.update(createBoardQuery, createBoardParams);
 
@@ -57,10 +57,11 @@ public class BoardDao {
      *
      */
     public List<GetBoardRes> getBoard(int user_idx){
-        String getBoardResQuery = "SELECT * ,(select exists(select post_idx, user_idx from Bookmark " +
-                "where post_idx = Board.post_idx " +
-                "and user_idx = ?)) " +
-                "as post_bookmark FROM Board " ;
+        String getBoardResQuery = "SELECT post_idx, user_idx, post_name, post_content, post_image, post_view, post_recommend, post_comment, post_createAt, post_updateAt, post_status, post_anonymity, " +
+                "post_category, school_name_idx, user_profileimage_url,IF(post_anonymity = 'Y', user_name = null, user_name) as user_name, " +
+                "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and user_idx = ?)) " +
+                "as post_bookmark " +
+                "FROM Board " ;
 
         return this.jdbcTemplate.query(getBoardResQuery,
                 (rs, rowNum) -> new GetBoardRes(
@@ -78,7 +79,9 @@ public class BoardDao {
                         rs.getString("post_status"),
                         rs.getString("post_anonymity"),
                         rs.getInt("school_name_idx"),
-                        rs.getInt("post_bookmark")),user_idx);
+                        rs.getInt("post_bookmark"),
+                        rs.getString("user_name"),
+                        rs.getString("user_profileimage_url")),user_idx);
     }
 
     /**게시글 수정
@@ -123,10 +126,11 @@ public class BoardDao {
     }
 
     public List<GetBoardRes> getBoardDetail(int user_idx, int post_idx){
-        String getBoardQuery = "SELECT * ,(select exists(select post_idx, user_idx from Bookmark " +
-                "where post_idx = Board.post_idx " +
-                "and user_idx = ?)) " +
-                "as post_bookmark FROM Board where post_idx = ? " ;
+        String getBoardQuery = "SELECT post_idx, user_idx, post_name, post_content, post_image, post_view, post_recommend, post_comment, post_createAt, post_updateAt, post_status, post_anonymity, " +
+                "post_category, school_name_idx, user_profileimage_url,IF(post_anonymity = 'Y', user_name = null, user_name) as user_name, " +
+                "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and user_idx = ?)) " +
+                "as post_bookmark " +
+                "FROM Board " ;
 
         return this.jdbcTemplate.query(getBoardQuery, (rs, rowNum) -> new GetBoardRes(
                 rs.getInt("post_idx"),
@@ -143,7 +147,9 @@ public class BoardDao {
                 rs.getString("post_status"),
                 rs.getString("post_anonymity"),
                 rs.getInt("school_name_idx"),
-                rs.getInt("post_bookmark")),user_idx, post_idx);
+                rs.getInt("post_bookmark"),
+                rs.getString("user_name"),
+                rs.getString("user_profileimage_url")),user_idx, post_idx);
     }
 
     /**게시글 상세조회(댓글수 증감)
@@ -223,11 +229,12 @@ public class BoardDao {
      */
     public List<GetCommentRes> getComment(int post_idx){
         String getCommentQuery = "SELECT comment_idx, User.user_idx, Board.post_idx, comment_content, comment_recommend, " +
-                "comment_anonymity, comment_createAt, comment_updatedAt, comment_status " +
-                "from badjangDB.Comment " +
-                "left join User on User.user_idx = Comment.user_idx " +
-                "left join Board on Board.post_idx = Comment.post_idx " +
-                "where Board.post_idx = ? " ;
+                "comment_anonymity, comment_createAt, comment_updatedAt, comment_status, " +
+                "IF(comment_anonymity = 'Y', Comment.user_name = null, Comment.user_name) as user_name, Comment.user_profileimage_url " +
+            "from badjangDB.Comment " +
+            "left join User on User.user_idx = Comment.user_idx " +
+            "left join Board on Board.post_idx = Comment.post_idx " +
+            "where Board.post_idx = ? " ;
 
         int getPostIdx = post_idx;
 
@@ -241,7 +248,9 @@ public class BoardDao {
                         rs.getString("comment_anonymity"),
                         rs.getString("comment_createAt"),
                         rs.getString("comment_updatedAt"),
-                        rs.getString("comment_status")
+                        rs.getString("comment_status"),
+                        rs.getString("user_name"),
+                        rs.getString("user_profileimage_url")
                 ),getPostIdx);
     }
 
@@ -249,12 +258,12 @@ public class BoardDao {
      *
      */
     public PostCommentRes postComment(PostCommentReq postCommentReq){
-        String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_anonymity) " +
-                "VALUES (?, ?, ?, ?)" ;
+        String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_anonymity, user_name, user_profileimage_url) " +
+                "VALUES (?, ?, ?, ?,(select user_name FROM User where User.user_idx = ?),(select user_profileimage_url FROM User where User.user_idx = ?)) " ;
 
         Object[] createCommentParams = new Object[]{
                 postCommentReq.getPost_idx(), postCommentReq.getUser_idx(), postCommentReq.getComment_content(),
-                postCommentReq.getComment_anonymity()
+                postCommentReq.getComment_anonymity(), postCommentReq.getUser_idx(), postCommentReq.getUser_idx()
         };
 
         this.jdbcTemplate.update(createCommentQuery,createCommentParams);
