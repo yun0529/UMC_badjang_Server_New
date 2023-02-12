@@ -23,4 +23,9 @@ public class GetBoardRes {
     private String post_anonymity;
     private int school_name_idx;
     private int post_bookmark;
+
+    public GetBoardRes(String post_category, int school_name_idx) {
+        this.post_category = post_category ;
+        this.school_name_idx = school_name_idx;
+    }
 }

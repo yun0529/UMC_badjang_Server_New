@@ -16,6 +16,19 @@ public class BoardDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    /**
+     * 전체게시판 조회
+     */
+
+    public List<GetBoardRes> getBoardTotal(){
+        String getBoardResQuery = "SELECT DISTINCT post_category, school_name_idx FROM Board ";
+
+        return this.jdbcTemplate.query(getBoardResQuery,
+                (rs, rowNum) -> new GetBoardRes(
+                        rs.getString("post_category"),
+                        rs.getInt("school_name_idx")));
+    }
+
     /**게시글 작성
      *
      */
