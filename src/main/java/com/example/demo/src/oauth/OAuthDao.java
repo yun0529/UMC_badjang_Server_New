@@ -19,8 +19,8 @@ public class OAuthDao {
 
     public int createUser(KakaoProfile profile) {
         String createUserQuery = "INSERT INTO User (user_email, user_name, user_type, " +
-                "user_birth, user_phone, user_push_yn) " +
-                "VALUES (?,'temp','KAKAO','temp','temp','N')";
+                "user_birth, user_phone) " +
+                "VALUES (?,'temp','KAKAO','temp','temp')";
 
         String createUserParams = profile.getKakao_account().getEmail();
 
