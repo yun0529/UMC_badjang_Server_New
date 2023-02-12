@@ -17,6 +17,8 @@ public class GetCommentRes {
     private String comment_createAt;
     private String comment_updatedAt;
     private String comment_status;
+    private String user_name;
+    private String user_profileimage_url;
 
     public GetCommentRes(int comment_idx, String comment_content, String comment_updatedAt) {
         this.comment_idx = comment_idx;
