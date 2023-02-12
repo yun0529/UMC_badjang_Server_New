@@ -20,11 +20,11 @@ public class BoardDao {
      * 전체게시판 조회
      */
 
-    public List<GetBoardRes> getBoardTotal(){
+    public List<GetBoardTotal> getBoardTotal(){
         String getBoardResQuery = "SELECT DISTINCT post_category, school_name_idx FROM Board ";
 
         return this.jdbcTemplate.query(getBoardResQuery,
-                (rs, rowNum) -> new GetBoardRes(
+                (rs, rowNum) -> new GetBoardTotal(
                         rs.getString("post_category"),
                         rs.getInt("school_name_idx")));
     }
@@ -130,7 +130,7 @@ public class BoardDao {
                 "post_category, school_name_idx, user_profileimage_url,IF(post_anonymity = 'Y', user_name = null, user_name) as user_name, " +
                 "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and user_idx = ?)) " +
                 "as post_bookmark " +
-                "FROM Board " ;
+                "FROM Board where post_idx = ?" ;
 
         return this.jdbcTemplate.query(getBoardQuery, (rs, rowNum) -> new GetBoardRes(
                 rs.getInt("post_idx"),
@@ -231,10 +231,10 @@ public class BoardDao {
         String getCommentQuery = "SELECT comment_idx, User.user_idx, Board.post_idx, comment_content, comment_recommend, " +
                 "comment_anonymity, comment_createAt, comment_updatedAt, comment_status, " +
                 "IF(comment_anonymity = 'Y', Comment.user_name = null, Comment.user_name) as user_name, Comment.user_profileimage_url " +
-            "from badjangDB.Comment " +
-            "left join User on User.user_idx = Comment.user_idx " +
-            "left join Board on Board.post_idx = Comment.post_idx " +
-            "where Board.post_idx = ? " ;
+                "from badjangDB.Comment " +
+                "left join User on User.user_idx = Comment.user_idx " +
+                "left join Board on Board.post_idx = Comment.post_idx " +
+                "where Board.post_idx = ? " ;
 
         int getPostIdx = post_idx;
 
