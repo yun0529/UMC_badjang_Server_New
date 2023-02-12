@@ -32,6 +32,16 @@ public class BoardProvider {
         }
     }
 
+    public List<GetBoardRes> getBoardTotal() throws BaseException{
+        try{
+            List<GetBoardRes> getBoardTotalRes = boardDao.getBoardTotal();
+            return getBoardTotalRes;
+        }catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public List<GetBoardRes> getBoardDetail(int user_idx, int post_idx) throws BaseException{
         try{
             List<GetBoardRes> getBoardDetailRes = boardDao.getBoardDetail(user_idx, post_idx);

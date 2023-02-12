@@ -27,15 +27,27 @@ public class BoardController {
     @Autowired
     private final JwtService jwtService;
 
-
-
-
     public BoardController(BoardProvider boardProvider, BoardDao boardDao, JwtService jwtService){
         this.boardProvider = boardProvider;
         this.boardDao = boardDao;
         this.jwtService = jwtService;
     }
 
+    /**
+     * 게시판 목록 조회 API
+     */
+
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/board/totalBoard") // (GET) 127.0.0.1:9000/board
+    public BaseResponse<List<GetBoardRes>> getBoardTotal() {
+        try{
+            List<GetBoardRes> getBoardRes = boardProvider.getBoardTotal();
+            return new BaseResponse<>(getBoardRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
     /**
      * 자유게시판 전체 글 조회 API
      */
