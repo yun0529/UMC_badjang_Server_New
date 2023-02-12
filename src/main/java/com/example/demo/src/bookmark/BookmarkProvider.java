@@ -59,6 +59,21 @@ public class BookmarkProvider {
         }
     }
 
+    public GetBookmarkCheckScholarshipRes getBookmarkCheckScholarship (int userIdx, int scholarshipIdx) throws BaseException {
+        try {
+            int nullCheck = bookmarkDao.bookmarkScholarshipNullCheck(userIdx, scholarshipIdx);
+            GetBookmarkCheckScholarshipRes getBookmarkCheckScholarshipRes;
+            if (nullCheck == 1) {
+                getBookmarkCheckScholarshipRes = new GetBookmarkCheckScholarshipRes(scholarshipIdx, "Y");
+            } else {
+                getBookmarkCheckScholarshipRes = new GetBookmarkCheckScholarshipRes(scholarshipIdx, "N");
+            }
+            return  getBookmarkCheckScholarshipRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public List<GetBookmarkSupportRes> getBookmarkSupport(int userIdx) throws BaseException {
         try {
             List<GetBookmarkSupportRes> getBookmarkSupportRes = bookmarkDao.getBookmarkSupport(userIdx);
