@@ -69,6 +69,9 @@ public enum BaseResponseStatus {
 
     POST_USERS_WRONG_TEXT(false, 2080, "'탈퇴하기'를 입력해주세요."),
 
+    POST_NOTI_EMPTY_YN(false, 2090, "알림설정을 입력해주세요."),
+    POST_NOTI_INVALID_YN(false, 2091, "알림설정은 'Y', 'N'만 입력해주세요."),
+
     GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
 
     GET_SEARCH_INVALID_QUERY(false, 2251, "검색어는 50자 내로 입력해주세요."),

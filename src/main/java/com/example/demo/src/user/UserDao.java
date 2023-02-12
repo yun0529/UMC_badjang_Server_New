@@ -66,12 +66,20 @@ public class UserDao {
 
     public int createUser(PostUserReq postUserReq) {
         String createUserQuery = "INSERT INTO User (user_email, user_name, user_type, " +
-                "user_password, user_birth, user_phone, user_push_yn) " +
-                "VALUES (?,?,?,?,?,?,?)";
+                "user_password, user_birth, user_phone, bookmark_yn, new_post_yn, inq_answer_yn, comment_yn) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?)";
 
-        Object[] createUserParams = new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
-                postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
-                postUserReq.getUser_phone(), postUserReq.getUser_push_yn()};
+        Object[] createUserParams;
+
+        if (postUserReq.getUser_push_yn().equals("Y"))
+            createUserParams =  new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
+                    postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
+                    postUserReq.getUser_phone(), "Y", "Y", "Y", "Y"};
+        else
+            createUserParams =  new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
+                    postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
+                    postUserReq.getUser_phone(), "N", "N", "N", "N"};
+
 
         this.jdbcTemplate.update(createUserQuery, createUserParams);
         String lastInsertIdQuery = "select last_insert_id()";
@@ -132,10 +140,17 @@ public class UserDao {
 
     public void saveUserExtraInfo(PostExtraReq postExtraReq) {
         String saveUserExtraInfoQuery = "UPDATE User " +
-                "SET user_name = ?, user_birth = ?, user_phone = ?, user_push_yn = ? " +
+                "SET user_name = ?, user_birth = ?, user_phone = ?, bookmark_yn = ?, new_post_yn = ?, inq_answer_yn = ?, comment_yn = ? " +
                 "WHERE user_idx = ?";
-        Object[] saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
-                postExtraReq.getUser_phone(), postExtraReq.getUser_push_yn(), postExtraReq.getUser_idx()};
+        Object[] saveUserExtraInfoParams;
+
+        if (postExtraReq.getUser_push_yn().equals("Y"))
+            saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
+                    postExtraReq.getUser_phone(), "Y", "Y", "Y", "Y", postExtraReq.getUser_idx()};
+        else
+            saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
+                    postExtraReq.getUser_phone(), "N", "N", "N", "N", postExtraReq.getUser_idx()};
+
 
         this.jdbcTemplate.update(saveUserExtraInfoQuery, saveUserExtraInfoParams);
     }
@@ -250,5 +265,14 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(checkStatusQuery,
                 int.class,
                 checkStatusParams);
+    }
+
+    public int setUserNoti(PostNotiReq postNotiReq) {
+        String setUserNotiQuery = "UPDATE User SET bookmark_yn = ?, new_post_yn = ?, inq_answer_yn = ?, comment_yn = ?" +
+                "WHERE user_idx = ?";
+        Object[] setUserNotiParams = new Object[]{postNotiReq.getBookmark_yn(), postNotiReq.getNew_post_yn(),
+                postNotiReq.getInq_answer_yn(), postNotiReq.getComment_yn(), postNotiReq.getUser_idx()};
+
+        return this.jdbcTemplate.update(setUserNotiQuery, setUserNotiParams);
     }
 }
