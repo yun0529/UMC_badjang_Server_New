@@ -40,9 +40,9 @@ public class BoardController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @GetMapping("/board/totalBoard") // (GET) 127.0.0.1:9000/board
-    public BaseResponse<List<GetBoardRes>> getBoardTotal() {
+    public BaseResponse<List<GetBoardTotal>> getBoardTotal() {
         try{
-            List<GetBoardRes> getBoardRes = boardProvider.getBoardTotal();
+            List<GetBoardTotal> getBoardRes = boardProvider.getBoardTotal();
             return new BaseResponse<>(getBoardRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));

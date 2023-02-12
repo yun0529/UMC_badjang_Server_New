@@ -32,9 +32,9 @@ public class BoardProvider {
         }
     }
 
-    public List<GetBoardRes> getBoardTotal() throws BaseException{
+    public List<GetBoardTotal> getBoardTotal() throws BaseException{
         try{
-            List<GetBoardRes> getBoardTotalRes = boardDao.getBoardTotal();
+            List<GetBoardTotal> getBoardTotalRes = boardDao.getBoardTotal();
             return getBoardTotalRes;
         }catch (Exception exception){
             System.out.println(exception);

@@ -26,8 +26,4 @@ public class GetBoardRes {
     private String user_name;
     private String user_profileimage_url;
 
-    public GetBoardRes(String post_category, int school_name_idx) {
-        this.post_category = post_category ;
-        this.school_name_idx = school_name_idx;
-    }
 }
