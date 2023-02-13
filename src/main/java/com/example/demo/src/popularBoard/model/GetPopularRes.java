@@ -24,4 +24,5 @@ public class GetPopularRes {
     private String post_view;
     private String post_recommend;
     private String post_name;
+    private String post_comment;
 }
