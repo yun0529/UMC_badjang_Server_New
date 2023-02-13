@@ -11,13 +11,13 @@ public class GetPopularRes {
     private int post_idx;
     private int user_idx;
     private int school_name_idx;
-    private String popular_content;
-    private String popular_createAt;
-    private String popular_updateAt;
-    private String popular_status;
+    private String post_content;
+    private String post_createAt;
+    private String post_updateAt;
+    private String postp_status;
     private int count;
     private String user_name;
-    private String board_category;
+    private String post_category;
     private String post_anonymity;
     private String user_profileimage_url;
     private String post_image;

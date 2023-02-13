@@ -35,6 +35,7 @@ public class PopularBoardController {
             List<GetPopularRes> getPopularRes = popularBoardProvider.getPopularAll();
             return new BaseResponse<>(getPopularRes);
         } catch(BaseException exception){
+            System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
     }
@@ -47,6 +48,7 @@ public class PopularBoardController {
             List<GetPopularRes> getPopularRes = popularBoardProvider.getPopular();
             return new BaseResponse<>(getPopularRes);
         } catch(BaseException exception){
+            System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
     }
