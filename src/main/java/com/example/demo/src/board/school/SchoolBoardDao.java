@@ -18,6 +18,23 @@ public class SchoolBoardDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //학교 게시판 종류 조회
+    public List<GetSchoolBoardNameRes> getSchoolBoardName() {
+
+
+        String getSchoolBoardNameQuery = "select * " +
+                "from School_Board_Name ";
+
+
+        return this.jdbcTemplate.query(getSchoolBoardNameQuery,
+                (rs, rowNum) -> new GetSchoolBoardNameRes(
+                        rs.getInt("school_name_idx"),
+                        rs.getString("post_school_name")
+                )
+        );
+
+    }
+
     //학교게시판에서의 전체 게시글 불러오기
     public List<GetSchoolBoardRes> getSchoolBoard(int userIdx, int schoolNameIdx) {
 
@@ -288,8 +305,5 @@ public class SchoolBoardDao {
         }
 
     }
-
-
-
 
 }
