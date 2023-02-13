@@ -19,7 +19,9 @@ public class MypageDao {
 
 
     public GetMypageRes getMypage(int user_idx) {
-        String getUserQuery = "select * from User where user_idx = ?"; // 해당 user_id를 만족하는 유저를 조회하는 쿼리문
+        String getUserQuery = "select user_idx, user_email, user_name, user_profileimage_url, user_type, user_birth, user_phone " +
+                ", user_push_yn, user_on_off, user_univ, user_college, user_department, user_grade, user_semester, user_province, " +
+                "  user_city, bookmark_yn, new_post_yn, inq_answer_yn, comment_yn from User where user_idx = ?"; // 해당 user_id를 만족하는 유저를 조회하는 쿼리문
         int getUserParams = user_idx;
         return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs, rowNum) -> new GetMypageRes(
