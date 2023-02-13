@@ -27,7 +27,7 @@ public class PopularBoardDao {
         String getPopularQuery = "SELECT popular_idx, post_idx, user_idx, school_name_idx, popular_content, popular_createAt, " +
                 "popular_updateAt, popular_status, count, " +
                 "IF(post_anonymity = 'Y', Popular_Board.user_name = null, Popular_Board.user_name) as user_name, " +
-                "board_category, post_anonymity, user_profileimage_url  " +
+                "board_category, post_anonymity, user_profileimage_url, post_image, post_view, post_recommend, post_name " +
                 "FROM Popular_Board order by count DESC ";
 
         return this.jdbcTemplate.query(getPopularQuery, (rs, rowNum) -> new GetPopularRes(
@@ -43,7 +43,11 @@ public class PopularBoardDao {
                 rs.getString("user_name"),
                 rs.getString("board_category"),
                 rs.getString("post_anonymity"),
-                rs.getString("user_profileimage_url")
+                rs.getString("user_profileimage_url"),
+                rs.getString("post_image"),
+                rs.getString("post_view"),
+                rs.getString("post_recommend"),
+                rs.getString("post_name")
                 ));
     }
 
@@ -51,7 +55,7 @@ public class PopularBoardDao {
         String getPopularQuery = "SELECT popular_idx, post_idx, user_idx, school_name_idx, popular_content, popular_createAt, " +
                 "popular_updateAt, popular_status, count, " +
                 "IF(post_anonymity = 'Y', Popular_Board.user_name = null, Popular_Board.user_name) as user_name, " +
-                "board_category, post_anonymity, user_profileimage_url  " +
+                "board_category, post_anonymity, user_profileimage_url, post_image, post_view, post_recommend, post_name " +
                 "FROM Popular_Board order by count DESC LIMIT 2" ;
 
         return this.jdbcTemplate.query(getPopularQuery, (rs, rowNum) -> new GetPopularRes(
@@ -67,15 +71,20 @@ public class PopularBoardDao {
                 rs.getString("user_name"),
                 rs.getString("board_category"),
                 rs.getString("post_anonymity"),
-                rs.getString("user_profileimage_url")
+                rs.getString("user_profileimage_url"),
+                rs.getString("post_image"),
+                rs.getString("post_view"),
+                rs.getString("post_recommend"),
+                rs.getString("post_name")
         ));
     }
 
     public PostPopularRes postPopular(){
         String postPopularQuery = "INSERT INTO Popular_Board(post_idx, user_idx, school_name_idx, popular_content, popular_createAt, popular_updateAt, " +
-                "popular_status, count, user_name, board_category, user_profileimage_url, post_anonymity) " +
+                "popular_status, count, user_name, board_category, user_profileimage_url, post_anonymity, post_image, post_view, post_recommend, post_name) " +
                 "(select Board.post_idx, Board.user_idx, Board.school_name_idx, Board.post_content, Board.post_createAt, Board.post_updateAt, Board.post_status, " +
-                "Board.post_recommend + Board.post_view, Board.user_name, Board.post_category, Board.user_profileimage_url, Board.post_anonymity from Board) " ;
+                "Board.post_recommend + Board.post_view, Board.user_name, Board.post_category, Board.user_profileimage_url, Board.post_anonymity , Board.post_image, " +
+                "Board.post_view, Board.post_recommend, Board.post_name from Board) " ;
 
         this.jdbcTemplate.update(postPopularQuery);
         return null;
