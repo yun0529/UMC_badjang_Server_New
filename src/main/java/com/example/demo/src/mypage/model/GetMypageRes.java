@@ -10,4 +10,8 @@ import lombok.Setter;
 public class GetMypageRes {
     private String user_name;
     private String user_profileimage_url;
+    private String bookmark_yn;
+    private String new_post_yn;
+    private String inq_answer_yn;
+    private String comment_yn;
 }

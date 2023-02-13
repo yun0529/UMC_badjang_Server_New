@@ -19,12 +19,16 @@ public class MypageDao {
 
 
     public GetMypageRes getMypage(int user_idx) {
-        String getUserQuery = "select user_name, user_profileimage_url from User where user_idx = ?"; // 해당 user_id를 만족하는 유저를 조회하는 쿼리문
+        String getUserQuery = "select * from User where user_idx = ?"; // 해당 user_id를 만족하는 유저를 조회하는 쿼리문
         int getUserParams = user_idx;
         return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs, rowNum) -> new GetMypageRes(
                         rs.getString("user_name"),
-                        rs.getString("user_profileimage_url")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                        rs.getString("user_profileimage_url"),
+                        rs.getString("bookmark_yn"),
+                        rs.getString("new_post_yn"),
+                        rs.getString("inq_answer_yn"),
+                        rs.getString("comment_yn")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getUserParams); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
 
