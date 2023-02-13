@@ -1,15 +1,13 @@
 package com.example.demo.src.user;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.user.model.PatchUserReq;
-import com.example.demo.src.user.model.PostInfoReq;
-import com.example.demo.src.user.model.PostUserReq;
-import com.example.demo.src.user.model.PostUserRes;
+import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -34,6 +32,11 @@ public class UserService {
     }
 
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
+
+        if(userProvider.checkStatus(postUserReq.getUser_email()) == 1) {
+            throw new BaseException(STOPPED_USER);
+        }
+
 
         if(userProvider.checkEmail(postUserReq.getUser_email()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
@@ -69,6 +72,8 @@ public class UserService {
     }
 
     public void saveUserUnivInfo(PostInfoReq postInfoReq) throws BaseException {
+        if (userProvider.checkOnOff(postInfoReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
         try {
             userDao.saveUserUnivInfo(postInfoReq);
         } catch (Exception e) {
@@ -76,8 +81,36 @@ public class UserService {
         }
     }
 
+    public PostUserRes saveUserExtraInfo(PostExtraReq postExtraReq) throws BaseException {
 
+        if (userProvider.checkOnOff(postExtraReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
 
+        LocalDate now = LocalDate.now();
+        LocalDate parsedBirth = LocalDate.parse(postExtraReq.getUser_birth(),
+                DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        int Age = now.minusYears(parsedBirth.getYear()).getYear();
+
+        if(parsedBirth.plusYears(Age).isAfter(now)){ Age -= 1; }
+
+        if(Age < 14){
+            int result = userDao.deleteUser(postExtraReq.getUser_idx());
+            if(result == 0) throw new BaseException(DATABASE_ERROR);
+
+            throw new BaseException(POST_USERS_LIMIT_BIRTH);
+        }
+
+        try {
+            userDao.saveUserExtraInfo(postExtraReq);
+            int user_idx = postExtraReq.getUser_idx();
+            String jwt = jwtService.createJwt(user_idx);
+            return new PostUserRes(user_idx, jwt);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    
     // 회원정보 수정(Patch)
     public void modifyUserPassword(PatchUserReq patchUserReq) throws BaseException {
         if(userProvider.checkEmail(patchUserReq.getUser_email()) == 0) {
@@ -92,6 +125,62 @@ public class UserService {
                 throw new BaseException(MODIFY_FAIL_USERPASSWORD);
             }
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String modifyUserInfo(PostModifyReq postModifyReq) throws BaseException {
+
+        if (userProvider.checkOnOff(postModifyReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
+        try {
+            return userDao.modifyUserInfo(postModifyReq);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String withdrawUser(PostWithdrawReq postWithdrawReq) throws BaseException {
+        try {
+            int result = userDao.withdrawUser(postWithdrawReq);
+            if(result == 0) throw new BaseException(DATABASE_ERROR);
+            return "회원 탈퇴 되었습니다.";
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String logOut(int user_idx) throws BaseException {
+        try {
+            int result = userDao.logOut(user_idx);
+            if(result == 0) throw new BaseException(DATABASE_ERROR);
+            return "로그아웃 되었습니다.";
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostUserRes autoLogin(PostLogoutReq postLogoutReq) throws BaseException {
+        if (userProvider.checkStatusByUserIdx(postLogoutReq.getUser_idx()) == 1)
+            throw new BaseException(STOPPED_USER);
+
+        try {
+            String jwt = jwtService.createJwt(postLogoutReq.getUser_idx());
+            return new PostUserRes(postLogoutReq.getUser_idx(), jwt);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String setUserNoti(PostNotiReq postNotiReq) throws BaseException {
+        if (userProvider.checkOnOff(postNotiReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
+
+        try {
+            int result = userDao.setUserNoti(postNotiReq);
+            if (result == 0) throw new BaseException(DATABASE_ERROR);
+            return "알림 설정 변경이 완료되었습니다.";
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

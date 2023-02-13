@@ -1,6 +1,13 @@
 package com.example.demo.src.user;
 
+
+import com.example.demo.src.user.model.GetUserRes;
+import com.example.demo.src.user.model.PostExtraReq;
+import com.example.demo.src.user.model.PostInfoReq;
+import com.example.demo.src.user.model.PostUserReq;
+
 import com.example.demo.src.user.model.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -59,12 +66,20 @@ public class UserDao {
 
     public int createUser(PostUserReq postUserReq) {
         String createUserQuery = "INSERT INTO User (user_email, user_name, user_type, " +
-                "user_password, user_birth, user_phone, user_push_yn) " +
-                "VALUES (?,?,?,?,?,?,?)";
+                "user_password, user_birth, user_phone, bookmark_yn, new_post_yn, inq_answer_yn, comment_yn) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?)";
 
-        Object[] createUserParams = new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
-                postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
-                postUserReq.getUser_phone(), postUserReq.getUser_push_yn()};
+        Object[] createUserParams;
+
+        if (postUserReq.getUser_push_yn().equals("Y"))
+            createUserParams =  new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
+                    postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
+                    postUserReq.getUser_phone(), "Y", "Y", "Y", "Y"};
+        else
+            createUserParams =  new Object[]{postUserReq.getUser_email(), postUserReq.getUser_name(),
+                    postUserReq.getUser_type(), postUserReq.getUser_password(), postUserReq.getUser_birth(),
+                    postUserReq.getUser_phone(), "N", "N", "N", "N"};
+
 
         this.jdbcTemplate.update(createUserQuery, createUserParams);
         String lastInsertIdQuery = "select last_insert_id()";
@@ -119,8 +134,25 @@ public class UserDao {
 
         saveUserUnivInfoQuery += " WHERE user_idx = '" + postInfoReq.getUser_idx() + "'";
 
-        System.out.println(saveUserUnivInfoQuery);
         this.jdbcTemplate.update(saveUserUnivInfoQuery);
+    }
+
+
+    public void saveUserExtraInfo(PostExtraReq postExtraReq) {
+        String saveUserExtraInfoQuery = "UPDATE User " +
+                "SET user_name = ?, user_birth = ?, user_phone = ?, bookmark_yn = ?, new_post_yn = ?, inq_answer_yn = ?, comment_yn = ? " +
+                "WHERE user_idx = ?";
+        Object[] saveUserExtraInfoParams;
+
+        if (postExtraReq.getUser_push_yn().equals("Y"))
+            saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
+                    postExtraReq.getUser_phone(), "Y", "Y", "Y", "Y", postExtraReq.getUser_idx()};
+        else
+            saveUserExtraInfoParams = new Object[]{postExtraReq.getUser_name(), postExtraReq.getUser_birth(),
+                    postExtraReq.getUser_phone(), "N", "N", "N", "N", postExtraReq.getUser_idx()};
+
+
+        this.jdbcTemplate.update(saveUserExtraInfoQuery, saveUserExtraInfoParams);
     }
 
 
@@ -167,4 +199,80 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserNameQuery, modifyUserNameParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
 
+    public String modifyUserInfo(PostModifyReq postModifyReq) {
+        String modifyUserInfoQuery = "UPDATE User SET ";
+        String resultString = "";
+
+        if (postModifyReq.getUser_name() != null) {
+            modifyUserInfoQuery += "user_name = " + "'" + postModifyReq.getUser_name() + "'";
+            resultString = "이름이 변경되었습니다.";
+        }
+        else if (postModifyReq.getUser_phone() != null) {
+            modifyUserInfoQuery += "user_phone = " + "'" + postModifyReq.getUser_phone() + "'";
+            resultString = "전화번호가 변경되었습니다.";
+        }
+
+        modifyUserInfoQuery += " WHERE user_idx = ?";
+        int modifyUserInfoParams = postModifyReq.getUser_idx();
+
+        this.jdbcTemplate.update(modifyUserInfoQuery, modifyUserInfoParams);
+
+        return resultString;
+    }
+
+    public int withdrawUser(PostWithdrawReq postWithdrawReq) {
+        String withdrawUserQuery = "UPDATE User SET user_status = 'STOP', user_on_off = 'OFF' WHERE user_idx = ?";
+        int withdrawUserParams = postWithdrawReq.getUser_idx();
+        return this.jdbcTemplate.update(withdrawUserQuery, withdrawUserParams);
+    }
+
+    public int logOut(int user_idx) {
+        String logOutQuery = "UPDATE User SET user_on_off = 'OFF' WHERE user_idx = ?";
+        int logOutParams = user_idx;
+        return this.jdbcTemplate.update(logOutQuery, logOutParams);
+    }
+
+    public int checkStatus(String user_email) {
+        String checkStatusQuery = "select exists(select user_email from User where user_email = ? and user_status = 'STOP')";
+        String checkStatusParams = user_email;
+        return this.jdbcTemplate.queryForObject(checkStatusQuery,
+                int.class,
+                checkStatusParams);
+    }
+
+    public int deleteUser(int user_idx) {
+        String deleteOAuthQuery = "DELETE User_OAuth WHERE user_idx = ?";
+        int deleteOAuthParams = user_idx;
+
+        String deleteUserQuery = "DELETE User WHERE user_idx = ?";
+        int deleteUserParams = user_idx;
+
+        this.jdbcTemplate.update(deleteOAuthQuery, deleteOAuthParams);
+
+        return this.jdbcTemplate.update(deleteUserQuery, deleteUserParams);
+    }
+
+    public String checkOnOff(int user_idx) {
+        String checkOnOffQuery = "SELECT user_on_off FROM User WHERE user_idx = ?";
+        int checkOnOffParams = user_idx;
+
+        return jdbcTemplate.queryForObject(checkOnOffQuery, String.class, checkOnOffParams);
+    }
+
+    public int checkStatusByUserIdx(int user_idx) {
+        String checkStatusQuery = "select exists(select user_idx from User where user_idx = ? and user_status = 'STOP')";
+        int checkStatusParams = user_idx;
+        return this.jdbcTemplate.queryForObject(checkStatusQuery,
+                int.class,
+                checkStatusParams);
+    }
+
+    public int setUserNoti(PostNotiReq postNotiReq) {
+        String setUserNotiQuery = "UPDATE User SET bookmark_yn = ?, new_post_yn = ?, inq_answer_yn = ?, comment_yn = ?" +
+                "WHERE user_idx = ?";
+        Object[] setUserNotiParams = new Object[]{postNotiReq.getBookmark_yn(), postNotiReq.getNew_post_yn(),
+                postNotiReq.getInq_answer_yn(), postNotiReq.getComment_yn(), postNotiReq.getUser_idx()};
+
+        return this.jdbcTemplate.update(setUserNotiQuery, setUserNotiParams);
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.*;
@@ -103,6 +104,11 @@ public class UserController {
         if(!isRegexPhone(postUserReq.getUser_phone())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE);
         }
+        if(postUserReq.getUser_push_yn() == null)
+            return new BaseResponse<>(POST_NOTI_EMPTY_YN);
+        if (!postUserReq.getUser_push_yn().equals("Y") && !postUserReq.getUser_push_yn().equals("N"))
+            return new BaseResponse<>(POST_NOTI_INVALID_YN);
+
         try{
             PostUserRes postUserRes = userService.createUser(postUserReq);
             return new BaseResponse<>(postUserRes);
@@ -115,7 +121,7 @@ public class UserController {
      * 학교, 지역 정보 저장 API
      * [POST] /users/info
      *
-     * @return BaseResponse<PostUserRes>
+     * @return BaseResponse<String>
      */
 
     @ResponseBody
@@ -138,7 +144,217 @@ public class UserController {
     }
 
 
+    /**
+     * 소셜 로그인 추가 정보 API
+     * [POST] /users/sns
+     *
+     * @return BaseResponse<PostUserRes>
+     */
 
+    @ResponseBody
+    @Transactional
+    @PostMapping("/sns")
+    public BaseResponse<PostUserRes> saveUserExtraInfo(@RequestBody PostExtraReq postExtraReq) {
+        if(postExtraReq.getUser_name() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_NAME);
+        }
+        if(postExtraReq.getUser_name().length() < 2 || postExtraReq.getUser_name().length() > 20){
+            return new BaseResponse<>(POST_USERS_INVALID_NAME);
+        }
+        if(postExtraReq.getUser_birth() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_BIRTH);
+        }
+        if(!isRegexBirth(postExtraReq.getUser_birth())){
+            return new BaseResponse<>(POST_USERS_INVALID_BIRTH);
+        }
+        if(postExtraReq.getUser_phone() == null){
+            return new BaseResponse<>(POST_USERS_EMPTY_PHONE);
+        }
+        if(!isRegexPhone(postExtraReq.getUser_phone())){
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
+        }
+        if (postExtraReq.getUser_push_yn() == null)
+            return new BaseResponse<>(POST_NOTI_EMPTY_YN);
+
+        if (!postExtraReq.getUser_push_yn().equals("Y") && !postExtraReq.getUser_push_yn().equals("N"))
+            return new BaseResponse<>(POST_NOTI_INVALID_YN);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postExtraReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            PostUserRes postUserRes = userService.saveUserExtraInfo(postExtraReq);
+            return new BaseResponse<>(postUserRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 회원 정보 변경 API
+     * [POST] /users/modify
+     *
+     * @return BaseResponse<String>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PostMapping("/modify")
+    public BaseResponse<String> modifyUserInfo(@RequestBody PostModifyReq postModifyReq) {
+        if (postModifyReq.getUser_idx() == 0) {
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+        }
+        if (postModifyReq.getUser_name() == null && postModifyReq.getUser_phone() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_INFO);
+        }
+        if (postModifyReq.getUser_name() != null && postModifyReq.getUser_phone() != null) {
+            return new BaseResponse<>(POST_USERS_MORE_INFO);
+        }
+        if (postModifyReq.getUser_name() != null && (postModifyReq.getUser_name().length() < 2 || postModifyReq.getUser_name().length() > 20)) {
+            return new BaseResponse<>(POST_USERS_INVALID_NAME);
+        }
+        if (postModifyReq.getUser_phone() != null && !(isRegexPhone(postModifyReq.getUser_phone()))) {
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
+        }
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postModifyReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            String resultString = userService.modifyUserInfo(postModifyReq);
+            return new BaseResponse<>(resultString);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
+
+    /**
+     * 회원 탈퇴 API
+     * [POST] /users/withdraw
+     *
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @Transactional
+    @PostMapping("/withdraw")
+    public BaseResponse<String> withdrawUser(@RequestBody PostWithdrawReq postWithdrawReq) {
+        if (postWithdrawReq.getUser_idx() == 0)
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+        if (postWithdrawReq.getText() == null || !postWithdrawReq.getText().equals("탈퇴하기"))
+            return new BaseResponse<>(POST_USERS_WRONG_TEXT);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postWithdrawReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            String resultString = userService.withdrawUser(postWithdrawReq);
+            return new BaseResponse<>(resultString);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 로그아웃 API
+     * [POST] /users/logout
+     *
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @Transactional
+    @PostMapping("/logout")
+    public BaseResponse<String> logOut(@RequestBody PostLogoutReq postLogoutReq) {
+        if(postLogoutReq.getUser_idx() == 0)
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postLogoutReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            String resultString = userService.logOut(postLogoutReq.getUser_idx());
+
+            return new BaseResponse<>(resultString);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
+
+    /**
+     * 자동 로그인 API
+     * [GET] /users/autologin
+     *
+     * @return BaseResponse<PostUserRes>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PostMapping("/autologin")
+    public BaseResponse<PostUserRes> autoLogin(@RequestBody PostLogoutReq postLogoutReq) {
+        if (postLogoutReq.getUser_idx() == 0)
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postLogoutReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            PostUserRes postUserRes = userService.autoLogin(postLogoutReq);
+
+            return new BaseResponse<>(postUserRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
+
+    /**
+     * 알림 설정 API
+     * [PATCH] /users/noti
+     *
+     * @return BaseResponse<String>
+     */
+
+    @ResponseBody
+    @Transactional
+    @PatchMapping("/noti")
+    public BaseResponse<String> setUserNoti(@RequestBody PostNotiReq postNotiReq) {
+        if (postNotiReq.getUser_idx() == 0)
+            return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+        if (postNotiReq.getBookmark_yn() == null || postNotiReq.getNew_post_yn() == null || postNotiReq.getInq_answer_yn() == null || postNotiReq.getComment_yn() == null)
+            return new BaseResponse<>(POST_NOTI_EMPTY_YN);
+
+        try {
+            int user_idx_JWT = jwtService.getUserIdx();
+            int user_idx = postNotiReq.getUser_idx();
+
+            if(user_idx != user_idx_JWT)
+                return new BaseResponse<>(INVALID_USER_JWT);
+
+            return new BaseResponse<>(userService.setUserNoti(postNotiReq));
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 
     /**

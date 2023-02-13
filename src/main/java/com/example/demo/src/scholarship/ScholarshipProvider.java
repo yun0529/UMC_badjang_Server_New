@@ -1,6 +1,7 @@
 package com.example.demo.src.scholarship;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.scholarship.model.GetScholarshipMyfilter;
 import com.example.demo.src.scholarship.model.GetScholarshipRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class ScholarshipProvider {
 
 
     // 해당 filter에 맞는 장학금들의 정보 조회
-    public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)Integer category, @RequestParam(required = false)Integer filter, @RequestParam(required = false)Integer order) throws BaseException {
+    public List<GetScholarshipRes> getScholarshipsByFilter(@RequestParam(required = false)String category, @RequestParam(required = false)String filter, @RequestParam(required = false)String order) throws BaseException {
         try {
             List<GetScholarshipRes> getScholarshipsRes = scholarshipDao.getScholarshipsByFilter(category, filter, order);
             return getScholarshipsRes;
@@ -49,7 +50,7 @@ public class ScholarshipProvider {
 
 
 
-    // 해당 userIdx를 갖는 User의 정보 조회
+    // 해당 scholarshipIdx를 갖는 장학금의 정보 조회
     public GetScholarshipRes getScholarship(long scholarshipIdx) throws BaseException {
         try {
             GetScholarshipRes getScholarshipRes = scholarshipDao.getScholarship(scholarshipIdx);
@@ -65,6 +66,14 @@ public class ScholarshipProvider {
         try {
             return scholarshipDao.checkScholarshipIdx(scholarshipidx);
         } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetScholarshipRes> getScholarshipMyfilter(GetScholarshipMyfilter getScholarshipMyfilter) throws BaseException {
+        try {
+            return scholarshipDao.getScholarshipMyfilter(getScholarshipMyfilter);
+        } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }

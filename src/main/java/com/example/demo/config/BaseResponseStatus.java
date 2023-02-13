@@ -12,7 +12,22 @@ public enum BaseResponseStatus {
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
     DELETE_SEARCH_HISTORY_SUCCESS(true, 1250, "최근 검색어 삭제 요청을 성공하였습니다."),
-    POST_BOOKMARK_SUCCESS(true, 1251, "북마크 요청을 성공하였습니다."),
+    POST_BOOKMARK_SUCCESS(true, 1251, "즐겨찾기가 추가되었습니다."),
+    DELETE_BOOKMARK_SUCCESS(true, 1252, "즐겨찾기가 취소되었습니다."),
+    POST_SCHOOL_BOARD_SUCCESS(true, 1253, "게시판을 추가하였습니다."),
+    PATCH_SCHOOL_BOARD_SUCCESS(true, 1254, "게시판을 수정하였습니다."),
+    DELETE_SCHOOL_BOARD_SUCCESS(true, 1255, "게시판을 삭제하였습니다."),
+    POST_SCHOOL_BOARD_COMMENT_SUCCESS(true, 1256, "댓글이 추가되었습니다."),
+
+    PATCH_SCHOOL_BOARD_COMMENT_SUCCESS(true, 1257, "댓글이 수정되었습니다."),
+    DELETE_SCHOOL_BOARD_COMMENT_SUCCESS(true, 1258, "댓글이 삭제되었습니다."),
+    POST_SCHOOL_BOARD_RECOMMEND_SUCCESS(true, 1259, "게시판을 추천하였습니다."),
+    DELETE_SCHOOL_BOARD_RECOMMEND_SUCCESS(true, 1260, "게시판 추천을 취소하였습니다."),
+    POST_SCHOOL_BOARD_COMMENT_RECOMMEND_SUCCESS(true, 1261, "댓글을 추천하였습니다."),
+    DELETE_SCHOOL_BOARD_COMMENT_RECOMMEND_SUCCESS(true, 1262, "댓글 추천을 취소하였습니다."),
+
+    POST_BOARD_REGISTRATION_SUCCESS(true, 1263, "게시판 만들기를 신청하였습니다."),
+
 
 
     /**
@@ -26,8 +41,10 @@ public enum BaseResponseStatus {
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
+    STOPPED_USER(false, 2011, "탈퇴한 계정입니다."),
+    OFFLINE_USER(false, 2012, "로그아웃한 계정입니다."),
+    USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요."),
 
-    USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요. "),
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
@@ -47,33 +64,101 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_PHONE(false, 2060, "전화번호를 입력해주세요."),
     POST_USERS_INVALID_PHONE(false, 2061, "전화번호 형식에 맞게 입력해주세요."),
 
+    POST_USERS_EMPTY_INFO(false, 2070, "전화번호나 이름이 없습니다."),
+    POST_USERS_MORE_INFO(false, 2071, "전화번호나 이름 중 한 가지만 입력해주세요."),
+
+    POST_USERS_WRONG_TEXT(false, 2080, "'탈퇴하기'를 입력해주세요."),
+
+    POST_NOTI_EMPTY_YN(false, 2090, "알림설정을 입력해주세요."),
+    POST_NOTI_INVALID_YN(false, 2091, "알림설정은 'Y', 'N'만 입력해주세요."),
+
     GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
 
     GET_SEARCH_INVALID_QUERY(false, 2251, "검색어는 50자 내로 입력해주세요."),
 
-    DELETE_SEARCH_HISTORY_FAIL(true, 2252, "최근 검색어 삭제를 실패하였습니다."),
+    DELETE_SEARCH_HISTORY_FAIL(false, 2252, "최근 검색어 삭제를 실패하였습니다."),
+
+    POST_BOOKMARK_FAIL(false, 2253, "즐겨찾기를 실패하셨습니다."),
+
+    SCHOOL_BOARD_AUTH_FAIL(false, 2254, "해당 게시판의 권한이 없습니다."),
+
+    SCHOOL_BOARD_COMMENT_AUTH_FAIL(false, 2255, "해당 댓글의 권한이 없습니다."),
+
+    POST_SCHOOL_BOARD_RECOMMEND_MINE(false, 2256, "게시판 작성자는 자신의 게시물을 추천할 수 없습니다."),
+    POST_SCHOOL_BOARD_RECOMMEND_FAIL(false, 2257, "게시판 추천을 실패하였습니다."),
+    POST_SCHOOL_BOARD_COMMENT_RECOMMEND_MINE(false, 2258, "댓글 작성자는 자신의 댓글을 추천할 수 없습니다."),
+    POST_SCHOOL_BOARD_COMMENT_RECOMMEND_FAIL(false, 2259, "댓글 추천을 실패하였습니다."),
+    POST_SCHOOL_BOARD_COMMENT_INVALID(false, 2260, "댓글은 100자까지 작성 가능합니다."),
+    POST_SCHOOL_BOARD_TITLE_INVALID(false, 2261, "게시글 제목은 50자까지 작성 가능합니다."),
+    POST_SCHOOL_BOARD_CONTENT_INVALID(false, 2262, "게시글 내용은 500자까지 작성 가능합니다."),
+    POST_BOARD_REGISTRATION_PURPOSE_INVALID(false, 2263, "게시판 만들기의 운영목적은 10자~500자 내로 작성 해주세요."),
+    POST_BOARD_REGISTRATION_RULE_INVALID(false, 2264, "게시판 만들기의 규칙은 10자~500자로 작성 해주세요."),
+    POST_BOARD_REGISTRATION_NULL(false, 2265, "게시판 만들기의 모든 내용을 작성해주세요."),
+    POST_SCHOOL_BOARD_TITLE_NULL(false, 2266, "게시판의 제목을 입력해주세요."),
+    POST_SCHOOL_BOARD_CONTENT_NULL(false, 2267, "게시판의 내용을 입력해주세요."),
+    POST_SCHOOL_BOARD_ANONYMITY_NULL(false, 2268, "게시판의 익명 여부를 체크해주세요."),
+    POST_SCHOOL_BOARD_COMMENT_NULL(false, 2269, "댓글을 입력해주세요."),
+    POST_SCHOOL_BOARD_COMMENT_ANONYMITY_NULL(false, 2270, "댓글의 익명 여부를 체크해주세요."),
+
+
 
 
     POST_COMMENT_EMPTY_CONTENT(false, 2301,"댓글을 입력해주세요."),
     PATCH_COMMENT_FAIL(false,2302,"댓글 수정에 실패했습니다."),
 
     DELETE_COMMENT_FAIL(false,2303,"댓글 삭제에 실패하였습니다."),
+    GET_MYFILTER_EMPTY_UNIVERSITY(false, 2304, "대학교를 입력하세요."),
+    GET_MYFILTER_EMPTY_COLLEGE(false, 2305, "단과대학을 입력하세요."),
+    GET_MYFILTER_EMPTY_DEPARTMENT(false, 2306, "학과를 입력하세요."),
+    GET_MYFILTER_EMPTY_GRADE(false, 2307, "학년을 입력하세요."),
+    GET_MYFILTER_EMPTY_SEMESTER(false, 2308, "학기를 입력하세요."),
+    GET_MYFILTER_EMPTY_PROVINCE(false, 2309, "도를 입력하세요."),
+    GET_MYFILTER_EMPTY_CITY(false, 2310, "시/군/구/를을 입력하세요."),
+    PATCH_WRONG_COMMENT_INDEX(false,2311,"잘못된 접근입니다."),
 
     POST_SCHOLARSHIP_EMPTY_NAME(false, 2352,"장학금 이름을 입력해주세요."),
 
+    POST_SUPPORT_EMPTY_NAME(false, 2353,"지원금 이름을 입력해주세요."),
+
+    POST_SUPPORT_EMPTY_POLICY(false, 2354,"정책id를 입력해주세요."),
 
 
 
 
+    SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 장학금idx 값이 존재하지 않습니다."),
 
-    SCHOLARSHIP_EMPTY_SCHOLARSHIP_IDX(false, 2351, "해당 값이 존재하지 않습니다."),
+    SUPPORT_EMPTY_SUPPORT_IDX(false, 2355, "해당 지원금idx 값이 존재하지 않습니다."),
+
+    FAQ_EMPTY_FAQ_IDX(false, 2752, "해당 FAQ idx 값이 존재하지 않습니다."),
+
+    EMPTY_TITLE(false, 2750, "제목을 입력해주세요."),
+
+    EMPTY_CONTENT(false, 2751, "내용을 입력해주세요."),
+
+    /**
+     * 2400 ~ 2450 : 게시판 오류처리(옆마당)
+     */
+    EMPTY_BOARD_NAME(false, 2400, "게시물 제목을 입력해주세요"),
+    EMPTY_BOARD_CONTENT(false, 2401, "게시물 본문을 입력해주세요"),
+    INVALID_POST_IDX(false, 2402, "요청한 게시글 인덱스와 일치하지 않습니다."),
+    EMPTY_POST_IDX(false, 2403, "게시글 인덱스를 확인하세요."),
+    EMPTY_USER_IDX(false, 2404, "유저 인덱스를 확인하세요."),
+    EMPTY_CATEGORY_IDX(false, 2405, "게시글 카테고리를 확인하세요."),
+    EMPTY_COMMENT_IDX(false, 2406, "댓글 인덱스를 확인하세요."),
+    EMPTY_COMMENT_ANONYMITY(false, 2407, "댓글의 익명성 여부를 확인하세요"),
+    EMPTY_COMMENT_STATUS(false, 2408, "댓글의 존재유무를 확인하세요."),
+    EMPTY_COMMENT_CONTENT(false, 2409, "댓글 내용을 입력하세요"),
+    INVALID_COMMENT_IDX(false, 2410, "댓글 인덱스가 일치하지 않습니다."),
+
+
+
 
     /**
      * 3000 : Response 오류
+     * 3400 ~ 3450 : 게시판 오류처리(옆마당)
      */
     // Common
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
-
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
@@ -105,8 +190,6 @@ public enum BaseResponseStatus {
     INCREASE_FAIL_SUPPORT_VIEW(false,4356,"지원금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
-
-
     private final boolean isSuccess;
     private final int code;
     private final String message;

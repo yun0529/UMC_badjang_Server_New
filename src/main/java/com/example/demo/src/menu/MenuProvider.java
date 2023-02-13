@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -37,10 +38,11 @@ public class MenuProvider {
         }
     }
 
-    public List<GetTotalRes> getTotal() throws BaseException{
+    public GetListRes getTotal(int user_idx) throws BaseException{
         try{
-            List<GetTotalRes> getTotalRes = menuDao.getTotalRes();
-            return getTotalRes;
+            GetListRes list = new GetListRes (menuDao.getTotalScholarshipRes(user_idx),
+                    menuDao.getTotalSupportRes(user_idx));
+            return list;
         }
         catch (Exception exception) {
             System.out.println(exception);
@@ -48,12 +50,13 @@ public class MenuProvider {
         }
     }
 
-    public List<GetSchoolRes> getSchool(int userIdx) throws BaseException{
+    public List<GetSchoolRes> getSchool(int user_idx) throws BaseException{
         try{
-            List<GetSchoolRes> getSchoolRes = menuDao.getSchoolRes(userIdx);
+            List<GetSchoolRes> getSchoolRes = menuDao.getScholarship(user_idx);
             return getSchoolRes;
         }
         catch (Exception exception) {
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

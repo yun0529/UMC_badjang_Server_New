@@ -7,11 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-
-public class GetTotalRes {
-    private int total_idx;
+public class PostTotalReq {
     private int scholarship_idx;
     private int fund_idx;
+    private String total_content;
     private String total_createAt;
     private String total_updateAt;
     private String total_status;
