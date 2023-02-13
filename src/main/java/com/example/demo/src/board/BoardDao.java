@@ -235,9 +235,9 @@ public class BoardDao {
     public List<GetCommentRes> getComment(int post_idx){
         String getCommentQuery = "SELECT comment_idx, User.user_idx, Board.post_idx, comment_content, comment_recommend, " +
                 "comment_anonymity, comment_createAt, comment_updatedAt, comment_status, " +
-                "IF(comment_anonymity = 'Y', Comment.user_name = null, Comment.user_name) as user_name, Comment.user_profileimage_url " +
+                "IF(comment_anonymity = 'Y', user_name = null, user_name) as user_name, user_profileimage_url " +
                 "from badjangDB.Comment " +
-                "left join User on User.user_idx = Comment.user_idx " +
+                "left join User on User.user_idx = Comment.user_idx and User.user_profileimage_url = user_profileimage_url " +
                 "left join Board on Board.post_idx = Comment.post_idx " +
                 "where Board.post_idx = ? " ;
 
