@@ -49,10 +49,10 @@ public class PopularBoardDao {
                 rs.getString("post_anonymity"),
                 rs.getString("user_profileimage_url"),
                 rs.getString("post_image"),
-                rs.getString("post_view"),
-                rs.getString("post_recommend"),
+                rs.getInt("post_view"),
+                rs.getInt("post_recommend"),
                 rs.getString("post_name"),
-                rs.getString("post_comment")
+                rs.getInt("post_comment")
                 ));
     }
 
@@ -65,7 +65,7 @@ public class PopularBoardDao {
                 "left join Board B on Popular_Board.post_idx = B.post_idx " +
                 "left join User U on Popular_Board.user_idx = U.user_idx and U.user_name = user_name " +
                 "and user_profileimage_url = U.user_profileimage_url " +
-                "order by count DESC LIMIT 2" ;
+                "order by count DESC LIMIT 2 " ;
 
         return this.jdbcTemplate.query(getPopularQuery, (rs, rowNum) -> new GetPopularRes(
                 rs.getInt("popular_idx"),
@@ -82,10 +82,10 @@ public class PopularBoardDao {
                 rs.getString("post_anonymity"),
                 rs.getString("user_profileimage_url"),
                 rs.getString("post_image"),
-                rs.getString("post_view"),
-                rs.getString("post_recommend"),
+                rs.getInt("post_view"),
+                rs.getInt("post_recommend"),
                 rs.getString("post_name"),
-                rs.getString("post_comment")
+                rs.getInt("post_comment")
         ));
     }
 
