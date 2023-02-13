@@ -24,4 +24,8 @@ public class GetMypageRes {
     private String user_semester;
     private String user_province;
     private String user_city;
+    private String bookmark_yn;
+    private String new_post_yn;
+    private String inq_answer_yn;
+    private String comment_yn;
 }
