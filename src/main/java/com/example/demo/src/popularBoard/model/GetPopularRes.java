@@ -21,8 +21,8 @@ public class GetPopularRes {
     private String post_anonymity;
     private String user_profileimage_url;
     private String post_image;
-    private String post_view;
-    private String post_recommend;
+    private int post_view;
+    private int post_recommend;
     private String post_name;
-    private String post_comment;
+    private int post_comment;
 }
