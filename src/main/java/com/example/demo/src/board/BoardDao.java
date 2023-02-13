@@ -57,11 +57,13 @@ public class BoardDao {
      *
      */
     public List<GetBoardRes> getBoard(int user_idx){
-        String getBoardResQuery = "SELECT post_idx, user_idx, post_name, post_content, post_image, post_view, post_recommend, post_comment, post_createAt, post_updateAt, post_status, post_anonymity, " +
+        String getBoardResQuery = "SELECT post_idx, U.user_idx, post_name, post_content, post_image, post_view, post_recommend, post_comment, post_createAt, " +
+                "post_updateAt, post_status, post_anonymity, " +
                 "post_category, school_name_idx, user_profileimage_url,IF(post_anonymity = 'Y', user_name = null, user_name) as user_name, " +
-                "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and user_idx = ?)) " +
-                "as post_bookmark " +
-                "FROM Board " ;
+                "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and U.user_idx = ?)) " +
+                "as post_bookmark FROM Board " +
+                "left join User U on U.user_name= user_name and U.user_profileimage_url = user_profileimage_url " +
+                "and U.user_idx = Board.user_idx " ;
 
         return this.jdbcTemplate.query(getBoardResQuery,
                 (rs, rowNum) -> new GetBoardRes(
@@ -126,11 +128,14 @@ public class BoardDao {
     }
 
     public List<GetBoardRes> getBoardDetail(int user_idx, int post_idx){
-        String getBoardQuery = "SELECT post_idx, user_idx, post_name, post_content, post_image, post_view, post_recommend, post_comment, post_createAt, post_updateAt, post_status, post_anonymity, " +
+        String getBoardQuery = "SELECT post_idx, U.user_idx, post_name, post_content, post_image, post_view, post_recommend, post_comment, post_createAt, " +
+                "post_updateAt, post_status, post_anonymity, " +
                 "post_category, school_name_idx, user_profileimage_url,IF(post_anonymity = 'Y', user_name = null, user_name) as user_name, " +
-                "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and user_idx = ?)) " +
+                "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and U.user_idx = ?)) " +
                 "as post_bookmark " +
-                "FROM Board where post_idx = ?" ;
+                "FROM Board " +
+                "left join User U on U.user_name= user_name and U.user_profileimage_url = user_profileimage_url " +
+                "and U.user_idx = Board.user_idx where post_idx = ? " ;
 
         return this.jdbcTemplate.query(getBoardQuery, (rs, rowNum) -> new GetBoardRes(
                 rs.getInt("post_idx"),
