@@ -34,6 +34,23 @@ public class SchoolBoardController {
     }
 
     /**
+     * 학교 게시판 종류 조회
+     * [GET] /board/school
+     */
+
+    @ResponseBody
+    @GetMapping("/board/school")
+    public BaseResponse<List<GetSchoolBoardNameRes>> getSchoolBoardName() {
+        try {
+            List<GetSchoolBoardNameRes> getSchoolBoardNameRes = schoolBoardProvider.getSchoolBoardName();
+
+            return new BaseResponse<>(getSchoolBoardNameRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
      * 각 학교 게시판 전체 조회
      * [GET] /board/school/:schoolNameIdx
      */

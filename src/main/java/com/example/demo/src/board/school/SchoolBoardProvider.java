@@ -1,10 +1,7 @@
 package com.example.demo.src.board.school;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.board.school.model.GetOneOfSchoolBoardRes;
-import com.example.demo.src.board.school.model.GetSchoolBoardCommentRes;
-import com.example.demo.src.board.school.model.GetSchoolBoardDetailRes;
-import com.example.demo.src.board.school.model.GetSchoolBoardRes;
+import com.example.demo.src.board.school.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,6 +22,17 @@ public class SchoolBoardProvider {
     public SchoolBoardProvider(SchoolBoardDao schoolBoardDao, SchoolBoardCommentDao schoolBoardCommentDao) {
         this.schoolBoardDao = schoolBoardDao;
         this.schoolBoardCommentDao = schoolBoardCommentDao;
+    }
+
+
+    public List<GetSchoolBoardNameRes> getSchoolBoardName() throws BaseException {
+        try {
+            List<GetSchoolBoardNameRes> getSchoolBoardNameRes = schoolBoardDao.getSchoolBoardName();
+
+            return getSchoolBoardNameRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
 
