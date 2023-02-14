@@ -142,7 +142,7 @@ public class BoardDao {
                 "as recommend_status," +
                 "(select count(post_idx) from Bookmark where Board.post_idx = Bookmark.post_idx) as bookmark_count FROM Board " +
                 "left join User U on U.user_name= user_name and U.user_profileimage_url = user_profileimage_url " +
-                "and U.user_idx = Board.user_idx where post_category = '자유게시판' " ;
+                "and U.user_idx = Board.user_idx where post_category = '자유게시판' and post_idx = ? " ;
 
 
         return this.jdbcTemplate.query(getBoardQuery, (rs, rowNum) -> new GetBoardRes(
