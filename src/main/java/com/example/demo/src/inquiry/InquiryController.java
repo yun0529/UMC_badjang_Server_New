@@ -48,8 +48,8 @@ public class InquiryController {
 
     /**idx로 문의 하나 조회*/
     @ResponseBody
-    @GetMapping("/{inquiryIdx}")
-    public BaseResponse<GetInquiryRes> getInquiryByIdx(@PathVariable("inquiryIdx") Integer inquiryIdx) {
+    @GetMapping("/{inquiry_idx}")
+    public BaseResponse<GetInquiryRes> getInquiryByIdx(@PathVariable("inquiry_idx") Integer inquiryIdx) {
 
         try {
             if(inquiryIdx == null) {
@@ -91,25 +91,29 @@ public class InquiryController {
     /**문의 수정*/
     @ResponseBody
     @PatchMapping("/modify/{inquiry_idx}")
-    public BaseResponse<String> modifyInquiry(@PathVariable("inquiry_idx") Integer inquiryIdx, @RequestBody PatchInquiryReq patchInquiryRes) {
+    public BaseResponse<String> modifyInquiry(@PathVariable("inquiry_idx") Integer inquiryIdx, @RequestBody PatchInquiryReq patchInquiryReq) {
         try {
             Integer userIdxByJwt = jwtService.getUserIdx(); // 토큰은 헤더에 있음
-            Integer user_idx = patchInquiryRes.getUser_idx();
+            Integer user_idx = patchInquiryReq.getUser_idx();
             //userIdx와 접근한 유저가 같은지 확인
             if(user_idx != userIdxByJwt){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            //수정할 댓글이 비었을 경우
-            if(patchInquiryRes.getInquiry_content() == null){
+            //수정할 제목이 비었을 경우
+            if (patchInquiryReq.getInquiry_title() == null) {
+                return new BaseResponse<>(POST_INQUIRY_EMPTY_TITLE);
+            }
+            //수정할 내용이 비었을 경우
+            if(patchInquiryReq.getInquiry_content() == null){
                 return new BaseResponse<>(PATCH_INQUIRY_EMPTY_CONTENT);
             }
+            if(inquiryIdx != patchInquiryReq.getInquiry_idx()){
+                return new BaseResponse<>(PATCH_WRONG_INQUIRY_INDEX);
+            }
 
-            inquiryService.modifyInquiry(patchInquiryRes);
+            inquiryService.modifyInquiry(patchInquiryReq);
 
-            //PatchSupportCommentReq patchSupportCommentReq = new PatchSupportCommentReq(support_comment_idx, supportComment.getSupport_comment_content());
-            //supportCommentService.modifySupportComment(patchSupportCommentReq);
-
-            String result = "댓글이 수정되었습니다.";
+            String result = "문의가 수정되었습니다.";
             return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -132,9 +136,7 @@ public class InquiryController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            //Integer support_idx = deleteSupportCommentReq.getSupport_idx();
             Integer inquiry_idx_ByReqBody = deleteInquiryReq.getInquiry_idx();
-            // PathVariable로 들어온 댓글 인덱스와 RequestBody로 받은 댓글 인덱스가 같은지 확인
             if(inquiry_idx != inquiry_idx_ByReqBody) {
                 return new BaseResponse<>(DELETE_WRONG_INQUIRY_INDEX);
             }
