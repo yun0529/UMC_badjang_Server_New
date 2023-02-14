@@ -39,11 +39,13 @@ public class SchoolBoardDao {
     public List<GetSchoolBoardRes> getSchoolBoard(int userIdx, int schoolNameIdx) {
 
 
-        String getSchoolBoardResQuery = "select post_idx, user_idx, post_name, post_content, post_image, post_view, " +
-                "post_recommend, post_comment, post_anonymity, post_category, post_school_name, post_createAt, " +
+        String getSchoolBoardResQuery = "select post_idx, Board.user_idx, user_name, user_profileimage_url, post_name, post_content, post_image, " +
+                "post_view, post_recommend, post_comment, post_anonymity, post_category, post_school_name, post_createAt, " +
                 "Exists( select post_recommend_idx from Board_Recommend where user_idx = ? and Board_Recommend.post_idx = Board.post_idx ) as isRecommendChk " +
                 "from Board " +
-                "left join School_Board_Name " +
+                "join User " +
+                "on Board.user_idx = User.user_idx " +
+                "join School_Board_Name " +
                 "on School_Board_Name.school_name_idx = Board.school_name_idx " +
                 "where School_Board_Name.school_name_idx = ? ";
 
@@ -55,6 +57,8 @@ public class SchoolBoardDao {
                 (rs, rowNum) -> new GetSchoolBoardRes(
                         rs.getInt("post_idx"),
                         rs.getInt("user_idx"),
+                        rs.getString("user_name"),
+                        rs.getString("user_profileimage_url"),
                         rs.getString("post_name"),
                         rs.getString("post_content"),
                         rs.getString("post_image"),
@@ -86,7 +90,7 @@ public class SchoolBoardDao {
     public List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes(int userIdx, int postIdx) {
 
 
-        String getOneOfSchoolBoardResQuery = "select Board.user_idx, user_name, post_name, post_content, post_image, " +
+        String getOneOfSchoolBoardResQuery = "select Board.user_idx, user_name, user_profileimage_url, post_name, post_content, post_image, " +
                 "post_view, post_recommend, post_comment, post_anonymity, post_category, post_school_name, post_createAt, " +
                 "Exists( select bookmark_idx from Bookmark where user_idx = ? and post_idx = ? ) as isBookmarkChk, " +
                 "Exists( select post_recommend_idx from Board_Recommend where user_idx = ? and post_idx = ? ) as isRecommendChk " +
@@ -104,6 +108,7 @@ public class SchoolBoardDao {
                 (rs, rowNum) -> new GetOneOfSchoolBoardRes(
                         rs.getInt("user_idx"),
                         rs.getString("user_name"),
+                        rs.getString("user_profileimage_url"),
                         rs.getString("post_name"),
                         rs.getString("post_content"),
                         rs.getString("post_image"),
