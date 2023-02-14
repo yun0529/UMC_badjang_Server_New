@@ -26,5 +26,6 @@ public class GetBoardRes {
     private int recommend_status;
     private String user_name;
     private String user_profileimage_url;
+    private int bookmark_count;
 
 }

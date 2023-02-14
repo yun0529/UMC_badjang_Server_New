@@ -63,9 +63,10 @@ public class BoardDao {
                 "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and U.user_idx = ?)) " +
                 "as post_bookmark, " +
                 "(select exists(select post_idx, user_idx from Board_Recommend where post_idx = Board.post_idx and U.user_idx = ?)) " +
-                "as recommend_status FROM Board " +
+                "as recommend_status, " +
+                "(select count(post_idx) from Bookmark where Board.post_idx = Bookmark.post_idx) as bookmark_count FROM Board " +
                 "left join User U on U.user_name= user_name and U.user_profileimage_url = user_profileimage_url " +
-                "and U.user_idx = Board.user_idx where post_category = '자유게시판' " ;
+                "and U.user_idx = Board.user_idx where post_category = '자유게시판' ";
 
         return this.jdbcTemplate.query(getBoardResQuery,
                 (rs, rowNum) -> new GetBoardRes(
@@ -86,7 +87,8 @@ public class BoardDao {
                         rs.getInt("post_bookmark"),
                         rs.getInt("recommend_status"),
                         rs.getString("user_name"),
-                        rs.getString("user_profileimage_url")), user_idx, user_idx);
+                        rs.getString("user_profileimage_url"),
+                        rs.getInt("bookmark_count")), user_idx, user_idx);
     }
 
     /**게시글 수정
@@ -137,7 +139,8 @@ public class BoardDao {
                 "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and U.user_idx = ?)) " +
                 "as post_bookmark, " +
                 "(select exists(select post_idx, user_idx from Board_Recommend where post_idx = Board.post_idx and U.user_idx = ?)) " +
-                "as recommend_status FROM Board " +
+                "as recommend_status," +
+                "(select count(post_idx) from Bookmark where Board.post_idx = Bookmark.post_idx) as bookmark_count FROM Board " +
                 "left join User U on U.user_name= user_name and U.user_profileimage_url = user_profileimage_url " +
                 "and U.user_idx = Board.user_idx where post_category = '자유게시판' " ;
 
@@ -160,7 +163,8 @@ public class BoardDao {
                 rs.getInt("post_bookmark"),
                 rs.getInt("recommend_status"),
                 rs.getString("user_name"),
-                rs.getString("user_profileimage_url")),user_idx, post_idx);
+                rs.getString("user_profileimage_url"),
+                rs.getInt("bookmark_count")),user_idx, post_idx);
     }
 
     /**게시글 상세조회(댓글수 증감)
