@@ -12,6 +12,7 @@ public class GetSchoolBoardCommentRes {
     private int comment_idx;
     private int user_idx;
     private String user_name;
+    private String user_profileimage_url;
     private String comment_content;
     private int comment_recommend;
     private String comment_anonymity;

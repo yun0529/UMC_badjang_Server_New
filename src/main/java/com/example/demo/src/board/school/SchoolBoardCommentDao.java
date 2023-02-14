@@ -23,8 +23,8 @@ public class SchoolBoardCommentDao {
     public List<GetSchoolBoardCommentRes> getSchoolBoardComment(int userIdx, int postIdx) {
 
 
-        String getSchoolBoardCommentQuery = "select Comment.post_idx, Comment.comment_idx,  Comment.user_idx, User.user_name, comment_content, " +
-                "comment_recommend, comment_anonymity, comment_createAt, " +
+        String getSchoolBoardCommentQuery = "select Comment.post_idx, Comment.comment_idx,  Comment.user_idx, user_name, user_profileimage_url, " +
+                "comment_content, comment_recommend, comment_anonymity, comment_createAt, " +
                 "Exists (select Comment_Recommend_idx from Comment_Recommend " +
                 "where Comment_Recommend.user_idx = ? and Board.post_idx = ? and Comment_Recommend.comment_idx = Comment.comment_idx) as isRecommendChk " +
                 "from Board " +
@@ -46,6 +46,7 @@ public class SchoolBoardCommentDao {
                         rs.getInt("comment_idx"),
                         rs.getInt("user_idx"),
                         rs.getString("user_name"),
+                        rs.getString("user_profileimage_url"),
                         rs.getString("comment_content"),
                         rs.getInt("comment_recommend"),
                         rs.getString("comment_anonymity"),
