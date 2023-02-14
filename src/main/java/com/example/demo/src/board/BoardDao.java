@@ -248,15 +248,13 @@ public class BoardDao {
                 "left join Board on Board.post_idx = Comment.post_idx " +
                 "where Board.post_idx = ? and Board.post_category = '자유게시판' " ;
 
-        int getPostIdx = post_idx;
-
         return this.jdbcTemplate.query(getCommentQuery,
                 (rs, rowNum) -> new GetCommentRes(
                         rs.getInt("comment_idx"),
                         rs.getInt("user_idx"),
                         rs.getInt("post_idx"),
                         rs.getString("comment_content"),
-                        rs.getString("comment_recommend"),
+                        rs.getInt("comment_recommend"),
                         rs.getString("comment_anonymity"),
                         rs.getString("comment_createAt"),
                         rs.getString("comment_updatedAt"),
@@ -264,7 +262,7 @@ public class BoardDao {
                         rs.getString("user_name"),
                         rs.getString("user_profileimage_url"),
                         rs.getInt("recommend_status")
-                ),getPostIdx, user_idx);
+                ),user_idx, post_idx);
     }
 
     /**게시글 댓글 작성
