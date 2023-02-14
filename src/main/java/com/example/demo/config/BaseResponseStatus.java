@@ -46,6 +46,7 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요."),
 
 
+
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2021, "이메일 형식에 맞게 입력해주세요."),
@@ -150,6 +151,13 @@ public enum BaseResponseStatus {
     EMPTY_COMMENT_CONTENT(false, 2409, "댓글 내용을 입력하세요"),
     INVALID_COMMENT_IDX(false, 2410, "댓글 인덱스가 일치하지 않습니다."),
 
+    GET_INQUIRY_EMPTY_IDX(false, 2701, "문의 인덱스를 확인하세요."),
+    POST_INQUIRY_EMPTY_TITLE(false, 2702, "제목을 입력하세요."),
+    POST_INQUIRY_EMPTY_CONTENT(false, 2703, "내용을 입력하세요."),
+    PATCH_INQUIRY_EMPTY_CONTENT(false, 2704, "내용을 입력하세요."),
+    PATCH_INQUIRY_FAIL(false, 2705, "수정에 실패했습니다."),
+    DELETE_WRONG_INQUIRY_INDEX(false,2706,"잘못된 인덱스입니다."),
+    DELETE_INQUIRY_FAIL(false,2707,"삭제에 실패했습니다."),
 
 
 

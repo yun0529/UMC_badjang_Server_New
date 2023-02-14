@@ -41,13 +41,15 @@ public class ScholarshipCommentDao {
      * 댓글 조회 API
      */
     public List<GetScholarshipCommentRes> getScholarshipComment(Integer scholarship_idx) {
-        String getScholarshipCommentQuery = "select * from Scholarship_Comment where scholarship_idx = ? and scholarship_comment_status = 'Y'";
+        String getScholarshipCommentQuery = "select * from Scholarship_Comment join User on Scholarship_Comment.user_idx = User.user_idx where scholarship_idx = ? and scholarship_comment_status = 'Y'";
         Integer getScholarshipCommentParams = scholarship_idx;
         return this.jdbcTemplate.query(getScholarshipCommentQuery,
                 (rs, rowNum) -> new GetScholarshipCommentRes(
                         rs.getInt("scholarship_comment_idx"),
                         rs.getInt("scholarship_idx"),
                         rs.getInt("user_idx"),
+                        rs.getString("user_name"),
+                        rs.getString("user_profileimage_url"),
                         rs.getString("scholarship_comment_content"),
                         rs.getString("scholarship_comment_updateAt")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getScholarshipCommentParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환

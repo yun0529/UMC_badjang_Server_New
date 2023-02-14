@@ -11,6 +11,8 @@ public class GetSupportCommentRes {
     private Integer support_comment_idx;
     private Integer support_idx;
     private Integer user_idx;
+    private String user_name;
+    private String user_profileimage_url;
     private String support_comment_content;
     private String support_comment_updateAt;
 }
