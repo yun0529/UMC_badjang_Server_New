@@ -226,10 +226,11 @@ public class BoardController {
     //[GET] 댓글 조회 (게시글 인덱스 사용)
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @GetMapping("/board/comment/{post_idx}")
-    public BaseResponse<List<GetCommentRes>> getComment(@PathVariable("post_idx")int post_idx){
+    @GetMapping("/board/comment/{post_idx}/{user_idx}")
+    public BaseResponse<List<GetCommentRes>> getComment(@PathVariable("post_idx")int post_idx,
+                                                        @PathVariable("user_idx")int user_idx){
         try{
-            List<GetCommentRes> getCommentRes = boardProvider.getComment(post_idx);
+            List<GetCommentRes> getCommentRes = boardProvider.getComment(post_idx,user_idx);
             return new BaseResponse<>(getCommentRes);
         } catch(BaseException exception){
             System.out.println(exception);
