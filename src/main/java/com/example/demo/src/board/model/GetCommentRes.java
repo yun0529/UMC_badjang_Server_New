@@ -19,6 +19,7 @@ public class GetCommentRes {
     private String comment_status;
     private String user_name;
     private String user_profileimage_url;
+    private int recommend_status;
 
     public GetCommentRes(int comment_idx, String comment_content, String comment_updatedAt) {
         this.comment_idx = comment_idx;

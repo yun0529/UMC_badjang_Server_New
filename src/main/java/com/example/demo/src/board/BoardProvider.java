@@ -143,9 +143,9 @@ public class BoardProvider {
      * 댓글 관련 부분 시작
      */
 
-    public List<GetCommentRes> getComment(int post_idx) throws BaseException {
+    public List<GetCommentRes> getComment(int post_idx, int user_idx) throws BaseException {
         try{
-            List<GetCommentRes> getCommentRes = boardDao.getComment(post_idx);
+            List<GetCommentRes> getCommentRes = boardDao.getComment(post_idx, user_idx);
             return getCommentRes;
         }
         catch (Exception exception) {
