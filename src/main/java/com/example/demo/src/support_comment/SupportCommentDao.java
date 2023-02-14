@@ -24,13 +24,15 @@ public class SupportCommentDao {
      * 댓글 조회 API
      */
     public List<GetSupportCommentRes> getSupportComment(Integer support_idx) {
-        String getSupportCommentQuery = "select * from Support_Comment where support_idx = ? and support_comment_status = 'Y'";
+        String getSupportCommentQuery = "select * from Support_Comment join User on Support_Comment.user_idx = User.user_idx where support_idx = ? and support_comment_status = 'Y'";
         Integer getSupportCommentParams = support_idx;
         return this.jdbcTemplate.query(getSupportCommentQuery,
                 (rs, rowNum) -> new GetSupportCommentRes(
                         rs.getInt("support_comment_idx"),
                         rs.getInt("support_idx"),
                         rs.getInt("user_idx"),
+                        rs.getString("user_name"),
+                        rs.getString("user_profileimage_url"),
                         rs.getString("support_comment_content"),
                         rs.getString("support_comment_updateAt")),
                 getSupportCommentParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
