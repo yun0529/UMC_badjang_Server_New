@@ -157,6 +157,7 @@ public enum BaseResponseStatus {
     PATCH_INQUIRY_FAIL(false, 2705, "수정에 실패했습니다."),
     DELETE_WRONG_INQUIRY_INDEX(false,2706,"잘못된 인덱스입니다."),
     DELETE_INQUIRY_FAIL(false,2707,"삭제에 실패했습니다."),
+    PATCH_WRONG_INQUIRY_INDEX(false, 2708, "잘못된 인덱스입니다."),
 
 
 
