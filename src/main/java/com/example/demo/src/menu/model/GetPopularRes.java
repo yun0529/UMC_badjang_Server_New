@@ -10,7 +10,7 @@ import lombok.Setter;
 
 public class GetPopularRes {
     private int post_idx;
-    private String post_content;
+    private String post_name;
     private String post_image;
     private int post_recommend;
     private int post_view;

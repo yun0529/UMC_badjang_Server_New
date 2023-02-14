@@ -61,9 +61,11 @@ public class BoardDao {
                 "post_updateAt, post_status, post_anonymity, " +
                 "post_category, school_name_idx, user_profileimage_url,IF(post_anonymity = 'Y', user_name = null, user_name) as user_name, " +
                 "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and U.user_idx = ?)) " +
-                "as post_bookmark FROM Board " +
+                "as post_bookmark, " +
+                "(select exists(select post_idx, user_idx from Board_Recommend where post_idx = Board.post_idx and U.user_idx = ?)) " +
+                "as recommend_status FROM Board " +
                 "left join User U on U.user_name= user_name and U.user_profileimage_url = user_profileimage_url " +
-                "and U.user_idx = Board.user_idx " ;
+                "and U.user_idx = Board.user_idx where post_category = '자유게시판' " ;
 
         return this.jdbcTemplate.query(getBoardResQuery,
                 (rs, rowNum) -> new GetBoardRes(
@@ -82,8 +84,9 @@ public class BoardDao {
                         rs.getString("post_anonymity"),
                         rs.getInt("school_name_idx"),
                         rs.getInt("post_bookmark"),
+                        rs.getInt("recommend_status"),
                         rs.getString("user_name"),
-                        rs.getString("user_profileimage_url")),user_idx);
+                        rs.getString("user_profileimage_url")), user_idx, user_idx);
     }
 
     /**게시글 수정
@@ -132,10 +135,12 @@ public class BoardDao {
                 "post_updateAt, post_status, post_anonymity, " +
                 "post_category, school_name_idx, user_profileimage_url,IF(post_anonymity = 'Y', user_name = null, user_name) as user_name, " +
                 "(select exists(select post_idx, user_idx from Bookmark where post_idx = Board.post_idx and U.user_idx = ?)) " +
-                "as post_bookmark " +
-                "FROM Board " +
+                "as post_bookmark, " +
+                "(select exists(select post_idx, user_idx from Board_Recommend where post_idx = Board.post_idx and U.user_idx = ?)) " +
+                "as recommend_status FROM Board " +
                 "left join User U on U.user_name= user_name and U.user_profileimage_url = user_profileimage_url " +
-                "and U.user_idx = Board.user_idx where post_idx = ? " ;
+                "and U.user_idx = Board.user_idx where post_category = '자유게시판' " ;
+
 
         return this.jdbcTemplate.query(getBoardQuery, (rs, rowNum) -> new GetBoardRes(
                 rs.getInt("post_idx"),
@@ -153,6 +158,7 @@ public class BoardDao {
                 rs.getString("post_anonymity"),
                 rs.getInt("school_name_idx"),
                 rs.getInt("post_bookmark"),
+                rs.getInt("recommend_status"),
                 rs.getString("user_name"),
                 rs.getString("user_profileimage_url")),user_idx, post_idx);
     }
@@ -232,14 +238,15 @@ public class BoardDao {
     /**게시글 댓글 조회
      *
      */
-    public List<GetCommentRes> getComment(int post_idx){
+    public List<GetCommentRes> getComment(int post_idx, int user_idx){
         String getCommentQuery = "SELECT comment_idx, User.user_idx, Board.post_idx, comment_content, comment_recommend, " +
                 "comment_anonymity, comment_createAt, comment_updatedAt, comment_status, " +
-                "IF(comment_anonymity = 'Y', user_name = null, user_name) as user_name, user_profileimage_url " +
-                "from badjangDB.Comment " +
+                "IF(comment_anonymity = 'Y', user_name = null, user_name) as user_name, user_profileimage_url, " +
+                "(select exists(select comment_idx, user_idx from Comment_Recommend where comment_idx = Comment.comment_idx and User.user_idx = ?)) " +
+                "as recommend_status FROM badjangDB.Comment " +
                 "left join User on User.user_idx = Comment.user_idx and User.user_profileimage_url = user_profileimage_url " +
                 "left join Board on Board.post_idx = Comment.post_idx " +
-                "where Board.post_idx = ? " ;
+                "where Board.post_idx = ? and Board.post_category = '자유게시판' " ;
 
         int getPostIdx = post_idx;
 
@@ -255,8 +262,9 @@ public class BoardDao {
                         rs.getString("comment_updatedAt"),
                         rs.getString("comment_status"),
                         rs.getString("user_name"),
-                        rs.getString("user_profileimage_url")
-                ),getPostIdx);
+                        rs.getString("user_profileimage_url"),
+                        rs.getInt("recommend_status")
+                ),getPostIdx, user_idx);
     }
 
     /**게시글 댓글 작성
