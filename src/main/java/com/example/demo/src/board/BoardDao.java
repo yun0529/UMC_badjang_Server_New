@@ -164,7 +164,7 @@ public class BoardDao {
                 rs.getInt("recommend_status"),
                 rs.getString("user_name"),
                 rs.getString("user_profileimage_url"),
-                rs.getInt("bookmark_count")),user_idx, post_idx);
+                rs.getInt("bookmark_count")),user_idx,user_idx, post_idx);
     }
 
     /**게시글 상세조회(댓글수 증감)
