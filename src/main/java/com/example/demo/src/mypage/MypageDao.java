@@ -19,12 +19,32 @@ public class MypageDao {
 
 
     public GetMypageRes getMypage(int user_idx) {
-        String getUserQuery = "select user_name, user_profileimage_url from User where user_idx = ?"; // 해당 user_id를 만족하는 유저를 조회하는 쿼리문
+        String getUserQuery = "select user_idx, user_email, user_name, user_profileimage_url, user_type, user_birth, user_phone " +
+                ", user_push_yn, user_on_off, user_univ, user_college, user_department, user_grade, user_semester, user_province, " +
+                "  user_city, bookmark_yn, new_post_yn, inq_answer_yn, comment_yn from User where user_idx = ?"; // 해당 user_id를 만족하는 유저를 조회하는 쿼리문
         int getUserParams = user_idx;
         return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs, rowNum) -> new GetMypageRes(
+                        rs.getInt("user_idx"),
+                        rs.getString("user_email"),
                         rs.getString("user_name"),
-                        rs.getString("user_profileimage_url")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                        rs.getString("user_profileimage_url"),
+                        rs.getString("user_type"),
+                        rs.getString("user_birth"),
+                        rs.getString("user_phone"),
+                        rs.getString("user_push_yn"),
+                        rs.getString("user_on_off"),
+                        rs.getString("user_univ"),
+                        rs.getString("user_college"),
+                        rs.getString("user_department"),
+                        rs.getString("user_grade"),
+                        rs.getString("user_semester"),
+                        rs.getString("user_province"),
+                        rs.getString("user_city"),
+                        rs.getString("bookmark_yn"),
+                        rs.getString("new_post_yn"),
+                        rs.getString("inq_answer_yn"),
+                        rs.getString("comment_yn")),// RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getUserParams); // 한 개의 회원정보를 얻기 위한 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
 
@@ -37,10 +57,13 @@ public class MypageDao {
 
     //내가 작성한 게시글 조회
     public List<GetBoardRes> getBoard(int user_idx){
-        String getBoardResQuery = "select * from Board where user_idx = ? order by post_view desc";
+        String getBoardResQuery = "select Board.*, User.* from Board join User on Board.user_idx = User.user_idx where Board.user_idx = ? order by post_view desc";
         int getBoardResParams = user_idx;
         return this.jdbcTemplate.query(getBoardResQuery,
                 (rs, rowNum) -> new GetBoardRes(
+                        rs.getString("user_name"),
+                        rs.getString("user_profileimage_url"),
+                        rs.getString("post_createAt"),
                         rs.getInt("post_idx"),
                         rs.getString("post_name"),
                         rs.getString("post_content"),
@@ -55,12 +78,13 @@ public class MypageDao {
 
 
     public List<GetCommentRes> getComment(int user_idx){
-        String getCommentResQuery = "select * from Comment where user_idx = ?";
+        String getCommentResQuery = "select Comment.*, Board.* from Comment join Board on Comment.post_idx = Board.post_idx where Comment.user_idx = ?";
         int getCommentResParams = user_idx;
         return this.jdbcTemplate.query(getCommentResQuery,
                 (rs, rowNum) -> new GetCommentRes(
                         rs.getInt("comment_idx"),
                         rs.getInt("post_idx"),
+                        rs.getString("post_name"),
                         rs.getString("post_category"),
                         rs.getString("comment_content")),
                 getCommentResParams);
@@ -78,5 +102,35 @@ public class MypageDao {
                 user_idx};
         return this.jdbcTemplate.update(saveUserUnivInfoQuery, saveUserUnivInfoParams);
     }
+
+    public List<GetNoticeRes> getNotice(){
+        String getNoticeResQuery = "select * from Notice";
+        //int getNoticeResParams = user_idx;
+        return this.jdbcTemplate.query(getNoticeResQuery,
+                (rs, rowNum) -> new GetNoticeRes(
+                        rs.getInt("notice_idx"),
+                        rs.getString("notice_title"),
+                        rs.getString("notice_content"),
+                        rs.getString("notice_image"),
+                        rs.getString("notice_createAt"),
+                        rs.getString("notice_updateAt"))
+        );
+    }
+
+    public GetNoticeRes getNoticeDetail(int notice_idx){
+        String getNoticeResQuery = "select * from Notice where notice_idx = ?";
+        int getNoticeResParams = notice_idx;
+        return this.jdbcTemplate.queryForObject(getNoticeResQuery,
+                (rs, rowNum) -> new GetNoticeRes(
+                        rs.getInt("notice_idx"),
+                        rs.getString("notice_title"),
+                        rs.getString("notice_content"),
+                        rs.getString("notice_image"),
+                        rs.getString("notice_createAt"),
+                        rs.getString("notice_updateAt")),
+                getNoticeResParams);
+    }
+
+
 
 }

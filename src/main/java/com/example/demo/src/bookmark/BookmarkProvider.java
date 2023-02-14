@@ -8,6 +8,7 @@ import com.example.demo.src.user.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class BookmarkProvider {
     }
 
 
+    @Transactional(readOnly = true)
     public GetBookmarkAllRes getBookmarkAll(int userIdx) throws BaseException {
         try {
             List<GetBookmarkBoardRes> getBookmarkBoardRes = bookmarkDao.getBookmarkBoard(userIdx);
@@ -52,6 +54,21 @@ public class BookmarkProvider {
         try {
             List<GetBookmarkScholarshipRes> getBookmarkScholarshipRes = bookmarkDao.getBookmarkScholarship(userIdx);
             return getBookmarkScholarshipRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetBookmarkCheckScholarshipRes getBookmarkCheckScholarship (int userIdx, int scholarshipIdx) throws BaseException {
+        try {
+            int nullCheck = bookmarkDao.bookmarkScholarshipNullCheck(userIdx, scholarshipIdx);
+            GetBookmarkCheckScholarshipRes getBookmarkCheckScholarshipRes;
+            if (nullCheck == 1) {
+                getBookmarkCheckScholarshipRes = new GetBookmarkCheckScholarshipRes(scholarshipIdx, "Y");
+            } else {
+                getBookmarkCheckScholarshipRes = new GetBookmarkCheckScholarshipRes(scholarshipIdx, "N");
+            }
+            return  getBookmarkCheckScholarshipRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

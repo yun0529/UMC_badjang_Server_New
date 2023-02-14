@@ -1,13 +1,11 @@
 package com.example.demo.src.board.school;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.board.school.model.GetOneOfSchoolBoardRes;
-import com.example.demo.src.board.school.model.GetSchoolBoardCommentRes;
-import com.example.demo.src.board.school.model.GetSchoolBoardDetailRes;
-import com.example.demo.src.board.school.model.GetSchoolBoardRes;
+import com.example.demo.src.board.school.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,9 +25,20 @@ public class SchoolBoardProvider {
     }
 
 
-    public List<GetSchoolBoardRes> getSchoolBoard(int schoolNameIdx) throws BaseException {
+    public List<GetSchoolBoardNameRes> getSchoolBoardName() throws BaseException {
         try {
-            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardDao.getSchoolBoard(schoolNameIdx);
+            List<GetSchoolBoardNameRes> getSchoolBoardNameRes = schoolBoardDao.getSchoolBoardName();
+
+            return getSchoolBoardNameRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
+    public List<GetSchoolBoardRes> getSchoolBoard(int userIdx, int schoolNameIdx) throws BaseException {
+        try {
+            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardDao.getSchoolBoard(userIdx, schoolNameIdx);
 
             return getSchoolBoardRes;
         } catch (Exception exception) {
@@ -37,12 +46,13 @@ public class SchoolBoardProvider {
         }
     }
 
-    public GetSchoolBoardDetailRes getSchoolBoardDetail(int postIdx) throws BaseException {
+    @Transactional
+    public GetSchoolBoardDetailRes getSchoolBoardDetail(int userIdx, int postIdx) throws BaseException {
 
         try {
             schoolBoardDao.updateView(postIdx);
-            List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes = schoolBoardDao.getOneOfSchoolBoardRes(postIdx);
-            List<GetSchoolBoardCommentRes> getSchoolBoardCommentRes = schoolBoardCommentDao.getSchoolBoardComment(postIdx);
+            List<GetOneOfSchoolBoardRes> getOneOfSchoolBoardRes = schoolBoardDao.getOneOfSchoolBoardRes(userIdx, postIdx);
+            List<GetSchoolBoardCommentRes> getSchoolBoardCommentRes = schoolBoardCommentDao.getSchoolBoardComment(userIdx, postIdx);
 
             GetSchoolBoardDetailRes getSchoolBoardDetailRes = new GetSchoolBoardDetailRes(getOneOfSchoolBoardRes, getSchoolBoardCommentRes);
 

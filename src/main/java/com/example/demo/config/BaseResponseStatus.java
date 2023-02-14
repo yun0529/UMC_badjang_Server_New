@@ -43,6 +43,7 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
     STOPPED_USER(false, 2011, "탈퇴한 계정입니다."),
     OFFLINE_USER(false, 2012, "로그아웃한 계정입니다."),
+    USERS_EMPTY_USER_IDX(false, 2201, "유저 인덱스 값을 확인해주세요."),
 
 
     // [POST] /users
@@ -67,6 +68,9 @@ public enum BaseResponseStatus {
     POST_USERS_MORE_INFO(false, 2071, "전화번호나 이름 중 한 가지만 입력해주세요."),
 
     POST_USERS_WRONG_TEXT(false, 2080, "'탈퇴하기'를 입력해주세요."),
+
+    POST_NOTI_EMPTY_YN(false, 2090, "알림설정을 입력해주세요."),
+    POST_NOTI_INVALID_YN(false, 2091, "알림설정은 'Y', 'N'만 입력해주세요."),
 
     GET_SEARCH_EMPTY_QUERY(false, 2250, "검색어를 입력해주세요."),
 
@@ -125,11 +129,12 @@ public enum BaseResponseStatus {
 
     SUPPORT_EMPTY_SUPPORT_IDX(false, 2355, "해당 지원금idx 값이 존재하지 않습니다."),
 
-    /**
-     * 2200 ~ 2250 : 메인화면 오류처리(옆마당)
-     */
-    USERS_EMPTY_USER_IDX(false, 2200, "유저 인덱스 값을 확인해주세요. "),
-    NON_MATCH_UNIV(false, 2201, "일치하는 장학금이 없습니다."),
+    FAQ_EMPTY_FAQ_IDX(false, 2752, "해당 FAQ idx 값이 존재하지 않습니다."),
+
+    EMPTY_TITLE(false, 2750, "제목을 입력해주세요."),
+
+    EMPTY_CONTENT(false, 2751, "내용을 입력해주세요."),
+
     /**
      * 2400 ~ 2450 : 게시판 오류처리(옆마당)
      */
@@ -192,8 +197,6 @@ public enum BaseResponseStatus {
     INCREASE_FAIL_SUPPORT_VIEW(false,4356,"지원금 조회수 증가 실패");
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
-
-
     private final boolean isSuccess;
     private final int code;
     private final String message;

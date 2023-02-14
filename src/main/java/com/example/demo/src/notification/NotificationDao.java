@@ -20,6 +20,7 @@ public class NotificationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //장학금 알림 불러오기 (장학금에 해당하는 학교가 사용자가 지정한 학교와 같을 때의 데이터만 최신순으로 5개까지)
     public List<GetNotificationScholarshipRes> getNotificationScholarshipRes(int userIdx) {
         String getNotificationScholarshipResQuery = "select Scholarship.scholarship_idx, Scholarship.scholarship_name, Scholarship.scholarship_institution, Scholarship.scholarship_univ " +
                 "from User, Scholarship " +
@@ -42,6 +43,7 @@ public class NotificationDao {
         );
     }
 
+    //지원금 알림 불러오기 (최근에 등록된 지원금 5개까지)
     public List<GetNotificationSupportRes> getNotificationSupportRes(int userIdx) {
         String getNotificationSupportResQuery = "select support_idx, support_name, support_institution " +
                 "from Support, User  " +
@@ -60,6 +62,7 @@ public class NotificationDao {
         );
     }
 
+    //자신이 쓴 게시물에 다른 사용자가 댓글을 달 경우 오는 알림(자신이 쓴 게시글에 자신이 댓글을 쓸 경우에는 오지 않음, 5개까지)
     public List<GetNotificationCommentRes> getNotificationCommentRes(int userIdx) {
         String getNotificationCommentResQuery = "select Board.post_idx, Comment.comment_idx, Board.post_name, Comment.comment_content from Comment " +
                 "left join Board  " +

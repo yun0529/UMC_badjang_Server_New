@@ -22,7 +22,7 @@ public class BoardRegistrationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
+    //사용자가 게시글 추가하기 요청 시, DB에 해당 내용 저장
     public void postBoardRegistration(PostBoardRegistrationReq postBoardRegistrationReq) {
 
         String postBoardRegistrationQuery = "insert into Board_Registration (" +
