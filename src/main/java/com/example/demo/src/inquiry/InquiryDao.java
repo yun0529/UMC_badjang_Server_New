@@ -68,7 +68,7 @@ public class InquiryDao {
     }
 
     /**
-     * 댓글 수정 API
+     * 문의 수정 API
      */
     public int modifyInquiry(PatchInquiryReq patchInquiryReq) {
         String modifyInquiryQuery = "update Inquiry set inquiry_title = ?, inquiry_content = ?, inquiry_image = ? where inquiry_idx = ? ";
