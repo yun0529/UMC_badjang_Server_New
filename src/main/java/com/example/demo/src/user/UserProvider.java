@@ -118,6 +118,14 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int checkStatusByUserIdx(int user_idx) throws BaseException {
+        try {
+            return userDao.checkStatusByUserIdx(user_idx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
 
 

@@ -1,14 +1,10 @@
 package com.example.demo.src.popularBoard;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.board.model.GetBoardRes;
 import com.example.demo.src.popularBoard.model.GetPopularRes;
-import com.example.demo.src.popularBoard.model.PostPopularReq;
-import com.example.demo.src.popularBoard.model.PostPopularRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +35,7 @@ public class PopularBoardController {
             List<GetPopularRes> getPopularRes = popularBoardProvider.getPopularAll();
             return new BaseResponse<>(getPopularRes);
         } catch(BaseException exception){
+            System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
     }
@@ -51,6 +48,7 @@ public class PopularBoardController {
             List<GetPopularRes> getPopularRes = popularBoardProvider.getPopular();
             return new BaseResponse<>(getPopularRes);
         } catch(BaseException exception){
+            System.out.println(exception);
             return new BaseResponse<>((exception.getStatus()));
         }
     }

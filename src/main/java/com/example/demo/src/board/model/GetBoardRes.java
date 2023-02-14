@@ -23,4 +23,7 @@ public class GetBoardRes {
     private String post_anonymity;
     private int school_name_idx;
     private int post_bookmark;
+    private String user_name;
+    private String user_profileimage_url;
+
 }

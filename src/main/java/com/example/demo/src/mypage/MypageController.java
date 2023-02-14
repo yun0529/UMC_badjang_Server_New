@@ -125,4 +125,38 @@ public class MypageController {
         }
     }
 
+    /**
+     * 공지사항 전체 조회(목록) API
+     * [GET] /notice
+     */
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/notice") // (GET) 127.0.0.1:9000/board
+    public BaseResponse<List<GetNoticeRes>> getNotice() {
+        try{
+            //int user_idx = jwtService.getUserIdx();
+            List<GetNoticeRes> getNoticeRes = mypageProvider.getNotice();
+            return new BaseResponse<>(getNoticeRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 공지사항 조회 API
+     * [GET] /notice/:notice_idx
+     */
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/notice/{notice_idx}") // (GET) 127.0.0.1:9000/board
+    public BaseResponse<GetNoticeRes> getNoticeDetail(@PathVariable("notice_idx")int notice_idx) {
+        try{
+            //int user_idx = jwtService.getUserIdx();
+            GetNoticeRes getNoticeRes = mypageProvider.getNoticeDetail(notice_idx);
+            return new BaseResponse<>(getNoticeRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }

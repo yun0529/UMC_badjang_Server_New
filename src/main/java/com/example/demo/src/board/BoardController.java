@@ -27,15 +27,27 @@ public class BoardController {
     @Autowired
     private final JwtService jwtService;
 
-
-
-
     public BoardController(BoardProvider boardProvider, BoardDao boardDao, JwtService jwtService){
         this.boardProvider = boardProvider;
         this.boardDao = boardDao;
         this.jwtService = jwtService;
     }
 
+    /**
+     * 게시판 목록 조회 API
+     */
+
+    @ResponseBody
+    @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
+    @GetMapping("/board/totalBoard") // (GET) 127.0.0.1:9000/board
+    public BaseResponse<List<GetBoardTotal>> getBoardTotal() {
+        try{
+            List<GetBoardTotal> getBoardRes = boardProvider.getBoardTotal();
+            return new BaseResponse<>(getBoardRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
     /**
      * 자유게시판 전체 글 조회 API
      */
@@ -91,12 +103,18 @@ public class BoardController {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             } else if (user_idx == 0) {
                 return new BaseResponse<>(BaseResponseStatus.USERS_EMPTY_USER_IDX);
-            } else if (postBoardReq.getPost_name() == null) {
+            } else if (postBoardReq.getPost_name() == null || postBoardReq.getPost_name() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_BOARD_NAME);
-            } else if (postBoardReq.getPost_content() == null) {
+            } else if (postBoardReq.getPost_content() == null || postBoardReq.getPost_content() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_BOARD_CONTENT);
-            } else if (postBoardReq.getPost_category() == null) {
+            } else if (postBoardReq.getPost_category() == null || postBoardReq.getPost_category() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_CATEGORY_IDX);
+            } else if (postBoardReq.getPost_name().length() > 50){
+                return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_TITLE_INVALID);
+            } else if (postBoardReq.getPost_content().length() > 500) {
+                return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_CONTENT_INVALID);
+            } else if(postBoardReq.getPost_anonymity() == null || postBoardReq.getPost_anonymity().equals("")) {
+                return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_ANONYMITY_NULL);
             }
             List<PostBoardRes> postBoardRes = boardProvider.postBoard(postBoardReq);
             return new BaseResponse<>(postBoardRes);
@@ -119,8 +137,20 @@ public class BoardController {
                     return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
                 } else if (idx != user_idx) {
                     return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
-                } else if(post_idx == 0){
+                } else if(post_idx== 0){
                     return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
+                } else if (patchBoardReq.getPost_name() == "") {
+                    return new BaseResponse<>(BaseResponseStatus.EMPTY_BOARD_NAME);
+                } else if (patchBoardReq.getPost_content() == "") {
+                    return new BaseResponse<>(BaseResponseStatus.EMPTY_BOARD_CONTENT);
+                } else if (patchBoardReq.getPost_category() == "") {
+                    return new BaseResponse<>(BaseResponseStatus.EMPTY_CATEGORY_IDX);
+                } else if (patchBoardReq.getPost_name().length() > 50){
+                    return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_TITLE_INVALID);
+                } else if (patchBoardReq.getPost_content().length() > 500) {
+                    return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_CONTENT_INVALID);
+                } else if (patchBoardReq.getAnonymity() == "") {
+                    return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_ANONYMITY_NULL);
                 }
                 boardProvider.patchBoard(patchBoardReq);
                 String result = "게시글이 수정되었습니다";
@@ -222,17 +252,23 @@ public class BoardController {
             else if(post_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
             }
-            else if (postCommentReq.getComment_content() == null) {
+            else if (postCommentReq.getComment_content() == null || postCommentReq.getComment_content() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_CONTENT);
             }
-            else if (postCommentReq.getComment_anonymity() == null) {
+            else if (postCommentReq.getComment_anonymity() == null || postCommentReq.getComment_anonymity() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_ANONYMITY);
             }
-            else if (postCommentReq.getComment_status() == null) {
+            else if (postCommentReq.getComment_status() == null || postCommentReq.getComment_status() == "") {
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_STATUS);
             }
             else if(idx != user_idx){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            else if (postCommentReq.getComment_content().length() > 100) {
+                return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_COMMENT_INVALID);
+            }
+            else if (postCommentReq.getComment_anonymity() == null || postCommentReq.getComment_anonymity().equals("")) {
+                return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_COMMENT_ANONYMITY_NULL);
             }
                 PostCommentRes postCommentRes = boardProvider.postComment(postCommentReq);
                 boardProvider.updateCommentCount(post_idx);
@@ -260,6 +296,15 @@ public class BoardController {
             }
             else if(idx != user_idx){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            else if (patchCommentReq.getComment_content() == "") {
+                return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_CONTENT);
+            }
+            else if (patchCommentReq.getComment_content().length() > 100){
+                return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_COMMENT_INVALID);
+            }
+            else if (patchCommentReq.getAnonymity() == ""){
+                return new BaseResponse<>(BaseResponseStatus.POST_SCHOOL_BOARD_COMMENT_ANONYMITY_NULL);
             }
             boardProvider.patchComment(patchCommentReq);
             String result = "댓글을 수정하였습니다.";

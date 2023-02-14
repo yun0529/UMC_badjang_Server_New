@@ -7,6 +7,7 @@ import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -154,6 +155,31 @@ public class UserService {
             int result = userDao.logOut(user_idx);
             if(result == 0) throw new BaseException(DATABASE_ERROR);
             return "로그아웃 되었습니다.";
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostUserRes autoLogin(PostLogoutReq postLogoutReq) throws BaseException {
+        if (userProvider.checkStatusByUserIdx(postLogoutReq.getUser_idx()) == 1)
+            throw new BaseException(STOPPED_USER);
+
+        try {
+            String jwt = jwtService.createJwt(postLogoutReq.getUser_idx());
+            return new PostUserRes(postLogoutReq.getUser_idx(), jwt);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String setUserNoti(PostNotiReq postNotiReq) throws BaseException {
+        if (userProvider.checkOnOff(postNotiReq.getUser_idx()).equals("OFF"))
+            throw new BaseException(OFFLINE_USER);
+
+        try {
+            int result = userDao.setUserNoti(postNotiReq);
+            if (result == 0) throw new BaseException(DATABASE_ERROR);
+            return "알림 설정 변경이 완료되었습니다.";
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

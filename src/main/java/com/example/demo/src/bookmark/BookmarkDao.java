@@ -143,7 +143,7 @@ public class BookmarkDao {
     }
 
     //북마크에 저장되어있는 장학금인지 확인
-    public int bookmarkScholarshipNullCheck(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
+    public int bookmarkScholarshipNullCheck(int userIdx, int scholarshipIdx) {
 
         String bookmarkScholarshipNullCheckQuery = "select Exists( " +
                 "select bookmark_idx " +
@@ -152,7 +152,7 @@ public class BookmarkDao {
                 "and scholarship_idx = ? " +
                 ") as isChk ";
 
-        Object[] bookmarkScholarshipNullCheckParams = new Object[]{postBookmarkScholarshipReq.getUser_idx(), postBookmarkScholarshipReq.getScholarship_idx()};
+        Object[] bookmarkScholarshipNullCheckParams = new Object[]{userIdx, scholarshipIdx};
 
         return this.jdbcTemplate.queryForObject(bookmarkScholarshipNullCheckQuery,
                 int.class,
@@ -198,7 +198,7 @@ public class BookmarkDao {
 
     //북마크에 저장되어있다면 삭제하고, 저장되어있지 않다면 저장하기(즐겨찾기 버튼 클릭)
     public String postBookmarkScholarship(PostBookmarkScholarshipReq postBookmarkScholarshipReq) {
-        int bookmarkScholarshipNullCheck = bookmarkScholarshipNullCheck(postBookmarkScholarshipReq);
+        int bookmarkScholarshipNullCheck = bookmarkScholarshipNullCheck(postBookmarkScholarshipReq.getUser_idx(), postBookmarkScholarshipReq.getScholarship_idx());
 //        int nullCheckSchoolForScholarship = nullCheckSchoolForScholarship(postBookmarkScholarshipReq);
 //        int nullCheckTotalForScholarship = nullCheckTotalForScholarship(postBookmarkScholarshipReq);
 

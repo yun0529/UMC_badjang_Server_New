@@ -19,37 +19,45 @@ public class SchoolBoardCommentDao {
     }
 
 
-    public List<GetSchoolBoardCommentRes> getSchoolBoardComment(int postIdx) {
+    //해당 게시글의 댓글 불러오기
+    public List<GetSchoolBoardCommentRes> getSchoolBoardComment(int userIdx, int postIdx) {
 
 
-        String getSchoolBoardCommentQuery = "select Board.post_idx, Comment.user_idx, User.user_name, comment_content, " +
-                "comment_recommend, comment_anonymity, comment_createAt " +
+        String getSchoolBoardCommentQuery = "select Comment.post_idx, Comment.comment_idx,  Comment.user_idx, User.user_name, comment_content, " +
+                "comment_recommend, comment_anonymity, comment_createAt, " +
+                "Exists (select Comment_Recommend_idx from Comment_Recommend " +
+                "where Comment_Recommend.user_idx = ? and Board.post_idx = ? and Comment_Recommend.comment_idx = Comment.comment_idx) as isRecommendChk " +
                 "from Board " +
                 "join Comment " +
                 "on Board.post_idx = Comment.post_idx " +
                 "join User " +
                 "on User.user_idx = Comment.user_idx " +
-                "where Board.post_idx = ? " +
-                "order by Comment.comment_createAt desc ";
+                "where Board.post_idx = ? ";
 
-        int getSchoolBoardCommentParams = postIdx;
+        Object[] getSchoolBoardCommentParams = new Object[]{
+                userIdx,
+                postIdx,
+                postIdx
+        };
 
         return this.jdbcTemplate.query(getSchoolBoardCommentQuery,
                 (rs, rowNum) -> new GetSchoolBoardCommentRes(
                         rs.getInt("post_idx"),
+                        rs.getInt("comment_idx"),
                         rs.getInt("user_idx"),
                         rs.getString("user_name"),
                         rs.getString("comment_content"),
                         rs.getInt("comment_recommend"),
                         rs.getString("comment_anonymity"),
-                        rs.getString("comment_createAt")
+                        rs.getString("comment_createAt"),
+                        rs.getInt("isRecommendChk")
                 ), getSchoolBoardCommentParams
         );
 
     }
 
 
-
+    //댓글 추가
     public void postSchoolBoardComment(int userIdx, int postIdx, PostSchoolBoardCommentReq postSchoolBoardCommentReq) {
 
         String postSchoolBoardCommentQuery = "insert into Comment (" +
@@ -71,21 +79,23 @@ public class SchoolBoardCommentDao {
 
     }
 
+    //댓글 삭제, 추가 등의 이유로 댓글수 변동시 처리하기 위한 쿼리
     public void schoolBoardCommentUpdate(int postIdx) {
 
-        String schoolBoardRecommendUpQuery = "UPDATE Board " +
+        String schoolBoardCommentUpdateQuery = "UPDATE Board " +
                 "set post_comment = " +
                 "( select COUNT(comment_idx) " +
                 "from Comment " +
                 "where post_idx = ? ) " +
                 "where post_idx = ? ";
 
-        int schoolBoardRecommendUpParams = postIdx;
+        int schoolBoardCommentUpdateParams = postIdx;
 
-        this.jdbcTemplate.update(schoolBoardRecommendUpQuery, schoolBoardRecommendUpParams, schoolBoardRecommendUpParams);
+        this.jdbcTemplate.update(schoolBoardCommentUpdateQuery, schoolBoardCommentUpdateParams, schoolBoardCommentUpdateParams);
 
     }
 
+    //댓글 작성자인지 확인하는 쿼리
     public int checkSchoolBoardCommentWriter(int userIdx, int commentIdx) {
 
         String checkSchoolBoardCommentWriterQuery = "select Exists( " +
@@ -104,6 +114,7 @@ public class SchoolBoardCommentDao {
 
     }
 
+    //댓글 수정
     public void patchSchoolBoardComment(int commentIdx, PatchSchoolBoardCommentReq patchSchoolBoardCommentReq) {
         String patchSchoolBoardCommentQuery;
         Object[] patchSchoolBoardCommentParams;
@@ -133,11 +144,10 @@ public class SchoolBoardCommentDao {
             this.jdbcTemplate.update(patchSchoolBoardCommentQuery, patchSchoolBoardCommentParams);
         }
 
-
-
-
     }
 
+
+    //댓글 삭제
     public void deleteSchoolBoardComment(int userIdx, int commentIdx) {
 
         String deleteSchoolBoardCommentQuery = "delete from Comment " +
@@ -155,6 +165,7 @@ public class SchoolBoardCommentDao {
     }
 
 
+    //이미 추천을 한 댓글인지 확인
     public int checkSchoolBoardCommentRecommendDouble(int userIdx, int commentIdx) {
 
         String checkSchoolBoardCommentRecommendDoubleQuery = "select Exists( " +
@@ -171,6 +182,7 @@ public class SchoolBoardCommentDao {
 
     }
 
+    //댓글의 추천수를 확인하기 위한 쿼리
     public void schoolBoardCommentRecommendUpdate(int commentIdx) {
 
         String schoolBoardCommentRecommendUpdateQuery = "UPDATE Comment " +
@@ -195,6 +207,7 @@ public class SchoolBoardCommentDao {
                 commentIdx
         };
 
+        //이미 추천이 되어있는 경우에는 취소하고(DB 내역에서 삭제), 추천이 되어있지 않은 경우에는 추천(DB 내역에 추가)하는 쿼리
         if (checkSchoolBoardCommentRecommendDouble == 1) {
 
             postSchoolBoardCommentRecommendQuery = "delete from Comment_Recommend " +

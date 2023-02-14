@@ -49,9 +49,27 @@ public class ScholarshipController {
         //  지금 예시와 같이 required 설정으로 필수 값에서 제외 시킬 수 있음
         //  defaultValue를 통해, 기본값(파라미터가 없는 경우, 해당 파라미터의 기본값 설정)을 지정할 수 있음
 
-        //  카테고리 null : 전체
-        //  필터 	null : 인기순(조회순)
-        //  정렬	    null : desc
+        //  카테고리 default 는 전체
+        //          국가장학
+        //          KRA와 함께하는 농어촌 희망재단 장학금
+        //          교내 신입생 입학성적 우수장학금
+        //          교내 재학생 장학금
+        //          교외장학
+        //          교내장학
+        //          학비대출
+        //          기타
+        //          국가근로
+        //          성적우수장학금
+        //          특별감면장학금
+        //          가계곤란자 장학금
+        //          근로 장학금
+        //  필터 	default 는 인기순
+        //          날짜순
+        //          인기순
+        //          댓글순
+        //  정렬	    default 는 desc
+        //          desc
+        //          asc
 
         try {
             List<GetScholarshipRes> getScholarshipsRes = scholarshipProvider.getScholarshipsByFilter(category, filter, order);

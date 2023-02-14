@@ -34,6 +34,23 @@ public class SchoolBoardController {
     }
 
     /**
+     * 학교 게시판 종류 조회
+     * [GET] /board/school
+     */
+
+    @ResponseBody
+    @GetMapping("/board/school")
+    public BaseResponse<List<GetSchoolBoardNameRes>> getSchoolBoardName() {
+        try {
+            List<GetSchoolBoardNameRes> getSchoolBoardNameRes = schoolBoardProvider.getSchoolBoardName();
+
+            return new BaseResponse<>(getSchoolBoardNameRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
      * 각 학교 게시판 전체 조회
      * [GET] /board/school/:schoolNameIdx
      */
@@ -42,7 +59,8 @@ public class SchoolBoardController {
     @GetMapping("/board/school/{schoolNameIdx}")
     public BaseResponse<List<GetSchoolBoardRes>> getSchoolBoardAll(@PathVariable("schoolNameIdx") int schoolNameIdx) {
         try {
-            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardProvider.getSchoolBoard(schoolNameIdx);
+            int userIdx = jwtService.getUserIdx();
+            List<GetSchoolBoardRes> getSchoolBoardRes = schoolBoardProvider.getSchoolBoard(userIdx, schoolNameIdx);
 
             return new BaseResponse<>(getSchoolBoardRes);
         } catch (BaseException exception) {
@@ -60,7 +78,8 @@ public class SchoolBoardController {
     @GetMapping("/board/school/{schoolNameIdx}/{postIdx}")
     public BaseResponse<GetSchoolBoardDetailRes> getOneOfSchoolBoard(@PathVariable("schoolNameIdx") int schoolNameIdx, @PathVariable("postIdx") int postIdx) {
         try {
-            GetSchoolBoardDetailRes getSchoolBoardDetailRes = schoolBoardProvider.getSchoolBoardDetail(postIdx);
+            int userIdx = jwtService.getUserIdx();
+            GetSchoolBoardDetailRes getSchoolBoardDetailRes = schoolBoardProvider.getSchoolBoardDetail(userIdx, postIdx);
 
             return new BaseResponse<>(getSchoolBoardDetailRes);
         } catch (BaseException exception) {

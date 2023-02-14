@@ -10,6 +10,7 @@ import com.example.demo.src.notification.model.GetNotificationSupportRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class NotificationProvider {
         this.notificationDao = notificationDao;
     }
 
-
+    @Transactional(readOnly = true)
     public GetNotificationAllRes getNotificationAllRes(int userIdx) throws BaseException {
         try {
             List<GetNotificationScholarshipRes> getNotificationScholarshipRes = notificationDao.getNotificationScholarshipRes(userIdx);

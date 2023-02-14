@@ -8,8 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 
-public class PatchCommentReq {
-    private int comment_idx;
-    private String comment_content;
-    private String anonymity;
+public class GetBoardTotal {
+    private String post_category;
+    private int school_name_idx;
 }

@@ -87,7 +87,7 @@ public class SearchController {
             }
             int userIdx = jwtService.getUserIdx();
             GetSearchAllRes getSearchAllRes = searchProvider.searchAll(query);
-            searchProvider.saveQuery(userIdx, query);
+            searchService.saveQuery(userIdx, query);
 
             return new BaseResponse<>(getSearchAllRes);
         } catch (BaseException exception) {
@@ -112,7 +112,7 @@ public class SearchController {
             }
             long userIdx = jwtService.getUserIdx();
             List<GetSearchBoardRes> getSearchBoardRes = searchProvider.searchBoard(query);
-            searchProvider.saveQuery(userIdx, query);
+            searchService.saveQuery(userIdx, query);
 
             return new BaseResponse<>(getSearchBoardRes);
         } catch (BaseException exception) {
@@ -136,7 +136,7 @@ public class SearchController {
             }
             int userIdx = jwtService.getUserIdx();
             List<GetSearchScholarshipRes> getSearchScholarshipRes = searchProvider.searchScholarship(query);
-            searchProvider.saveQuery(userIdx, query);
+            searchService.saveQuery(userIdx, query);
 
             return new BaseResponse<>(getSearchScholarshipRes);
         } catch (BaseException exception) {
@@ -160,7 +160,7 @@ public class SearchController {
             }
             int userIdx = jwtService.getUserIdx();
             List<GetSearchSupportRes> getSearchSupportRes = searchProvider.searchSupport(query);
-            searchProvider.saveQuery(userIdx, query);
+            searchService.saveQuery(userIdx, query);
 
             return new BaseResponse<>(getSearchSupportRes);
         } catch (BaseException exception) {
