@@ -124,7 +124,7 @@ public class ScholarshipController {
      * myfilter로 조회 API
      * */
     @ResponseBody
-    @GetMapping("/myfilter")
+    @PostMapping("/myfilter")
     public BaseResponse<List<GetScholarshipRes>> getScholarshipMyfilter(@RequestBody GetScholarshipMyfilter getScholarshipMyfilter) {
         try {
             List<GetScholarshipRes> getScholarshipRes = scholarshipProvider.getScholarshipMyfilter(getScholarshipMyfilter);
