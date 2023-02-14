@@ -242,11 +242,11 @@ public class BoardDao {
         String getCommentQuery = "SELECT comment_idx, User.user_idx, Board.post_idx, comment_content, comment_recommend, " +
                 "comment_anonymity, comment_createAt, comment_updatedAt, comment_status, " +
                 "IF(comment_anonymity = 'Y', user_name = null, user_name) as user_name, user_profileimage_url, " +
-                "(select exists(select comment_idx, user_idx from Comment_Recommend where comment_idx = Comment.comment_idx and User.user_idx = ?)) as recommend_status " +
-                "from badjangDB.Comment " +
+                "(select exists(select comment_idx, user_idx from Comment_Recommend where comment_idx = Comment.comment_idx and User.user_idx = ?)) " +
+                "as recommend_status FROM badjangDB.Comment " +
                 "left join User on User.user_idx = Comment.user_idx and User.user_profileimage_url = user_profileimage_url " +
                 "left join Board on Board.post_idx = Comment.post_idx " +
-                "where Board.post_idx = ? " ;
+                "where Board.post_idx = ? and Board.post_category = '자유게시판' " ;
 
         int getPostIdx = post_idx;
 
