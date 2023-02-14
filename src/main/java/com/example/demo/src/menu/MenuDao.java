@@ -20,7 +20,7 @@ public class MenuDao {
     }
 
     public List<GetPopularRes> getPopularRes(){
-        String getPopularQuery = "SELECT B.post_idx, post_name, post_image, post_recommend, " +
+        String getPopularQuery = "SELECT B.post_idx, post_content, post_image, post_recommend, " +
                 "post_view, post_comment, post_createAt, post_updateAt,post_status, (B.post_view + B.post_recommend) as count " +
                 "FROM Popular_Board " +
                 "left join Board B on B.post_idx = Popular_Board.post_idx " +
@@ -29,7 +29,7 @@ public class MenuDao {
         return this.jdbcTemplate.query(getPopularQuery,
                 (rs,rowNum) -> new GetPopularRes(
                         rs.getInt("post_idx"),
-                        rs.getString("post_name"),
+                        rs.getString("post_content"),
                         rs.getString("post_image"),
                         rs.getInt("post_recommend"),
                         rs.getInt("post_view"),
