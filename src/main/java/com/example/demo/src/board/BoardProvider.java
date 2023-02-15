@@ -111,9 +111,9 @@ public class BoardProvider {
         }
     }
 
-    public List<GetBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq) throws BaseException{
+    public List<GetBoardRes> deleteBoard(int user_idx, int post_idx) throws BaseException{
         try{
-            List<GetBoardRes> deleteBoardRes = boardDao.deleteBoard(deleteBoardReq);
+            List<GetBoardRes> deleteBoardRes = boardDao.deleteBoard(user_idx, post_idx);
             return deleteBoardRes;
         }catch (Exception exception) {
             System.out.println(exception);
@@ -176,9 +176,9 @@ public class BoardProvider {
         }
     }
 
-    public GetCommentRes deleteComment(DeleteCommentReq deleteCommentReq) throws BaseException {
+    public GetCommentRes deleteComment(int user_idx, int comment_idx) throws BaseException {
         try {
-            GetCommentRes deleteCommentRes = boardDao.deleteComment(deleteCommentReq);
+            GetCommentRes deleteCommentRes = boardDao.deleteComment(user_idx, comment_idx);
             return deleteCommentRes;
         }catch (Exception exception){
             System.out.println(exception);
