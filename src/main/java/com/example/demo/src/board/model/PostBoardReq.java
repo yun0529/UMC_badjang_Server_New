@@ -13,11 +13,6 @@ public class PostBoardReq {
     private String post_name;
     private String post_content;
     private String post_image;
-    private int post_view;
-    private int post_recommend;
-    private int post_comment;
-    private String post_createAt;
-    private String post_updateAt;
-    private String post_status;
     private String post_anonymity;
+    private String school_name_idx;
 }
