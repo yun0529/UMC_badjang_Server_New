@@ -165,20 +165,16 @@ public class BoardController {
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
     @DeleteMapping("/board/delete/{post_idx}/{user_idx}")
-    public BaseResponse<String> deleteBoard(@PathVariable("post_idx") int post_idx,@PathVariable("user_idx") int user_idx,
-                                                          @RequestBody DeleteBoardReq deleteBoardReq){
+    public BaseResponse<String> deleteBoard(@PathVariable("post_idx") int post_idx,@PathVariable("user_idx") int user_idx){
         try{
             int idx = jwtService.getUserIdx();
             if(idx != user_idx){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
-            else if(post_idx != deleteBoardReq.getPost_idx()){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_POST_IDX);
-            }
             else if(post_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_POST_IDX);
             }
-            boardProvider.deleteBoard(deleteBoardReq);
+            boardProvider.deleteBoard(user_idx, post_idx);
 
             String result = "삭제에 성공하였습니다.";
             return new BaseResponse<>(result);
@@ -319,23 +315,20 @@ public class BoardController {
     //[DELETE] 댓글 삭제 (댓글 인덱스 사용)
     @ResponseBody
     @Transactional(propagation = Propagation.REQUIRED, isolation = READ_COMMITTED , rollbackFor = Exception.class)
-    @DeleteMapping("/board/comment/delete/{comment_idx}/{user_idx}")
+    @DeleteMapping("/board/comment/delete/{comment_idx}/{user_idx}/{post_idx}")
     public BaseResponse<String> deleteComment(@PathVariable("comment_idx") int comment_idx,
                                                      @PathVariable("user_idx") int user_idx,
-                                                          @RequestBody DeleteCommentReq deleteCommentReq){
+                                                    @PathVariable("post_idx") int post_idx){
         try{
             int idx = jwtService.getUserIdx();
-            if(comment_idx != deleteCommentReq.getComment_idx()){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_COMMENT_IDX);
-            }
-            else if(comment_idx == 0){
+            if(comment_idx == 0){
                 return new BaseResponse<>(BaseResponseStatus.EMPTY_COMMENT_IDX);
             }
             else if(idx != user_idx){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
-            boardProvider.deleteComment(deleteCommentReq);
-            boardProvider.updateCommentCount(deleteCommentReq.getPost_idx());
+            boardProvider.deleteComment(user_idx, comment_idx);
+            boardProvider.updateCommentCount(post_idx);
             String result = "댓글을 삭제했습니다.";
             return new BaseResponse<>(result);
 

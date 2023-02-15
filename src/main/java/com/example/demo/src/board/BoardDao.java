@@ -33,11 +33,11 @@ public class BoardDao {
      *
      */
     public List<PostBoardRes> postBoard(PostBoardReq postBoardReq){
-        String createBoardQuery = "INSERT INTO Board (user_idx, post_category, post_name, post_content, post_image, post_anonymity, user_name, user_profileimage_url) " +
-            "VALUES (?,?,?,?,?,?,(select user_name FROM User where User.user_idx = ?),(select user_profileimage_url FROM User where User.user_idx = ?)) " ;
+        String createBoardQuery = "INSERT INTO Board (user_idx, post_category, post_name, post_content, post_image, post_anonymity, school_name_idx) " +
+                "VALUES (?,?,?,?,?,?,?) " ;
         Object[] createBoardParams = new Object[]{
                 postBoardReq.getUser_idx(), postBoardReq.getPost_category(), postBoardReq.getPost_name(), postBoardReq.getPost_content(),
-                postBoardReq.getPost_image(), postBoardReq.getPost_anonymity(), postBoardReq.getUser_idx(), postBoardReq.getUser_idx()
+                postBoardReq.getPost_image(), postBoardReq.getPost_anonymity(), postBoardReq.getSchool_name_idx()
         };
         this.jdbcTemplate.update(createBoardQuery, createBoardParams);
 
@@ -110,11 +110,11 @@ public class BoardDao {
     /**게시글 삭제
      *
      */
-    public List<GetBoardRes> deleteBoard(DeleteBoardReq deleteBoardReq){
+    public List<GetBoardRes> deleteBoard(int user_idx, int post_idx){
         String deleteBoardQuery = "DELETE from Board where post_idx = ? and user_idx = ?" ;
 
         Object[] deleteParam = new Object[]{
-                deleteBoardReq.getPost_idx(), deleteBoardReq.getUser_idx()
+                post_idx, user_idx
         };
         this.jdbcTemplate.update(deleteBoardQuery, deleteParam);
         return null;
@@ -273,12 +273,12 @@ public class BoardDao {
      *
      */
     public PostCommentRes postComment(PostCommentReq postCommentReq){
-        String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_anonymity, user_name, user_profileimage_url) " +
-                "VALUES (?, ?, ?, ?,(select user_name FROM User where User.user_idx = ?),(select user_profileimage_url FROM User where User.user_idx = ?)) " ;
+        String createCommentQuery = "INSERT INTO Comment (post_idx ,user_idx, comment_content, comment_anonymity) " +
+                "VALUES (?, ?, ?, ?) " ;
 
         Object[] createCommentParams = new Object[]{
                 postCommentReq.getPost_idx(), postCommentReq.getUser_idx(), postCommentReq.getComment_content(),
-                postCommentReq.getComment_anonymity(), postCommentReq.getUser_idx(), postCommentReq.getUser_idx()
+                postCommentReq.getComment_anonymity(),
         };
 
         this.jdbcTemplate.update(createCommentQuery,createCommentParams);
@@ -323,11 +323,11 @@ public class BoardDao {
     /**댓글 삭제
      *
      */
-    public GetCommentRes deleteComment(DeleteCommentReq deleteCommentReq){
-        String deleteQuery = "DELETE from Comment where comment_idx = ? ";
+    public GetCommentRes deleteComment(int user_idx, int comment_idx){
+        String deleteQuery = "DELETE from Comment where user_idx = ? and comment_idx = ? ";
 
         Object[] deleteResult = new Object[]{
-                deleteCommentReq.getComment_idx()
+                user_idx, comment_idx
         };
         this.jdbcTemplate.update(deleteQuery,deleteResult);
         return null;
